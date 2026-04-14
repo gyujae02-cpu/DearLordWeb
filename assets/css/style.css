@@ -1,0 +1,239 @@
+:root {
+    --bg-color: #0a0a0a;
+    --surface-color: #161616;
+    --accent-color: #d4af37;
+    --text-primary: #f5f5f5;
+    --text-secondary: #a0a0a0;
+    --nav-height: 90px;
+    --bottom-nav-height: 0px; /* 데스크톱 기본값 */
+    --font-logo: 'Cormorant Garamond', serif;
+    --font-heading: 'Playfair Display', 'Noto Serif KR', serif;
+    --font-body: 'Montserrat', 'Noto Serif KR', sans-serif;
+    --transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { 
+    width: 100%; height: 100%; height: 100dvh; 
+    overflow: hidden; 
+    background-color: var(--bg-color); 
+    font-family: var(--font-body); 
+    color: var(--text-primary); 
+    -webkit-font-smoothing: antialiased; 
+}
+
+/* --- Splash Screen --- */
+#splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: 100dvh; background-color: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; cursor: pointer; transition: opacity 1.2s ease-in-out; }
+.splash-logo-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; }
+.splash-icon { width: clamp(40px, 8vw, 50px); height: auto; }
+.splash-text { font-family: var(--font-logo); font-size: clamp(2rem, 7vw, 2.8rem); letter-spacing: 0.05rem; color: var(--text-primary); font-weight: 300; }
+.splash-subtext { font-size: 0.8rem; color: var(--accent-color); letter-spacing: 0.2rem; animation: pulseText 2s infinite; }
+@keyframes pulseText { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
+/* --- UI Overlay --- */
+header { 
+    width: 100%; 
+    height: calc(var(--nav-height) + env(safe-area-inset-top)); 
+    padding-top: env(safe-area-inset-top);
+    position: fixed; top: 0; z-index: 1000; 
+    background: linear-gradient(to bottom, rgba(10,10,10,0.85), transparent); 
+    pointer-events: none;
+}
+nav { max-width: 1200px; margin: 0 auto; height: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; pointer-events: auto; }
+.logo { display: flex; align-items: center; gap: 6px; text-decoration: none; cursor: pointer; }
+.logo-icon { width: clamp(24px, 5vw, 32px); height: auto; }
+.logo-text { font-family: var(--font-logo); font-size: clamp(1.4rem, 4vw, 1.8rem); font-weight: 400; color: var(--text-primary); letter-spacing: 0.02rem; }
+
+.nav-links { list-style: none; display: flex; gap: clamp(10px, 3vw, 35px); align-items: center; }
+.nav-links a { display: flex; align-items: center; gap: 6px; text-decoration: none; color: var(--text-secondary); font-size: 0.95rem; font-family: 'Noto Serif KR', serif; transition: color 0.3s ease; cursor: pointer; padding: 5px 0; }
+.nav-links a.active { color: var(--accent-color); font-weight: 700; }
+.nav-icon { display: none; }
+
+/* --- Page System --- */
+.page { 
+    position: absolute; top: 0; left: 0; 
+    width: 100%; height: 100%; height: 100dvh; 
+    display: none; flex-direction: column; align-items: center; 
+    padding: calc(var(--nav-height) + env(safe-area-inset-top) + 10px) 20px calc(40px + var(--bottom-nav-height) + env(safe-area-inset-bottom)); 
+    text-align: center; opacity: 0; transition: var(--transition); 
+    overflow: hidden; 
+}
+.page.active { display: flex; opacity: 1; }
+#page-home { justify-content: center; } 
+#page-lords-prayer, #page-prayer, #page-info { justify-content: flex-start; }
+
+/* --- Home --- */
+.cinematic-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; }
+.web-description { max-width: 680px; margin: 0 auto 4dvh; opacity: 0; transform: translateY(20px); transition: all 1.5s ease-out; position: relative; z-index: 10; }
+.web-description.show { opacity: 1; transform: translateY(0); }
+.web-description h2 { font-family: var(--font-heading); font-size: clamp(1.4rem, 6vw, 2.2rem); font-style: italic; margin-bottom: clamp(15px, 4vw, 22px); color: var(--accent-color); }
+.bible-verse { color: var(--text-secondary); font-size: clamp(0.95rem, 3.5vw, 1.2rem); word-break: keep-all; line-height: 2.2; font-family: 'Noto Serif KR', serif; letter-spacing: -0.01em; }
+.cta-button { display: inline-block; margin-top: clamp(20px, 5vw, 30px); padding: 14px 38px; border: 1px solid var(--accent-color); color: var(--accent-color); text-decoration: none !important; font-size: 0.9rem; letter-spacing: 0.2rem; transition: 0.3s; font-family: 'Noto Serif KR', serif; cursor: pointer !important; z-index: 20; border-radius: 4px; }
+
+.cinematic-header { position: relative; display: flex; justify-content: center; align-items: center; margin: 2dvh 0; }
+.divine-backglow { position: absolute; width: clamp(200px, 60vw, 450px); height: clamp(200px, 60vw, 450px); background: radial-gradient(circle, rgba(212, 175, 55, 0.25) 0%, rgba(10, 10, 10, 0) 70%); filter: blur(50px); animation: breatheGlow 6s infinite ease-in-out; pointer-events: none; z-index: 1; }
+.divine-cross-image { height: clamp(130px, 20dvh, 250px); opacity: 0.85; filter: grayscale(100%) brightness(1.2) contrast(1.1); -webkit-mask-image: radial-gradient(circle, black 40%, transparent 85%); mask-image: radial-gradient(circle, black 40%, transparent 85%); position: relative; z-index: 2; }
+
+#cinematic-text { font-family: 'Noto Serif KR', serif; font-size: clamp(1.1rem, 5vw, 2rem); font-weight: 700; opacity: 0; filter: blur(10px); transform: translateY(20px); transition: all 1.2s cubic-bezier(0.33, 1, 0.68, 1); text-shadow: 0 0 20px rgba(255,255,255,0.3); }
+#cinematic-text.active { opacity: 1; filter: blur(0); transform: translateY(0); }
+
+.song-control-wrap { margin-top: clamp(20px, 5vh, 30px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; position: relative; z-index: 50; width: 100%; }
+.song-info { font-size: 0.75rem; color: var(--text-secondary); opacity: 0.6; letter-spacing: 0.05em; font-weight: 300; text-align: center; }
+
+.play-btn { 
+    background: transparent; border: 1px solid rgba(212, 175, 55, 0.3); color: var(--accent-color); 
+    width: clamp(48px, 12vw, 56px); height: clamp(48px, 12vw, 56px); border-radius: 50%; cursor: pointer; 
+    display: flex; justify-content: center; align-items: center; 
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); outline: none; backdrop-filter: blur(5px); 
+}
+
+.play-icon-container {
+    display: flex; justify-content: center; align-items: center;
+    width: 100%; height: 100%; pointer-events: none;
+}
+
+/* --- UI Controls --- */
+.font-controls-container { display: flex; justify-content: flex-end; width: 100%; gap: 8px; margin-bottom: 10px; z-index: 10; }
+.font-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-secondary); width: clamp(30px, 8vw, 34px); height: clamp(30px, 8vw, 34px); border-radius: 6px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s ease; outline: none; }
+.font-btn .material-symbols-outlined { font-size: 18px; font-variation-settings: 'Wght' 300; }
+
+/* --- Search Bar UI --- */
+.search-container { width: 100%; max-width: 700px; position: relative; margin-bottom: 20px; transition: all 0.4s ease; flex-shrink: 0; }
+.search-input { width: 100%; padding: 16px 20px 16px 55px; border-radius: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-primary); font-family: 'Noto Serif KR', serif; font-size: 1rem; outline: none; transition: all 0.3s ease; backdrop-filter: blur(10px); -webkit-appearance: none; }
+.search-input::placeholder { color: rgba(255,255,255,0.3); }
+.search-input:focus { border-color: var(--accent-color); background: rgba(212, 175, 55, 0.05); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
+.search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1.4rem; transition: color 0.3s ease; pointer-events: none; }
+.search-input:focus + .search-icon { color: var(--accent-color); }
+
+/* --- Custom Scrollbar --- */
+.scroll-area { scrollbar-width: thin; scrollbar-color: var(--accent-color) transparent; }
+.scroll-area::-webkit-scrollbar { width: 3px; }
+.scroll-area::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+
+/* --- Scrollable Core Containers --- */
+#prayer-browser, .info-container { width: 100%; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; position: relative; }
+#prayer-browser { max-width: 700px; padding: 10px 0; }
+.info-container { max-width: 800px; padding: 10px 0; }
+
+.lords-prayer-content { 
+    width: 100%; 
+    max-width: 600px; 
+    padding: clamp(30px, 8vw, 50px) clamp(20px, 6vw, 40px); 
+    background: rgba(255,255,255,0.02); 
+    border-radius: 12px; 
+    border: 1px solid rgba(212, 175, 55, 0.1); 
+    flex: none; 
+    height: auto; 
+    max-height: 100%; 
+    overflow-y: auto; 
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* --- Shared Typo & Elements --- */
+.browser-section-title { font-family: var(--font-heading); font-size: clamp(1.5rem, 5vw, 2.2rem); color: var(--accent-color); margin-bottom: clamp(25px, 6vw, 40px); font-style: italic; border-left: 4px solid var(--accent-color); padding-left: clamp(15px, 4vw, 22px); text-align: left; }
+.browser-item { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); margin-bottom: 16px; padding: clamp(18px, 5vw, 25px) clamp(20px, 6vw, 28px); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); display: flex; align-items: center; text-align: left; }
+.browser-item .idx { font-family: var(--font-heading); color: var(--accent-color); margin-right: clamp(15px, 4vw, 28px); font-size: clamp(1.1rem, 3.5vw, 1.3rem); opacity: 0.6; min-width: 30px; }
+.browser-item .label { font-family: 'Noto Serif KR', serif; font-size: clamp(1rem, 3.5vw, 1.15rem); letter-spacing: -0.02em; line-height: 1.4; word-break: keep-all; }
+
+.lords-prayer-content h3 { font-family: var(--font-heading); color: var(--accent-color); font-size: clamp(1.6rem, 6vw, 2rem); margin-top: 0; margin-bottom: 30px; }
+.lords-prayer-text { font-family: 'Noto Serif KR', serif; line-height: 2.2; font-size: 1.1rem; color: var(--text-primary); text-align: center; word-break: keep-all; transition: font-size 0.3s ease, line-height 0.3s ease; }
+
+.prayer-view-content { animation: fadeInUp 0.8s ease forwards; background: rgba(255, 255, 255, 0.02); padding: clamp(30px, 7vw, 65px) clamp(20px, 6vw, 65px); border-radius: 10px; position: relative; }
+.prayer-category-label { text-align: center; color: var(--accent-color); font-size: clamp(0.8rem, 3vw, 0.9rem); font-weight: 600; margin-bottom: 10px; opacity: 0.8; letter-spacing: 0.05em; }
+.prayer-view-content h3 { font-family: 'Noto Serif KR', serif; color: var(--accent-color); margin-top: 0; margin-bottom: clamp(30px, 6vw, 45px); font-size: clamp(1.4rem, 5vw, 2rem); text-align: center; }
+#prayer-text { font-family: 'Noto Serif KR', serif; color: var(--text-primary); word-break: keep-all; text-align: center; line-height: 2.2; transition: font-size 0.3s ease, line-height 0.3s ease; }
+
+/* --- Prayer Navigation --- */
+.prayer-nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+.nav-action-btn { display: flex; align-items: center; gap: 6px; background: transparent; border: none; color: var(--text-secondary); font-family: 'Noto Serif KR', serif; font-size: clamp(0.85rem, 3vw, 0.95rem); cursor: pointer; transition: all 0.3s ease; outline: none; padding: 10px; border-radius: 6px; }
+.nav-action-btn:not(:disabled):hover { color: var(--accent-color); background: rgba(212, 175, 55, 0.05); }
+.nav-action-btn:disabled { opacity: 0.2; cursor: default; }
+.nav-action-btn .material-symbols-outlined { font-size: 1.1rem; }
+.prayer-counter { font-family: var(--font-body); font-size: clamp(0.75rem, 2.5vw, 0.85rem); color: var(--text-secondary); opacity: 0.6; letter-spacing: 2px; }
+
+.info-section { margin-bottom: clamp(30px, 8vw, 50px); animation: fadeInUp 1s ease forwards; opacity: 0; text-align: left; }
+.info-header-title { font-family: var(--font-heading); font-size: clamp(1.8rem, 6vw, 2.2rem); color: var(--accent-color); margin-bottom: clamp(20px, 5vw, 30px); font-style: italic; letter-spacing: 0.1rem; }
+.info-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: clamp(20px, 6vw, 30px); margin-bottom: 20px; backdrop-filter: blur(10px); }
+.info-card h4 { font-family: 'Noto Serif KR', serif; color: var(--accent-color); margin-bottom: 15px; font-size: clamp(1rem, 3.5vw, 1.1rem); display: flex; align-items: center; gap: 8px; }
+.info-card p { font-family: 'Noto Serif KR', serif; line-height: 1.8; color: var(--text-secondary); font-size: clamp(0.9rem, 3vw, 0.95rem); word-break: keep-all; }
+
+.contact-links { display: flex; flex-wrap: wrap; gap: clamp(12px, 4vw, 20px); margin-top: 20px; }
+.contact-links a { color: var(--text-primary); text-decoration: none; font-size: clamp(0.85rem, 3vw, 0.9rem); display: flex; align-items: center; gap: 6px; transition: color 0.3s ease; cursor: pointer; }
+
+.notice-box { border-left: 2px solid var(--accent-color); padding-left: clamp(15px, 4vw, 20px); margin-top: clamp(25px, 6vw, 40px); opacity: 0.8; }
+.notice-box span { display: block; font-size: clamp(0.8rem, 2.8vw, 0.85rem); color: var(--text-secondary); margin-bottom: 5px; word-break: keep-all;}
+
+.info-watermark { display: flex; flex-direction: column; align-items: center; margin-top: 50px; margin-bottom: 20px; opacity: 0; pointer-events: none; user-select: none; transition: opacity 0.5s ease; }
+.info-watermark img { width: clamp(45px, 10vw, 60px); margin-bottom: 12px; filter: grayscale(100%) brightness(2); }
+.info-watermark .watermark-text { font-family: var(--font-logo); font-size: clamp(1.3rem, 4vw, 1.6rem); letter-spacing: 0.2em; color: #fff; }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes breatheGlow { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
+
+footer { 
+    position: fixed; width: 100%; text-align: center; color: var(--text-secondary); font-size: 0.65rem; opacity: 0.4; z-index: 100; pointer-events: none;
+    bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 15px);
+    transition: bottom 0.3s ease;
+}
+
+/* --- 크로스 플랫폼 반응형 & App-Like UX --- */
+
+@media (hover: hover) and (pointer: fine) {
+    .nav-links a:hover { color: var(--accent-color); }
+    .cta-button:hover { background: var(--accent-color); color: #000; box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); }
+    .play-btn:hover { border-color: var(--accent-color); background: rgba(212, 175, 55, 0.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.15); transform: scale(1.08); }
+    .font-btn:hover { color: var(--accent-color); border-color: rgba(212, 175, 55, 0.4); background: rgba(212, 175, 55, 0.05); }
+    .browser-item:hover { background: rgba(212, 175, 55, 0.08); border-color: var(--accent-color); }
+    .contact-links a:hover { color: var(--accent-color); }
+    .info-container:hover .info-watermark { opacity: 0.1; }
+    .back-nav:hover { opacity: 0.7; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .browser-item:active { background: rgba(212, 175, 55, 0.08); border-color: var(--accent-color); transform: scale(0.98); transition: all 0.1s; }
+    .cta-button:active { background: var(--accent-color); color: #000; transition: all 0.1s; }
+    .play-btn:active { transform: scale(0.95); transition: all 0.1s; }
+    .font-btn:active { color: var(--accent-color); background: rgba(212, 175, 55, 0.05); transition: all 0.1s; }
+    .back-nav:active { opacity: 0.5; transition: all 0.1s; }
+}
+
+@media (max-width: 768px) {
+    :root { 
+        --nav-height: 65px; 
+        --bottom-nav-height: 70px; 
+    } 
+    nav { padding: 0 20px; justify-content: center; }
+    header { background: linear-gradient(to bottom, rgba(10,10,10,0.9), transparent); }
+    
+    .nav-links { 
+        position: fixed; bottom: 0; left: 0; width: 100%; height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+        background: rgba(15, 15, 15, 0.75); border-top: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        flex-direction: row; justify-content: space-around; gap: 0;
+        padding-bottom: env(safe-area-inset-bottom); z-index: 2000;
+    }
+    .nav-links li { flex: 1; height: 100%; display: flex; }
+    .nav-links a { 
+        flex-direction: column; justify-content: center; width: 100%; height: 100%; padding: 0; gap: 4px;
+        color: rgba(255, 255, 255, 0.4); font-size: 0.7rem; font-family: var(--font-body); letter-spacing: -0.5px;
+    }
+    .nav-links a.active { color: var(--accent-color); background: rgba(212, 175, 55, 0.05); }
+    .nav-icon { display: block; font-size: 22px; font-variation-settings: 'Wght' 300; transition: all 0.3s ease; }
+    .nav-links a.active .nav-icon { font-variation-settings: 'Wght' 500, 'FILL' 1; transform: translateY(-2px); }
+
+    .page { padding-left: 15px; padding-right: 15px; }
+    .info-card { margin-bottom: 15px; }
+    
+    .search-input { padding: 12px 15px 12px 42px; font-size: 0.95rem; }
+    .search-icon { left: 14px; font-size: 1.2rem; }
+    
+    .lords-prayer-content { border-radius: 8px; border: none; background: transparent; padding: 20px 0; }
+    .prayer-view-content { border-radius: 8px; background: transparent; padding: 20px 0; }
+    .browser-section-title { padding-left: 15px; border-left-width: 3px; }
+}
+
+@media (max-width: 360px) {
+    .nav-links a { font-size: 0.65rem; }
+    .nav-icon { font-size: 20px; }
+}
