@@ -483,35 +483,34 @@ let ytAnimFrameId = null;
 function onYouTubeIframeAPIReady() {
     const ytContainer = document.getElementById('yt-player-container');
     
-    // [핵심 1] 브라우저 엔진을 속이는 최적의 위장술
-    // opacity 0이나 1x1 픽셀은 인앱 브라우저에서 '광고 차단' 로직에 걸립니다.
-    // 300x300의 정상적인 크기를 주되, 투명도를 0.001로 설정하여 화면에서 안 보이게 처리합니다.
+    // ❌ 기존: opacity 0.001 (인스타에서 차단됨)
+    // ✅ 수정: 화면 밖으로 보내되 "정상 요소"로 유지
     if (ytContainer) {
         ytContainer.style.position = 'fixed';
-        ytContainer.style.top = '0px';
-        ytContainer.style.left = '0px';
-        ytContainer.style.width = '300px';
-        ytContainer.style.height = '300px';
-        ytContainer.style.opacity = '0.001'; 
+        ytContainer.style.top = '-1000px';
+        ytContainer.style.left = '-1000px';
+        ytContainer.style.width = '1px';
+        ytContainer.style.height = '1px';
+        ytContainer.style.opacity = '1'; // 중요
         ytContainer.style.pointerEvents = 'none';
-        ytContainer.style.zIndex = '-9999';
+        ytContainer.style.zIndex = '-1';
     }
 
     ytPlayer = new YT.Player('yt-player-container', {
-        height: '300',
-        width: '300',
+        height: '1',
+        width: '1',
         videoId: ytPlaylistData[currentYtIdx].id,
         playerVars: { 
-            'autoplay': 0, 
-            'controls': 0, 
-            'playsinline': 1, 
-            'rel': 0,
-            'origin': window.location.origin 
+            autoplay: 0,
+            controls: 0,
+            playsinline: 1,
+            rel: 0,
+            modestbranding: 1
         },
         events: {
-            'onReady': onYtPlayerReady,
-            'onStateChange': onYtPlayerStateChange,
-            'onError': onYtPlayerError
+            onReady: onYtPlayerReady,
+            onStateChange: onYtPlayerStateChange,
+            onError: onYtPlayerError
         }
     });
 }
@@ -563,46 +562,66 @@ function toggleGlobalPlayer() {
 
 function toggleYtPlayPause() {
     if (!isYtPlayerReady) return;
+
     const state = ytPlayer.getPlayerState();
-    const playpauseIcon = document.getElementById('gmp-playpause-icon');
-    
-    if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
-        // 즉각적인 UI 반영
-        playpauseIcon.textContent = 'play_circle';
+    const icon = document.getElementById('gmp-playpause-icon');
+
+    if (state === YT.PlayerState.PLAYING) {
+        icon.textContent = 'play_circle';
         ytPlayer.pauseVideo();
-    } else {
-        // 즉각적인 UI 반영 및 로컬 오디오 완전 차단
-        playpauseIcon.textContent = 'pause_circle';
-        forceReleaseLocalAudio();
-        
-        // [핵심 2] 인앱 브라우저 강제 음소거 돌파
-        ytPlayer.unMute();
-        ytPlayer.setVolume(100);
+        return;
+    }
+
+    // 🔥 인스타 핵심 해결 로직
+    icon.textContent = 'pause_circle';
+
+    forceReleaseLocalAudio();
+
+    try {
+        // 1. 먼저 음소거 상태로 시작 (필수)
+        ytPlayer.mute();
+
+        // 2. 재생 (사용자 클릭 이벤트 안에서 실행됨)
         ytPlayer.playVideo();
+
+        // 3. 약간 딜레이 후 음소거 해제
+        setTimeout(() => {
+            ytPlayer.unMute();
+            ytPlayer.setVolume(100);
+        }, 300);
+
+    } catch (e) {
+        console.log("YT play failed:", e);
     }
 }
 
 function loadAndPlayYt(index) {
     if (!isYtPlayerReady) return;
     if (index < 0 || index >= ytPlaylistData.length) return;
-    
-    if (ytIsShuffle && index !== currentYtIdx) {
-        ytPlayHistory.push(currentYtIdx);
-        // 메모리 우상향 방지: 히스토리 제한
-        if (ytPlayHistory.length > 50) ytPlayHistory.shift(); 
-    }
 
     forceReleaseLocalAudio();
 
     currentYtIdx = index;
-    const playpauseIcon = document.getElementById('gmp-playpause-icon');
-    playpauseIcon.textContent = 'pause_circle'; // UI 즉시 업데이트
 
-    ytPlayer.unMute();
-    ytPlayer.setVolume(100);
-    ytPlayer.loadVideoById(ytPlaylistData[currentYtIdx].id);
-    ytPlayer.playVideo(); 
-    
+    const icon = document.getElementById('gmp-playpause-icon');
+    icon.textContent = 'pause_circle';
+
+    try {
+        ytPlayer.loadVideoById(ytPlaylistData[currentYtIdx].id);
+
+        // 🔥 동일 패턴 적용
+        ytPlayer.mute();
+        ytPlayer.playVideo();
+
+        setTimeout(() => {
+            ytPlayer.unMute();
+            ytPlayer.setVolume(100);
+        }, 300);
+
+    } catch (e) {
+        console.log("YT load failed:", e);
+    }
+
     updateYtUIInfo();
     renderYtPlaylistUI();
 }
