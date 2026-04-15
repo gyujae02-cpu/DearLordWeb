@@ -270,6 +270,18 @@
         </div>
     </div>
 
+    <div id="inapp-warning-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="material-symbols-outlined modal-icon">open_in_browser</span>
+            <h3>기본 브라우저 사용 권장</h3>
+            <p>카카오톡, 인스타그램 등의 앱 내 브라우저에서는<br>유튜브 음악 재생이 원활하지 않을 수 있습니다.<br>안정적인 감상을 위해 <b>삼성, 사파리, 크롬, 파이어폭스 브라우저 등</b><br>기본 브라우저를 이용해 주세요.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn btn-close" onclick="closeInAppWarning()">그냥 재생하기</button>
+                <button class="modal-btn btn-copy" onclick="copyUrlForExternal()">주소 복사하기</button>
+            </div>
+        </div>
+    </div>
+
     <audio id="main-audio" preload="auto">
         <source src="복음밖에 없습니다 - 손경민.mp3" type="audio/mpeg">
     </audio>
