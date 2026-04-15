@@ -3,6 +3,16 @@ let localFadeInterval = null;
 const fadeStepTime = 50; 
 const fadeTotalSteps = 20; // 50ms * 20 = 1000ms (1초 페이드)
 
+// [핵심] 인앱 브라우저 오디오 세션 충돌 방지를 위한 강제 반납 함수
+function forceReleaseLocalAudio() {
+    if (!audio.paused) {
+        clearInterval(localFadeInterval);
+        audio.volume = 0;
+        audio.pause();
+        audio.currentTime = 0; // 오디오 세션 제어권을 시스템에 완전히 반납
+    }
+}
+
 function doLocalPlay() {
     clearInterval(localFadeInterval);
     if (audio.paused) {
@@ -334,21 +344,28 @@ function updateLyrics() {
 }
 
 function toggleAudio() {
-    if (audio.paused) doLocalPlay();
-    else doLocalPause();
+    // 로컬 오디오 버튼 터치 시 즉각적인 UI 반영
+    if (audio.paused) {
+        playSvg.style.display = 'none';
+        pauseSvg.style.display = 'block';
+        doLocalPlay();
+        // 유튜브 실행 중이면 강제 종료하여 오디오 세션 확보
+        if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
+            if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+                ytPlayer.pauseVideo();
+            }
+        }
+    } else {
+        playSvg.style.display = 'block';
+        pauseSvg.style.display = 'none';
+        doLocalPause();
+    }
 }
 
 audio.addEventListener('play', () => {
     playSvg.style.display = 'none';
     pauseSvg.style.display = 'block';
     if (!animationFrameId) updateLyrics();
-
-    // 상호 배제: 유튜브 재생 중일 경우 즉시 일시정지 (iOS 충돌 방지)
-    if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
-        if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-            ytPlayer.pauseVideo();
-        }
-    }
 });
 
 audio.addEventListener('pause', () => {
@@ -377,11 +394,10 @@ function startExperience() {
     }
 
     setTimeout(() => {
-        splash.remove(); // DOM 요소 제거로 메모리 해제 보장
+        splash.remove(); // 메모리 해제
         if(webDesc) webDesc.classList.add('show');
     }, 1500);
     
-    // 자연스러운 로컬 플레이어 페이드인 시작
     doLocalPlay();
 }
 
@@ -444,7 +460,7 @@ const ytPlaylistData = [
     { id: '8PEKtpFsWiI', title: '주가 일하시네', artist: '예람워십 (Yeram Worship)' },
 
     { id: 'c216NU8183o', title: '영접송 (내 맘을 엽니다)', artist: '팀룩워십 (Team Luke Worship)' },
-    { id: 'pqDTRgaY8q0', title: '고요한 밤 하늘 별들 반짝일 때', 가사: '팀룩워십 (Team Luke Worship)' },
+    { id: 'pqDTRgaY8q0', title: '고요한 밤 하늘 별들 반짝일 때', artist: '팀룩워십 (Team Luke Worship)' },
 
     { id: '3ZFnSEH6Hfk', title: '나의 안에 거하라', artist: '달빛마을 (Moonlight Village)' },
 
@@ -466,27 +482,31 @@ let ytAnimFrameId = null;
 
 function onYouTubeIframeAPIReady() {
     const ytContainer = document.getElementById('yt-player-container');
-    // 인앱 브라우저(특히 인스타/iOS WKWebView)는 비디오 크기가 0이거나 안보이면 음원을 차단합니다.
-    // CSS 간섭을 피하기 위해 인라인 스타일로 안전한 1x1 투명 크기로 강제 지정합니다.
+    
+    // [핵심 1] 브라우저 엔진을 속이는 최적의 위장술
+    // opacity 0이나 1x1 픽셀은 인앱 브라우저에서 '광고 차단' 로직에 걸립니다.
+    // 300x300의 정상적인 크기를 주되, 투명도를 0.001로 설정하여 화면에서 안 보이게 처리합니다.
     if (ytContainer) {
-        ytContainer.style.position = 'absolute';
-        ytContainer.style.width = '1px';
-        ytContainer.style.height = '1px';
-        ytContainer.style.opacity = '0.01';
+        ytContainer.style.position = 'fixed';
+        ytContainer.style.top = '0px';
+        ytContainer.style.left = '0px';
+        ytContainer.style.width = '300px';
+        ytContainer.style.height = '300px';
+        ytContainer.style.opacity = '0.001'; 
         ytContainer.style.pointerEvents = 'none';
-        ytContainer.style.zIndex = '-1';
+        ytContainer.style.zIndex = '-9999';
     }
 
     ytPlayer = new YT.Player('yt-player-container', {
-        height: '1', // 0은 인앱브라우저 미디어 차단을 유발하므로 1로 변경
-        width: '1',  // 동일
+        height: '300',
+        width: '300',
         videoId: ytPlaylistData[currentYtIdx].id,
         playerVars: { 
             'autoplay': 0, 
             'controls': 0, 
             'playsinline': 1, 
             'rel': 0,
-            'origin': window.location.origin // 모바일 통신 무결성을 위해 오리진 추가
+            'origin': window.location.origin 
         },
         events: {
             'onReady': onYtPlayerReady,
@@ -505,11 +525,11 @@ function onYtPlayerReady(event) {
 function onYtPlayerStateChange(event) {
     const playpauseIcon = document.getElementById('gmp-playpause-icon');
     
+    // 상태값(3: 버퍼링)일 때는 아이콘을 덮어쓰지 않아 깜빡임을 막습니다.
     if (event.data === YT.PlayerState.PLAYING) {
         playpauseIcon.textContent = 'pause_circle';
         startYtProgressLoop();
-        // 메모리: 상호 배제 로직은 오디오 세션 충돌 방지를 위해 클릭 핸들러 쪽으로 이동
-    } else {
+    } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
         playpauseIcon.textContent = 'play_circle';
         stopYtProgressLoop();
     }
@@ -544,16 +564,20 @@ function toggleGlobalPlayer() {
 function toggleYtPlayPause() {
     if (!isYtPlayerReady) return;
     const state = ytPlayer.getPlayerState();
+    const playpauseIcon = document.getElementById('gmp-playpause-icon');
     
     if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
+        // 즉각적인 UI 반영
+        playpauseIcon.textContent = 'play_circle';
         ytPlayer.pauseVideo();
     } else {
-        // [중요] 인앱 브라우저의 오디오 세션 독점을 방지하기 위해 로컬 오디오를 즉시 정지 (페이드아웃 생략)
-        if (!audio.paused) {
-            clearInterval(localFadeInterval);
-            audio.volume = 0;
-            audio.pause();
-        }
+        // 즉각적인 UI 반영 및 로컬 오디오 완전 차단
+        playpauseIcon.textContent = 'pause_circle';
+        forceReleaseLocalAudio();
+        
+        // [핵심 2] 인앱 브라우저 강제 음소거 돌파
+        ytPlayer.unMute();
+        ytPlayer.setVolume(100);
         ytPlayer.playVideo();
     }
 }
@@ -564,20 +588,20 @@ function loadAndPlayYt(index) {
     
     if (ytIsShuffle && index !== currentYtIdx) {
         ytPlayHistory.push(currentYtIdx);
-        // [메모리 우상향 방지] 셔플 히스토리 배열이 끝없이 커지는 것을 막음 (최대 50곡 유지)
+        // 메모리 우상향 방지: 히스토리 제한
         if (ytPlayHistory.length > 50) ytPlayHistory.shift(); 
     }
 
-    // 로컬 오디오 즉시 정지
-    if (!audio.paused) {
-        clearInterval(localFadeInterval);
-        audio.volume = 0;
-        audio.pause();
-    }
+    forceReleaseLocalAudio();
 
     currentYtIdx = index;
+    const playpauseIcon = document.getElementById('gmp-playpause-icon');
+    playpauseIcon.textContent = 'pause_circle'; // UI 즉시 업데이트
+
+    ytPlayer.unMute();
+    ytPlayer.setVolume(100);
     ytPlayer.loadVideoById(ytPlaylistData[currentYtIdx].id);
-    ytPlayer.playVideo(); // 인앱 호환성을 위해 API 로드 후 플레이 명시적 호출
+    ytPlayer.playVideo(); 
     
     updateYtUIInfo();
     renderYtPlaylistUI();
@@ -596,7 +620,7 @@ function playNextYt(isAutoPlay = false) {
 
     if (ytIsShuffle) {
         ytPlayHistory.push(currentYtIdx);
-        if (ytPlayHistory.length > 50) ytPlayHistory.shift(); // 메모리 우상향 제한
+        if (ytPlayHistory.length > 50) ytPlayHistory.shift();
 
         if (ytPlaylistData.length > 1) {
             do {
