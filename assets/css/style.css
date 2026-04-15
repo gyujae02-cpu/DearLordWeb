@@ -1,3 +1,15 @@
+#yt-player-container, 
+#yt-player-container iframe {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0.01 !important;
+    pointer-events: none !important;
+    z-index: -999 !important;
+    border: none !important;
+    overflow: hidden !important;
+}
+
 :root {
     --bg-color: #0a0a0a;
     --surface-color: #161616;
