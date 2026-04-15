@@ -17,19 +17,27 @@
 <body>
 
     <div id="splash-screen">
-        <div class="splash-logo-wrap">
-            <img src="img/DearLoadIcon_White.png" alt="Icon" class="splash-icon" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2Q0YWYzNyI+PHBhdGggZD0iTTEyIDJMMTIgMjJNMCAxMkwyNCAxMiIgc3Ryb2tlPSIjZDRhZjM3IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4='">
-            <div class="splash-text">Dear Lord</div>
+        <div class="splash-bg-glow"></div>
+        <div class="splash-content">
+            <div class="splash-logo-wrap">
+                <img src="img/DearLoadIcon_White.png" alt="Icon" class="splash-icon" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2Q0YWYzNyI+PHBhdGggZD0iTTEyIDJMMTIgMjJNMCAxMkwyNCAxMiIgc3Ryb2tlPSIjZDRhZjM3IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4='">
+                <div class="splash-text">Dear Lord</div>
+            </div>
+            <div class="splash-subtext">TAP TO BEGIN</div>
         </div>
-        <div class="splash-subtext">CLICK TO ENTER</div>
     </div>
 
     <header>
         <nav>
-            <a onclick="showPage('home')" class="logo">
-                <img src="img/DearLoadIcon_White.png" alt="Icon" class="logo-icon" onerror="this.style.display='none'">
-                <span class="logo-text">Dear Lord</span>
-            </a>
+            <div class="logo-group" style="display: flex; align-items: center; gap: 20px;">
+                <a onclick="showPage('home')" class="logo">
+                    <img src="img/DearLoadIcon_White.png" alt="Icon" class="logo-icon" onerror="this.style.display='none'">
+                    <span class="logo-text">Dear Lord</span>
+                </a>
+                <button id="header-music-btn" onclick="toggleGlobalPlayer()" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; outline:none; transition: color 0.3s; padding:5px;">
+                    <span class="material-symbols-outlined" id="header-music-icon" style="font-size: 26px; font-variation-settings: 'Wght' 300;">headset</span>
+                </button>
+            </div>
             <ul class="nav-links">
                 <li><a onclick="showPage('home')" id="nav-home" class="active"><span class="material-symbols-outlined nav-icon">home</span><span class="nav-text">소개</span></a></li>
                 <li><a onclick="showPage('lords-prayer')" id="nav-lords-prayer"><span class="material-symbols-outlined nav-icon">menu_book</span><span class="nav-text">주기도문</span></a></li>
@@ -195,6 +203,57 @@
         </div>
     </main>
 
+    <div id="global-music-player">
+        <div id="yt-player-container" style="display:none;"></div>
+        
+        <div id="gmp-playlist-popup" class="scroll-area">
+            <div class="gmp-playlist-header">
+                <span>플레이리스트</span>
+                <span class="material-symbols-outlined" onclick="togglePlaylist()" style="cursor:pointer; font-size: 18px;">close</span>
+            </div>
+            <ul id="gmp-playlist-ul" style="list-style: none;"></ul>
+        </div>
+
+        <div class="gmp-progress-container" id="gmp-progress-container" onclick="seekYtProgress(event)">
+            <div class="gmp-progress-bar" id="gmp-progress-bar"></div>
+        </div>
+        <div class="gmp-controls-wrapper">
+            <div class="gmp-info">
+                <div class="gmp-thumbnail-wrapper">
+                    <img id="gmp-thumbnail" src="" alt="Thumbnail">
+                </div>
+                <div class="gmp-track-info">
+                    <div id="gmp-title">-</div>
+                    <div id="gmp-artist">-</div>
+                </div>
+            </div>
+            
+            <div class="gmp-controls">
+                <button class="gmp-btn" id="gmp-shuffle" onclick="toggleYtShuffle()" title="랜덤 재생">
+                    <span class="material-symbols-outlined">shuffle</span>
+                </button>
+                <button class="gmp-btn" id="gmp-prev" onclick="playPrevYt()" title="이전곡">
+                    <span class="material-symbols-outlined">skip_previous</span>
+                </button>
+                <button class="gmp-btn gmp-play-btn" id="gmp-playpause" onclick="toggleYtPlayPause()" title="재생/일시정지">
+                    <span class="material-symbols-outlined" id="gmp-playpause-icon">play_circle</span>
+                </button>
+                <button class="gmp-btn" id="gmp-next" onclick="playNextYt()" title="다음곡">
+                    <span class="material-symbols-outlined">skip_next</span>
+                </button>
+                <button class="gmp-btn" id="gmp-repeat" onclick="toggleYtRepeat()" title="반복 재생">
+                    <span class="material-symbols-outlined" id="gmp-repeat-icon">repeat</span>
+                </button>
+            </div>
+            
+            <div class="gmp-extra">
+                <button class="gmp-btn" id="gmp-playlist-btn" onclick="togglePlaylist()" title="플레이리스트">
+                    <span class="material-symbols-outlined">queue_music</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <audio id="main-audio" preload="auto">
         <source src="복음밖에 없습니다 - 손경민.mp3" type="audio/mpeg">
     </audio>
@@ -202,37 +261,8 @@
     <footer><p>Jesus Loves You</p></footer>
 
     <script src="assets/js/prayers.js"></script>
-    <script src="assets/js/script.js"></script>
-
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
-    <script>
-        DisableDevtool({
-            disableMenu: true,
-            interval: 1000,
-        });
-
-        window.addEventListener('keydown', function(e) {
-            // Windows(Ctrl+U) 또는 Mac(Cmd+Option+U) 소스보기 강제 차단
-            if ((e.ctrlKey && (e.key === 'u' || e.key === 'U')) || 
-                (e.metaKey && e.altKey && (e.key === 'u' || e.key === 'U'))) {
-                e.preventDefault();
-                return false;
-            }
-
-            // 페이지 저장(Ctrl+S) 강제 차단 (옵션)
-            if ((e.ctrlKey && (e.key === 's' || e.key === 'S')) || 
-                (e.metaKey && (e.key === 's' || e.key === 'S'))) {
-                e.preventDefault();
-                return false;
-            }
-            
-            // 페이지 인쇄(Ctrl+P) 강제 차단 (옵션)
-            if ((e.ctrlKey && (e.key === 'p' || e.key === 'P')) || 
-                (e.metaKey && (e.key === 'p' || e.key === 'P'))) {
-                e.preventDefault();
-                return false;
-            }
-        });
-    </script>
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
