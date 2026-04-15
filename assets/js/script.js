@@ -1,1 +1,744 @@
-const _0xe9df91=_0x5bf3;(function(_0x2152af,_0x174f44){const _0x40c36c={_0x19bb0f:0x100,_0x25e939:0xad,_0x492644:0x8d,_0xf6291:0x128,_0x5e91b9:0x104,_0x395dc4:0x120,_0x27a266:0xb5},_0x4cae12=_0x5bf3,_0x1d4883=_0x2152af();while(!![]){try{const _0x190e23=-parseInt(_0x4cae12(0x145))/0x1*(-parseInt(_0x4cae12(_0x40c36c._0x19bb0f))/0x2)+parseInt(_0x4cae12(_0x40c36c._0x25e939))/0x3+parseInt(_0x4cae12(0xe1))/0x4+parseInt(_0x4cae12(_0x40c36c._0x492644))/0x5+parseInt(_0x4cae12(_0x40c36c._0xf6291))/0x6*(parseInt(_0x4cae12(_0x40c36c._0x5e91b9))/0x7)+parseInt(_0x4cae12(_0x40c36c._0x395dc4))/0x8*(parseInt(_0x4cae12(0xbf))/0x9)+parseInt(_0x4cae12(_0x40c36c._0x27a266))/0xa*(-parseInt(_0x4cae12(0xa2))/0xb);if(_0x190e23===_0x174f44)break;else _0x1d4883['push'](_0x1d4883['shift']());}catch(_0x18b5a3){_0x1d4883['push'](_0x1d4883['shift']());}}}(_0x2aa5,0x33894));let localFadeInterval=null;const fadeStepTime=0x32,fadeTotalSteps=0x14;function doLocalPlay(){const _0x3c87c9={_0x4427c3:0xc7,_0x3ce54c:0x12e},_0x8366b4=_0x5bf3;clearInterval(localFadeInterval);audio[_0x8366b4(_0x3c87c9._0x4427c3)]&&(audio[_0x8366b4(_0x3c87c9._0x3ce54c)]=0x0,audio['play']()[_0x8366b4(0xc3)](_0xaa235c=>console[_0x8366b4(0x98)](_0x8366b4(0x125),_0xaa235c)));let _0x11963e=Math[_0x8366b4(0xa5)](audio[_0x8366b4(_0x3c87c9._0x3ce54c)]*fadeTotalSteps);localFadeInterval=setInterval(()=>{const _0xdf8c35=_0x8366b4;_0x11963e++,_0x11963e>=fadeTotalSteps?(audio[_0xdf8c35(0x12e)]=0x1,clearInterval(localFadeInterval)):audio[_0xdf8c35(0x12e)]=_0x11963e/fadeTotalSteps;},fadeStepTime);}function doLocalPause(){const _0x5a71e5={_0x515e94:0xa5},_0x362b5f={_0x46d19e:0x12e,_0x44c309:0x93},_0x5d7cc9=_0x5bf3;clearInterval(localFadeInterval);let _0x3dff5e=Math[_0x5d7cc9(_0x5a71e5._0x515e94)](audio[_0x5d7cc9(0x12e)]*fadeTotalSteps);localFadeInterval=setInterval(()=>{const _0x3c0ffd=_0x5d7cc9;_0x3dff5e--,_0x3dff5e<=0x0?(audio[_0x3c0ffd(_0x362b5f._0x46d19e)]=0x0,audio[_0x3c0ffd(_0x362b5f._0x44c309)](),clearInterval(localFadeInterval)):audio[_0x3c0ffd(0x12e)]=_0x3dff5e/fadeTotalSteps;},fadeStepTime);}const audio=document['getElementById'](_0xe9df91(0x132)),cText=document['getElementById']('cinematic-text'),webDesc=document['getElementById'](_0xe9df91(0x114)),divineImage=document[_0xe9df91(0x13a)](_0xe9df91(0xb8)),browser=document['getElementById'](_0xe9df91(0x89)),searchContainer=document[_0xe9df91(0xdf)]('search-container'),searchInput=document[_0xe9df91(0xdf)](_0xe9df91(0xd5)),backContainer=document['getElementById'](_0xe9df91(0xd8)),backBtn=document[_0xe9df91(0xdf)](_0xe9df91(0x113)),playSvg=document[_0xe9df91(0xdf)](_0xe9df91(0x131)),pauseSvg=document[_0xe9df91(0xdf)](_0xe9df91(0xf2)),scripts=[{'start':0x0,'text':'예수님은\x20누구신가'},{'start':0x6,'text':'약한\x20자의\x20강함과'},{'start':0xd,'text':_0xe9df91(0x12f)},{'start':0x14,'text':_0xe9df91(0xbe)},{'start':0x1c,'text':_0xe9df91(0xc5)},{'start':0x23,'text':_0xe9df91(0xb9)}];let animationFrameId=null,currentIdx=-0x1,currentFontSize=1.1,currentCategory=null,isSearching=![],currentPrayerList=[],currentDetailIndex=-0x1;searchInput&&searchInput[_0xe9df91(0x106)](_0xe9df91(0xbb),_0x22c84b=>{const _0x524250={_0x51824d:0xc1,_0x355875:0x147},_0x4712e4=_0xe9df91,_0x3b15fd=_0x22c84b['target'][_0x4712e4(_0x524250._0x51824d)][_0x4712e4(_0x524250._0x355875)]()['trim']();if(!_0x3b15fd){isSearching=![],renderCategoryIndex(![]);return;}isSearching=!![];const _0x5ab44b=[];typeof prayerData!==_0x4712e4(0x11e)&&prayerData['forEach'](_0x7165f=>{const _0x314d09={_0x3c39f1:0x134,_0x2d6e14:0x147},_0x52b252=_0x4712e4;_0x7165f[_0x52b252(0x10d)]['forEach'](_0x4091de=>{const _0x1a7d4c=_0x52b252;(_0x4091de['title']['toLowerCase']()[_0x1a7d4c(_0x314d09._0x3c39f1)](_0x3b15fd)||_0x4091de[_0x1a7d4c(0xda)][_0x1a7d4c(_0x314d09._0x2d6e14)]()[_0x1a7d4c(0x134)](_0x3b15fd))&&_0x5ab44b[_0x1a7d4c(0x8c)]({'item':_0x4091de,'category':_0x7165f});});}),renderSearchResults(_0x5ab44b,_0x3b15fd);});function showPage(_0x4aa12a){const _0x5d4006={_0x189954:0xb0,_0x2442b5:0xdf,_0x54cb75:0x127,_0xf59fa9:0xaf,_0x3c5a3a:0xec,_0x57841b:0xf0,_0x5910d8:0x127,_0x4384d5:0x105},_0x1ef304=_0xe9df91;document[_0x1ef304(0x9c)]('.page')['forEach'](_0x4c7034=>{const _0x5c2617=_0x1ef304;_0x4c7034[_0x5c2617(0xa9)][_0x5c2617(0x92)]('active'),_0x4c7034[_0x5c2617(0x127)][_0x5c2617(0xaf)]=_0x5c2617(0xf0);}),document['querySelectorAll'](_0x1ef304(_0x5d4006._0x189954))[_0x1ef304(0x12d)](_0xd51442=>_0xd51442[_0x1ef304(0xa9)][_0x1ef304(0x92)](_0x1ef304(0x97)));const _0x4c8498=document[_0x1ef304(0xdf)]('page-'+_0x4aa12a),_0x248f7d=document[_0x1ef304(_0x5d4006._0x2442b5)]('nav-'+_0x4aa12a);_0x4c8498&&(_0x4c8498[_0x1ef304(_0x5d4006._0x54cb75)][_0x1ef304(_0x5d4006._0xf59fa9)]=_0x1ef304(_0x5d4006._0x3c5a3a),requestAnimationFrame(()=>_0x4c8498['classList'][_0x1ef304(0xbd)](_0x1ef304(0x97))));if(_0x248f7d)_0x248f7d[_0x1ef304(0xa9)][_0x1ef304(0xbd)](_0x1ef304(0x97));_0x4aa12a==='prayer'?(searchInput[_0x1ef304(0xc1)]='',isSearching=![],currentDetailIndex=-0x1,renderCategoryIndex()):(searchContainer[_0x1ef304(0x127)]['display']=_0x1ef304(_0x5d4006._0x57841b),backContainer[_0x1ef304(_0x5d4006._0x5910d8)][_0x1ef304(_0x5d4006._0xf59fa9)]='none');if(_0x4aa12a===_0x1ef304(_0x5d4006._0x4384d5))currentIdx=-0x1;applyFontSize();}function renderCategoryIndex(_0x2878dd=!![]){const _0x4694bf={_0x15cd36:0xaf,_0x24661d:0xcd,_0x2ea50c:0xf0,_0x5ae8c6:0xc1,_0x5385d8:0x143,_0x3654d3:0xca},_0x535179={_0x3cb56b:0x9e,_0x4d3d25:0xd9,_0x40a188:0x110,_0x4db95f:0xba,_0x871947:0x108},_0x5c0ed0=_0xe9df91;if(typeof prayerData==='undefined')return;searchContainer['style'][_0x5c0ed0(_0x4694bf._0x15cd36)]=_0x5c0ed0(_0x4694bf._0x24661d),backContainer[_0x5c0ed0(0x127)][_0x5c0ed0(_0x4694bf._0x15cd36)]=_0x5c0ed0(_0x4694bf._0x2ea50c),currentDetailIndex=-0x1;if(_0x2878dd)searchInput[_0x5c0ed0(_0x4694bf._0x5ae8c6)]='';browser[_0x5c0ed0(_0x4694bf._0x5385d8)]=_0x5c0ed0(_0x4694bf._0x3654d3),prayerData[_0x5c0ed0(0x12d)]((_0x322b6d,_0x4b7255)=>{const _0x149f84=_0x5c0ed0,_0x11c620=document[_0x149f84(0x9b)](_0x149f84(0x139));_0x11c620['className']='browser-item',_0x11c620[_0x149f84(0x127)][_0x149f84(_0x535179._0x3cb56b)]=_0x149f84(_0x535179._0x4d3d25)+_0x4b7255*0.1+'s',_0x11c620['innerHTML']=_0x149f84(_0x535179._0x40a188)+_0x322b6d['id']+'</span><span\x20class=\x22label\x22>'+_0x322b6d[_0x149f84(_0x535179._0x4db95f)]+_0x149f84(_0x535179._0x871947),_0x11c620[_0x149f84(0xea)]=()=>renderPrayerList(_0x322b6d),browser[_0x149f84(0xeb)](_0x11c620);}),browser[_0x5c0ed0(0xef)]=0x0;}function renderPrayerList(_0x2b3f84){const _0x24fae4={_0x585b88:0x127,_0x1214e3:0xf0,_0x4eac16:0x127,_0x41e8b7:0xea,_0x2a612a:0x10d},_0x2b9b86={_0x4d713f:0x9b,_0x36ac26:0x139,_0x13508d:0x13f,_0x1ed09e:0xf7,_0x304b06:0x110},_0x537b92=_0xe9df91;currentCategory=_0x2b3f84,searchContainer[_0x537b92(_0x24fae4._0x585b88)]['display']=_0x537b92(_0x24fae4._0x1214e3),backContainer[_0x537b92(_0x24fae4._0x4eac16)][_0x537b92(0xaf)]=_0x537b92(0xcd),backBtn[_0x537b92(_0x24fae4._0x41e8b7)]=isSearching?restoreSearch:()=>renderCategoryIndex(![]),currentDetailIndex=-0x1,currentPrayerList=_0x2b3f84[_0x537b92(_0x24fae4._0x2a612a)]['map'](_0x29db87=>({'item':_0x29db87,'category':_0x2b3f84})),browser[_0x537b92(0x143)]='',currentPrayerList[_0x537b92(0x12d)]((_0x4c3c31,_0x441fcc)=>{const _0x23a2a4=_0x537b92,_0x14e026=document[_0x23a2a4(_0x2b9b86._0x4d713f)](_0x23a2a4(_0x2b9b86._0x36ac26));_0x14e026[_0x23a2a4(_0x2b9b86._0x13508d)]=_0x23a2a4(_0x2b9b86._0x1ed09e),_0x14e026['innerHTML']=_0x23a2a4(_0x2b9b86._0x304b06)+_0x4c3c31['item']['id']+_0x23a2a4(0xa3)+_0x4c3c31[_0x23a2a4(0x86)][_0x23a2a4(0xa4)]+'</span>',_0x14e026['onclick']=()=>renderPrayerDetail(_0x441fcc),browser[_0x23a2a4(0xeb)](_0x14e026);}),browser[_0x537b92(0xef)]=0x0;}function renderSearchResults(_0x471389,_0x1e20e4){const _0x25aa93={_0x576616:0xaf,_0x157584:0x127,_0x23b2b2:0xf0,_0x499fa6:0xc9,_0x348bcf:0x143,_0x3e8b8e:0x12d},_0x45a43a={_0x3cfeee:0x9e,_0x2a0eda:0xb2,_0x4aec17:0xfb,_0x7876fa:0xb1,_0xec392:0xea},_0x59393d=_0xe9df91;searchContainer[_0x59393d(0x127)][_0x59393d(_0x25aa93._0x576616)]=_0x59393d(0xcd),backContainer[_0x59393d(_0x25aa93._0x157584)][_0x59393d(_0x25aa93._0x576616)]=_0x59393d(_0x25aa93._0x23b2b2),currentDetailIndex=-0x1,currentPrayerList=_0x471389,browser['innerHTML']=_0x59393d(0xf5)+_0x471389[_0x59393d(_0x25aa93._0x499fa6)]+_0x59393d(0xb4);if(_0x471389['length']===0x0){browser[_0x59393d(_0x25aa93._0x348bcf)]+=_0x59393d(0x91)+_0x1e20e4+_0x59393d(0x14a);return;}_0x471389[_0x59393d(_0x25aa93._0x3e8b8e)]((_0x23cf60,_0x333695)=>{const _0x3bf62b=_0x59393d,_0x472793=document['createElement'](_0x3bf62b(0x139));_0x472793['className']=_0x3bf62b(0xf7),_0x472793[_0x3bf62b(0x127)][_0x3bf62b(_0x45a43a._0x3cfeee)]=_0x3bf62b(_0x45a43a._0x2a0eda)+_0x333695*0.05+'s',_0x472793[_0x3bf62b(0x143)]=_0x3bf62b(0xd7)+_0x23cf60[_0x3bf62b(0x86)]['id']+_0x3bf62b(_0x45a43a._0x4aec17)+_0x23cf60['item']['title']+_0x3bf62b(0xde)+_0x23cf60[_0x3bf62b(0xba)][_0x3bf62b(0xba)]+_0x3bf62b(_0x45a43a._0x7876fa),_0x472793[_0x3bf62b(_0x45a43a._0xec392)]=()=>renderPrayerDetail(_0x333695),browser['appendChild'](_0x472793);}),browser[_0x59393d(0xef)]=0x0;}function renderPrayerDetail(_0x4a694b){const _0x21cf88={_0x14a688:0x127,_0x24328d:0xaf,_0xaac6f0:0xaf,_0x3311cf:0xcd,_0x355d03:0xea,_0x17548b:0xc9,_0x29f7ce:0x143,_0x571d30:0x13e,_0x1372a5:0x143,_0x3941d6:0x107,_0x576ceb:0xa4,_0x14d404:0xf4,_0x3e3b94:0xe0,_0x5308d6:0x101},_0x7e2a87=_0xe9df91;currentDetailIndex=_0x4a694b;const _0x23e2a7=currentPrayerList[_0x4a694b],_0x14dbf5=_0x23e2a7[_0x7e2a87(0x86)],_0x353cc3=_0x23e2a7[_0x7e2a87(0xba)];searchContainer[_0x7e2a87(_0x21cf88._0x14a688)][_0x7e2a87(_0x21cf88._0x24328d)]=_0x7e2a87(0xf0),backContainer[_0x7e2a87(0x127)][_0x7e2a87(_0x21cf88._0xaac6f0)]=_0x7e2a87(_0x21cf88._0x3311cf),backBtn[_0x7e2a87(_0x21cf88._0x355d03)]=isSearching?restoreSearch:()=>renderPrayerList(currentCategory);const _0x2fd463=_0x4a694b===0x0?_0x7e2a87(0xd3):'',_0x35e198=_0x4a694b===currentPrayerList[_0x7e2a87(_0x21cf88._0x17548b)]-0x1?_0x7e2a87(0xd3):'';browser[_0x7e2a87(_0x21cf88._0x29f7ce)]='';const _0x242c2a=document[_0x7e2a87(0x9b)](_0x7e2a87(0x139));_0x242c2a[_0x7e2a87(0x13f)]=_0x7e2a87(_0x21cf88._0x571d30),_0x242c2a[_0x7e2a87(_0x21cf88._0x1372a5)]=_0x7e2a87(_0x21cf88._0x3941d6)+_0x353cc3[_0x7e2a87(0xba)]+'</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22font-controls-container\x22\x20style=\x22margin-top:-20px;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22font-btn\x22\x20onclick=\x22adjustFontSize(-0.1)\x22\x20title=\x22글자\x20축소\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22material-symbols-outlined\x22>remove</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22font-btn\x22\x20onclick=\x22adjustFontSize(0.1)\x22\x20title=\x22글자\x20확대\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22material-symbols-outlined\x22>add</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<h3>'+_0x14dbf5[_0x7e2a87(_0x21cf88._0x576ceb)]+_0x7e2a87(_0x21cf88._0x14d404)+_0x14dbf5[_0x7e2a87(0xda)][_0x7e2a87(0xe6)](/\n/g,_0x7e2a87(0x141))+_0x7e2a87(0xe4)+_0x2fd463+_0x7e2a87(_0x21cf88._0x3e3b94)+(_0x4a694b-0x1)+_0x7e2a87(0x111)+(_0x4a694b+0x1)+_0x7e2a87(_0x21cf88._0x5308d6)+currentPrayerList[_0x7e2a87(0xc9)]+_0x7e2a87(0xfd)+_0x35e198+_0x7e2a87(0xe0)+(_0x4a694b+0x1)+')\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20다음\x20<span\x20class=\x22material-symbols-outlined\x22>arrow_forward_ios</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20',browser['appendChild'](_0x242c2a),applyFontSize(),browser['scrollTop']=0x0;}let touchStartX=0x0,touchEndX=0x0;browser['addEventListener'](_0xe9df91(0xdb),_0x40bb87=>{const _0x4f17a8={_0x2722b0:0xbc,_0x5dbc6b:0x96},_0x27a1a6=_0xe9df91;touchStartX=_0x40bb87[_0x27a1a6(_0x4f17a8._0x2722b0)][0x0][_0x27a1a6(_0x4f17a8._0x5dbc6b)];},{'passive':!![]}),browser[_0xe9df91(0x106)](_0xe9df91(0x14b),_0xfdf6c4=>{const _0x57b9dc=_0xe9df91;touchEndX=_0xfdf6c4[_0x57b9dc(0xbc)][0x0]['screenX'],handleSwipe();},{'passive':!![]});function handleSwipe(){const _0x27ae1d={_0x48077d:0x13a,_0x54aa6b:0xf3},_0x4a5619=_0xe9df91;if(currentDetailIndex===-0x1||!document[_0x4a5619(_0x27ae1d._0x48077d)](_0x4a5619(_0x27ae1d._0x54aa6b)))return;const _0x59a635=0x3c;if(touchEndX<touchStartX-_0x59a635){if(currentDetailIndex<currentPrayerList['length']-0x1)renderPrayerDetail(currentDetailIndex+0x1);}if(touchEndX>touchStartX+_0x59a635){if(currentDetailIndex>0x0)renderPrayerDetail(currentDetailIndex-0x1);}}function restoreSearch(){const _0x3c93e4=_0xe9df91;searchContainer[_0x3c93e4(0x127)][_0x3c93e4(0xaf)]='block',currentDetailIndex=-0x1,searchInput['dispatchEvent'](new Event(_0x3c93e4(0xbb)));}function adjustFontSize(_0x40a9b0){const _0x5a302c=currentFontSize+_0x40a9b0;_0x5a302c>=0.8&&_0x5a302c<=2.5&&(currentFontSize=_0x5a302c,applyFontSize());}function applyFontSize(){const _0x331256={_0x4c6689:0x127,_0x3be192:0xdf,_0xafba8a:0xdc},_0x514d8b=_0xe9df91,_0x2e2820=document[_0x514d8b(0x13a)](_0x514d8b(0x8b));_0x2e2820&&(_0x2e2820[_0x514d8b(_0x331256._0x4c6689)]['fontSize']=currentFontSize+'rem',_0x2e2820[_0x514d8b(_0x331256._0x4c6689)][_0x514d8b(0x10f)]=currentFontSize*2.2+_0x514d8b(0xdc));const _0x46aa54=document[_0x514d8b(_0x331256._0x3be192)]('prayer-text');_0x46aa54&&(_0x46aa54['style']['fontSize']=currentFontSize+_0x514d8b(_0x331256._0xafba8a),_0x46aa54[_0x514d8b(0x127)][_0x514d8b(0x10f)]=currentFontSize*2.2+_0x514d8b(0xdc));}function updateImageColor(){const _0x38a752={_0x1de81f:0xf9,_0x5c5682:0xe3,_0xc7ac80:0x127,_0xed8982:0xed},_0x1a85a9=_0xe9df91;if(divineImage&&audio[_0x1a85a9(_0x38a752._0x1de81f)]){const _0x2dd46a=audio[_0x1a85a9(0xf8)]/audio[_0x1a85a9(_0x38a752._0x1de81f)],_0x5edf86=Math[_0x1a85a9(_0x38a752._0x5c5682)](0x0,0x64-_0x2dd46a*0x64);divineImage[_0x1a85a9(_0x38a752._0xc7ac80)][_0x1a85a9(_0x38a752._0xed8982)]=_0x1a85a9(0xe2)+_0x5edf86+'%)\x20brightness(1.2)\x20contrast(1.1)';}}function updateLyrics(){const _0x30b04a={_0x2e7a1e:0xc7,_0x4064e4:0xf8,_0x47f372:0xa9,_0xcb52bb:0x92,_0x58f963:0x92},_0x449854={_0x3e31e0:0xa9,_0x112503:0x97},_0x1c42d5=_0xe9df91;if(audio[_0x1c42d5(_0x30b04a._0x2e7a1e)]||audio['ended'])return;updateImageColor();const _0x43535c=audio[_0x1c42d5(_0x30b04a._0x4064e4)];let _0x21e493=-0x1;for(let _0x45703e=0x0;_0x45703e<scripts['length'];_0x45703e++){const _0x5133c6=scripts[_0x45703e+0x1]?scripts[_0x45703e+0x1][_0x1c42d5(0x109)]:Infinity;if(_0x43535c>=scripts[_0x45703e][_0x1c42d5(0x109)]&&_0x43535c<_0x5133c6-0.3){_0x21e493=_0x45703e;break;}}_0x21e493!==currentIdx&&(currentIdx=_0x21e493,currentIdx!==-0x1?(cText[_0x1c42d5(_0x30b04a._0x47f372)][_0x1c42d5(_0x30b04a._0xcb52bb)]('active'),setTimeout(()=>{const _0x27fdb7=_0x1c42d5;cText['innerText']=scripts[currentIdx]['text'],cText[_0x27fdb7(_0x449854._0x3e31e0)][_0x27fdb7(0xbd)](_0x27fdb7(_0x449854._0x112503));},0x190)):cText[_0x1c42d5(0xa9)][_0x1c42d5(_0x30b04a._0x58f963)]('active')),animationFrameId=requestAnimationFrame(updateLyrics);}function toggleAudio(){if(audio['paused'])doLocalPlay();else doLocalPause();}audio[_0xe9df91(0x106)](_0xe9df91(0xc4),()=>{const _0x3400da={_0x5a5b35:0x127,_0x1be003:0xf0,_0x2c8c04:0x127,_0x308639:0xaf,_0x90fa47:0x13b,_0x375b6c:0x87},_0xb5075=_0xe9df91;playSvg[_0xb5075(_0x3400da._0x5a5b35)][_0xb5075(0xaf)]=_0xb5075(_0x3400da._0x1be003),pauseSvg[_0xb5075(_0x3400da._0x2c8c04)][_0xb5075(_0x3400da._0x308639)]=_0xb5075(0xcd);if(!animationFrameId)updateLyrics();if(ytPlayer&&typeof ytPlayer[_0xb5075(_0x3400da._0x90fa47)]==='function'){if(ytPlayer[_0xb5075(_0x3400da._0x90fa47)]()===YT[_0xb5075(_0x3400da._0x375b6c)][_0xb5075(0xc2)])ytPlayer['pauseVideo']();}}),audio['addEventListener'](_0xe9df91(0x93),()=>{const _0x3cd7d1={_0x3f7f39:0xaf,_0x406a09:0x127,_0x23f1b3:0xaf},_0x2f8cb9=_0xe9df91;playSvg['style'][_0x2f8cb9(_0x3cd7d1._0x3f7f39)]=_0x2f8cb9(0xcd),pauseSvg[_0x2f8cb9(_0x3cd7d1._0x406a09)][_0x2f8cb9(_0x3cd7d1._0x23f1b3)]='none',animationFrameId&&(cancelAnimationFrame(animationFrameId),animationFrameId=null);});function startExperience(){const _0x1c3d29={_0x132f0c:0xdf,_0x28861c:0x127,_0x12cf26:0x121,_0x1e6bed:0x14e,_0x297c87:0x137,_0x44fcea:0xb7,_0x2d9874:0x122,_0x4fb242:0x14e},_0x40dc53={_0x45d497:0xbd},_0x4a0eef=_0xe9df91,_0x9f5b00=document[_0x4a0eef(_0x1c3d29._0x132f0c)]('splash-screen'),_0x34736f=document[_0x4a0eef(0x13a)](_0x4a0eef(0xb3));_0x9f5b00[_0x4a0eef(_0x1c3d29._0x28861c)][_0x4a0eef(_0x1c3d29._0x12cf26)]='none',_0x9f5b00[_0x4a0eef(0x127)]['transition']='opacity\x201.5s\x20ease-in-out',_0x9f5b00[_0x4a0eef(0x127)][_0x4a0eef(_0x1c3d29._0x1e6bed)]='0',_0x34736f&&(_0x34736f[_0x4a0eef(0x127)][_0x4a0eef(_0x1c3d29._0x297c87)]=_0x4a0eef(_0x1c3d29._0x44fcea),_0x34736f['style']['transform']=_0x4a0eef(_0x1c3d29._0x2d9874),_0x34736f['style'][_0x4a0eef(_0x1c3d29._0x4fb242)]='0'),setTimeout(()=>{const _0x547978=_0x4a0eef;_0x9f5b00['remove']();if(webDesc)webDesc['classList'][_0x547978(_0x40dc53._0x45d497)](_0x547978(0xdd));},0x5dc),doLocalPlay();}const ytPlaylistData=[{'id':_0xe9df91(0xd4),'title':_0xe9df91(0xa1),'artist':_0xe9df91(0x12b)},{'id':_0xe9df91(0x11b),'title':_0xe9df91(0xfc),'artist':_0xe9df91(0xae)},{'id':'acS4DAMFGWA','title':_0xe9df91(0x95),'artist':_0xe9df91(0xa7)},{'id':_0xe9df91(0x11f),'title':_0xe9df91(0x115),'artist':_0xe9df91(0x135)},{'id':_0xe9df91(0x102),'title':_0xe9df91(0x133),'artist':_0xe9df91(0x135)},{'id':_0xe9df91(0xab),'title':'나는\x20믿네\x20(I\x20Do\x20Believe)','artist':'피아워십\x20(F.I.A\x20Worship)'},{'id':_0xe9df91(0xf1),'title':_0xe9df91(0xd1),'artist':_0xe9df91(0x135)},{'id':_0xe9df91(0x90),'title':'예수\x20우리\x20왕이여','artist':_0xe9df91(0x119)},{'id':_0xe9df91(0x12a),'title':_0xe9df91(0x10c),'artist':'제이어스\x20(J-US)'},{'id':'NYiH9ftHjWo','title':_0xe9df91(0x11c),'artist':_0xe9df91(0x119)},{'id':_0xe9df91(0xd0),'title':'내일\x20일은\x20난\x20몰라요','artist':_0xe9df91(0xd6)},{'id':_0xe9df91(0xe7),'title':'전능하신\x20나의\x20주\x20하나님은','artist':'마커스워십\x20(Markers\x20Worship)'},{'id':_0xe9df91(0x14c),'title':_0xe9df91(0x126),'artist':_0xe9df91(0xa8)},{'id':_0xe9df91(0x116),'title':_0xe9df91(0x9f),'artist':'예람워십\x20(Yeram\x20Worship)'},{'id':'c216NU8183o','title':_0xe9df91(0x103),'artist':_0xe9df91(0x94)},{'id':_0xe9df91(0x10a),'title':_0xe9df91(0xff),'artist':_0xe9df91(0x94)},{'id':'3ZFnSEH6Hfk','title':_0xe9df91(0x149),'artist':_0xe9df91(0xa6)},{'id':_0xe9df91(0x138),'title':_0xe9df91(0xb6),'artist':_0xe9df91(0x117)},{'id':_0xe9df91(0x144),'title':'Living\x20Hope\x20(주\x20예수\x20내\x20산\x20소망)','artist':'데이빗밴드\x20(Daybeat\x20Band)'}];let ytPlayer,isYtPlayerReady=![],currentYtIdx=0x0,isPlayerVisible=![],ytIsShuffle=![],ytRepeatMode=0x0,ytPlayHistory=[],ytAnimFrameId=null;function onYouTubeIframeAPIReady(){const _0x78d1f3=_0xe9df91;ytPlayer=new YT['Player'](_0x78d1f3(0x11a),{'height':'0','width':'0','videoId':ytPlaylistData[currentYtIdx]['id'],'playerVars':{'autoplay':0x0,'controls':0x0,'playsinline':0x1,'rel':0x0,'enablejsapi':0x1},'events':{'onReady':onYtPlayerReady,'onStateChange':onYtPlayerStateChange,'onError':onYtPlayerError}});}function onYtPlayerReady(_0x19b947){isYtPlayerReady=!![],updateYtUIInfo(),renderYtPlaylistUI();}function onYtPlayerStateChange(_0x7d4ec3){const _0x2bddc0={_0x328efe:0x8a,_0x97f849:0xc2,_0x5252e6:0xc7,_0x222e6e:0xfe},_0x4c7dd8=_0xe9df91,_0x146ee4=document['getElementById']('gmp-playpause-icon');if(_0x7d4ec3[_0x4c7dd8(_0x2bddc0._0x328efe)]===YT['PlayerState'][_0x4c7dd8(_0x2bddc0._0x97f849)]){_0x146ee4['textContent']='pause_circle',startYtProgressLoop();if(!audio[_0x4c7dd8(_0x2bddc0._0x5252e6)])doLocalPause();}else _0x146ee4[_0x4c7dd8(0x129)]=_0x4c7dd8(0xcb),stopYtProgressLoop();if(_0x7d4ec3[_0x4c7dd8(0x8a)]===YT[_0x4c7dd8(0x87)][_0x4c7dd8(_0x2bddc0._0x222e6e)])playNextYt(!![]);}function onYtPlayerError(_0x562d8b){const _0x53fe60={_0x594a1c:0x124},_0x517d28=_0xe9df91;console[_0x517d28(_0x53fe60._0x594a1c)](_0x517d28(0xcc),_0x562d8b['data']),playNextYt();}function toggleYtPlayPause(){const _0x389fcf={_0x2bab51:0x13b,_0x366445:0xc2},_0x1b5305=_0xe9df91;if(!ytPlayer||!isYtPlayerReady)return;const _0x533357=ytPlayer[_0x1b5305(_0x389fcf._0x2bab51)]();if(_0x533357===YT[_0x1b5305(0x87)][_0x1b5305(_0x389fcf._0x366445)])ytPlayer[_0x1b5305(0x14f)]();else{if(ytPlayer['isMuted']())ytPlayer[_0x1b5305(0x123)]();ytPlayer[_0x1b5305(0xe8)]();}}function loadAndPlayYt(_0x396963){const _0x20c361=_0xe9df91;if(!isYtPlayerReady)return;if(_0x396963<0x0||_0x396963>=ytPlaylistData[_0x20c361(0xc9)])return;if(ytIsShuffle&&_0x396963!==currentYtIdx)ytPlayHistory[_0x20c361(0x8c)](currentYtIdx);currentYtIdx=_0x396963,ytPlayer['loadVideoById'](ytPlaylistData[currentYtIdx]['id']),updateYtUIInfo(),renderYtPlaylistUI();}function _0x5bf3(_0x3318a1,_0x3d11ba){_0x3318a1=_0x3318a1-0x86;const _0x2aa5ae=_0x2aa5();let _0x5bf3af=_0x2aa5ae[_0x3318a1];return _0x5bf3af;}function playNextYt(_0x55b1ed=![]){const _0x53e48a={_0x36ee2a:0x8c,_0x197ec3:0xc9},_0x1ca94a=_0xe9df91;if(!isYtPlayerReady)return;let _0x50b653=currentYtIdx;if(_0x55b1ed&&ytRepeatMode===0x1){ytPlayer['seekTo'](0x0),ytPlayer['playVideo']();return;}if(ytIsShuffle){ytPlayHistory[_0x1ca94a(_0x53e48a._0x36ee2a)](currentYtIdx);if(ytPlaylistData['length']>0x1)do{_0x50b653=Math[_0x1ca94a(0xa5)](Math[_0x1ca94a(0xcf)]()*ytPlaylistData[_0x1ca94a(_0x53e48a._0x197ec3)]);}while(_0x50b653===currentYtIdx);}else _0x50b653=(currentYtIdx+0x1)%ytPlaylistData[_0x1ca94a(0xc9)];loadAndPlayYt(_0x50b653);}function playPrevYt(){const _0x1cb236={_0x58db5c:0xc9},_0x4e9225=_0xe9df91;if(!isYtPlayerReady)return;if(ytPlayer[_0x4e9225(0x9a)]()>0x3){ytPlayer[_0x4e9225(0x12c)](0x0);return;}let _0x330de3=currentYtIdx;if(ytIsShuffle&&ytPlayHistory[_0x4e9225(0xc9)]>0x0)_0x330de3=ytPlayHistory['pop']();else _0x330de3=(currentYtIdx-0x1+ytPlaylistData[_0x4e9225(_0x1cb236._0x58db5c)])%ytPlaylistData[_0x4e9225(_0x1cb236._0x58db5c)];loadAndPlayYt(_0x330de3);}function toggleYtShuffle(){const _0x44cb1a={_0x5b0087:0xa9},_0x465233=_0xe9df91;ytIsShuffle=!ytIsShuffle;const _0x410c1c=document[_0x465233(0xdf)](_0x465233(0x142));if(ytIsShuffle)_0x410c1c[_0x465233(_0x44cb1a._0x5b0087)][_0x465233(0xbd)]('active'),ytPlayHistory=[];else _0x410c1c[_0x465233(0xa9)][_0x465233(0x92)]('active');}function toggleYtRepeat(){const _0x1c85e1={_0x238874:0xdf,_0x404713:0xdf,_0x2e2157:0x129,_0x494325:0xa9},_0x1c8c25=_0xe9df91;ytRepeatMode=(ytRepeatMode+0x1)%0x2;const _0x478ccb=document[_0x1c8c25(_0x1c85e1._0x238874)]('gmp-repeat-icon'),_0xf15b29=document[_0x1c8c25(_0x1c85e1._0x404713)](_0x1c8c25(0x118));ytRepeatMode===0x1?(_0x478ccb[_0x1c8c25(_0x1c85e1._0x2e2157)]=_0x1c8c25(0xc6),_0xf15b29['classList'][_0x1c8c25(0xbd)]('active')):(_0x478ccb[_0x1c8c25(_0x1c85e1._0x2e2157)]='repeat',_0xf15b29[_0x1c8c25(_0x1c85e1._0x494325)][_0x1c8c25(0x92)]('active'));}function renderYtPlaylistUI(){const _0x3ba546={_0x343a4f:0x9b,_0x170649:0xe5,_0x1a7183:0x97,_0x705fd8:0x146,_0x2e8703:0xeb},_0x2d994e=document['getElementById']('gmp-playlist-ul');if(!_0x2d994e)return;_0x2d994e['innerHTML']='',ytPlaylistData['forEach']((_0x507eba,_0x5b52eb)=>{const _0x15a9ba=_0x5bf3,_0x44aa09=document[_0x15a9ba(_0x3ba546._0x343a4f)]('li');_0x44aa09['className']=_0x15a9ba(_0x3ba546._0x170649)+(_0x5b52eb===currentYtIdx?_0x15a9ba(_0x3ba546._0x1a7183):''),_0x44aa09[_0x15a9ba(0xea)]=()=>{loadAndPlayYt(_0x5b52eb),togglePlaylist();},_0x44aa09['innerHTML']=_0x15a9ba(0x9d)+_0x507eba['title']+_0x15a9ba(0x8e)+_0x507eba[_0x15a9ba(_0x3ba546._0x705fd8)]+_0x15a9ba(0xe9),_0x2d994e[_0x15a9ba(_0x3ba546._0x2e8703)](_0x44aa09);});}function togglePlaylist(){const _0x2d8e1f={_0x38d6c0:0xdf,_0x390351:0x10e,_0x50b443:0xdd,_0x1f95b1:0xa9,_0x5168ca:0x97},_0x297f97=_0xe9df91,_0x204dd6=document[_0x297f97(0xdf)](_0x297f97(0xee)),_0x1b5d16=document[_0x297f97(_0x2d8e1f._0x38d6c0)](_0x297f97(0x140));_0x204dd6[_0x297f97(0xa9)][_0x297f97(_0x2d8e1f._0x390351)]('show')?(_0x204dd6[_0x297f97(0xa9)][_0x297f97(0x92)](_0x297f97(_0x2d8e1f._0x50b443)),_0x1b5d16[_0x297f97(_0x2d8e1f._0x1f95b1)]['remove'](_0x297f97(0x97))):(_0x204dd6['classList']['add']('show'),_0x1b5d16[_0x297f97(0xa9)][_0x297f97(0xbd)](_0x297f97(_0x2d8e1f._0x5168ca)));}function updateYtUIInfo(){const _0x1cdac7={_0x36ae5d:0xa4,_0x5b37b7:0xdf,_0x4691a6:0x11d,_0x1f46e2:0x129,_0x5993bc:0x146,_0x1efb1f:0x112,_0x1184cd:0x8f},_0x1399ff=_0xe9df91,_0x5969c7=ytPlaylistData[currentYtIdx];document[_0x1399ff(0xdf)]('gmp-title')['textContent']=_0x5969c7[_0x1399ff(_0x1cdac7._0x36ae5d)],document[_0x1399ff(_0x1cdac7._0x5b37b7)](_0x1399ff(_0x1cdac7._0x4691a6))[_0x1399ff(_0x1cdac7._0x1f46e2)]=_0x5969c7[_0x1399ff(_0x1cdac7._0x5993bc)],document['getElementById'](_0x1399ff(0x130))[_0x1399ff(0x150)]=_0x1399ff(_0x1cdac7._0x1efb1f)+_0x5969c7['id']+_0x1399ff(_0x1cdac7._0x1184cd);}function startYtProgressLoop(){if(!ytAnimFrameId)updateYtProgress();}function stopYtProgressLoop(){ytAnimFrameId&&(cancelAnimationFrame(ytAnimFrameId),ytAnimFrameId=null);}function updateYtProgress(){const _0xfbae65={_0x3e4e28:0x13b,_0x52b919:0x13c,_0x48198f:0x9a,_0x321e2e:0xdf,_0x192f35:0x14d},_0x4c80b0=_0xe9df91;if(ytPlayer&&isYtPlayerReady&&ytPlayer[_0x4c80b0(_0xfbae65._0x3e4e28)]()===YT[_0x4c80b0(0x87)]['PLAYING']){const _0x3fcc6c=ytPlayer[_0x4c80b0(_0xfbae65._0x52b919)](),_0x3671bd=ytPlayer[_0x4c80b0(_0xfbae65._0x48198f)]();if(_0x3fcc6c>0x0){const _0xf5dc33=_0x3671bd/_0x3fcc6c*0x64;document[_0x4c80b0(_0xfbae65._0x321e2e)](_0x4c80b0(_0xfbae65._0x192f35))[_0x4c80b0(0x127)]['width']=_0xf5dc33+'%';}}ytAnimFrameId=requestAnimationFrame(updateYtProgress);}function seekYtProgress(_0x499e6c){const _0x60230b={_0x27b4d0:0x10b,_0x36d7a:0xce,_0x15f802:0xfa,_0x60d6ec:0xc2},_0x1b2eca=_0xe9df91;if(!ytPlayer||!isYtPlayerReady)return;const _0x573a9e=document[_0x1b2eca(0xdf)]('gmp-progress-container'),_0x4184d4=_0x573a9e[_0x1b2eca(_0x60230b._0x27b4d0)](),_0x2b1a3f=_0x499e6c['clientX']||_0x499e6c[_0x1b2eca(0xce)]&&_0x499e6c[_0x1b2eca(_0x60230b._0x36d7a)][0x0][_0x1b2eca(0xc8)];let _0x4cc1aa=(_0x2b1a3f-_0x4184d4[_0x1b2eca(_0x60230b._0x15f802)])/_0x4184d4['width'];_0x4cc1aa=Math[_0x1b2eca(0xe3)](0x0,Math['min'](0x1,_0x4cc1aa)),document[_0x1b2eca(0xdf)](_0x1b2eca(0x14d))['style']['width']=_0x4cc1aa*0x64+'%';const _0x4495de=ytPlayer[_0x1b2eca(0x13c)]();if(_0x4495de>0x0){ytPlayer[_0x1b2eca(0x12c)](_0x4495de*_0x4cc1aa,!![]);if(ytPlayer['getPlayerState']()!==YT['PlayerState'][_0x1b2eca(_0x60230b._0x60d6ec)])ytPlayer[_0x1b2eca(0xe8)]();}}function _0x2aa5(){const _0xf4d957=['<span\x20class=\x22idx\x22>',')\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22material-symbols-outlined\x22>arrow_back_ios</span>\x20이전\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22prayer-counter\x22>','https://img.youtube.com/vi/','back-btn','web-desc','하나님의\x20부르심','8PEKtpFsWiI','위클레시아\x20(WECCLESIA)','gmp-repeat','제이어스\x20(J-US)','yt-player-container','2O_w1Am9cq0','Love\x20Never\x20Fails\x20(여호와께\x20돌아가자)','gmp-artist','undefined','ovjWMKsks2Y','1490584APSPmd','pointerEvents','scale(1.1)','unMute','error','Auto-play\x20prevented:','비\x20준비하시니','style','240RehGAf','textContent','MMzUCCn6aQ4','손경민\x20(Vocal.\x20지선,\x20이윤화,\x20하니,\x20강찬)','seekTo','forEach','volume','눈\x20먼\x20자의\x20빛이시며','gmp-thumbnail','play-svg','main-audio','나는\x20일어섭니다','includes','피아워십\x20(F.I.A\x20Worship)','key','transition','CDeWAlagzQc','div','querySelector','getPlayerState','getDuration','metaKey','prayer-view-content','className','gmp-playlist-btn','<br>','gmp-shuffle','innerHTML','ctP6td3vTpo','5602JBiLmE','artist','toLowerCase','var(--accent-color)','나의\x20안에\x20거하라','\x27에\x20대한<br>검색\x20결과가\x20없습니다.</div>','touchend','9NhESBIGvWc','gmp-progress-bar','opacity','pauseVideo','src','item','PlayerState','ctrlKey','prayer-browser','data','.lords-prayer-text','push','1352370vgwjAq','</div><div\x20class=\x22p-artist\x22>','/mqdefault.jpg','lToefu_xLQI','<div\x20style=\x22text-align:center;\x20color:var(--text-secondary);\x20margin-top:\x2050px;\x20font-family:\x20\x27Noto\x20Serif\x20KR\x27,\x20serif;\x20line-height:\x201.6;\x22>\x27','remove','pause','팀룩워십\x20(Team\x20Luke\x20Worship)','내가\x20매일\x20해야\x20하는\x20말','screenX','active','log','var(--text-secondary)','getCurrentTime','createElement','querySelectorAll','<div\x20class=\x22p-title\x22>','animation','주가\x20일하시네','preventDefault','은혜\x20(Grace)','5287139JYkMSs','</span><span\x20class=\x22label\x22>','title','floor','달빛마을\x20(Moonlight\x20Village)','손경민\x20(With\x20아이빅밴드,\x20지선,\x20이윤화)','예람워십\x20(Yeram\x20Worship)','classList','color','Qek0xGCTCIc','keydown','799833BlYMcc','손경민\x20(feat.지선,\x20이윤화,\x20아이빅밴드)','display','.nav-links\x20a','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20','fadeInUp\x200.4s\x20ease\x20forwards\x20','.splash-content',')</h2>','30KHACQw','주님을\x20바라봅니다','transform\x201.5s\x20ease-in-out,\x20opacity\x201.5s\x20ease-in-out','.divine-cross-image','우리\x20생명\x20되시네','category','input','changedTouches','add','병든\x20자의\x20고침과','18ByoqIT','altKey','value','PLAYING','catch','play','죽은\x20자의\x20부활\x20되고','repeat_one','paused','clientX','length','<h2\x20class=\x22browser-section-title\x22>Index</h2>','play_circle','YouTube\x20Player\x20Error','block','touches','random','yj1yyLyPiBE','나는\x20주를\x20섬기는\x20것에\x20후회가\x20없습니다','header-music-icon','disabled','pZuW2CV0mXY','prayer-search-input','마커스워십\x20(Markers\x20Worship)','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22idx\x22\x20style=\x22font-size:\x20clamp(1rem,\x203.5vw,\x201.1rem);\x20min-width:\x20clamp(30px,\x208vw,\x2040px);\x22>','back-container','fadeInUp\x200.6s\x20ease\x20forwards\x20','content','touchstart','rem','show','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20style=\x22font-size:clamp(0.7rem,\x202.5vw,\x200.75rem);\x20color:var(--accent-color);\x20opacity:0.8;\x20margin-top:6px;\x22>','getElementById','\x20onclick=\x22renderPrayerDetail(','1551776lNENkT','grayscale(','max','</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22prayer-ending\x22\x20style=\x22margin-top:50px;\x20text-align:center;\x20color:var(--accent-color);\x20opacity:0.6;\x22>예수님의\x20이름으로\x20기도합니다.\x20아멘.</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22prayer-nav-buttons\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22nav-action-btn\x22\x20','gmp-playlist-item\x20','replace','9vS0aGxVHjk','playVideo','</div>','onclick','appendChild','flex','filter','gmp-playlist-popup','scrollTop','none','AmwX2-BIpRU','pause-svg','.prayer-view-content','</h3>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22prayer-text\x22>','<h2\x20class=\x22browser-section-title\x22\x20style=\x22font-size:\x20clamp(1.2rem,\x204vw,\x201.4rem);\x22>검색\x20결과\x20(','splash-screen','browser-item','currentTime','duration','left','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22display:flex;\x20flex-direction:column;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22label\x22>','복음밖에\x20없습니다','</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20class=\x22nav-action-btn\x22\x20','ENDED','고요한\x20밤\x20하늘\x20별들\x20반짝일\x20때','124xchnHB','\x20/\x20','KS4wNLfGD1s','영접송\x20(내\x20맘을\x20엽니다)','1407EvEkTu','home','addEventListener','\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22prayer-category-label\x22>','</span>','start','pqDTRgaY8q0','getBoundingClientRect','Amazing\x20Grace\x20(나\x20같은\x20죄인\x20살리신)','list','contains','lineHeight'];_0x2aa5=function(){return _0xf4d957;};return _0x2aa5();}function toggleGlobalPlayer(){const _0x11c8d9={_0x5f8459:0xa9,_0x4dab35:0xbd,_0x447ecf:0x148,_0x36f9ef:0xaa,_0x1fdc14:0x99,_0x1316a6:0xdf,_0x1a34f0:0x10e,_0x18d072:0xdd},_0x188c26=_0xe9df91,_0x9c526a=document['getElementById']('global-music-player'),_0x42819e=document['getElementById'](_0x188c26(0xd2));isPlayerVisible=!isPlayerVisible;if(isPlayerVisible)_0x9c526a[_0x188c26(_0x11c8d9._0x5f8459)][_0x188c26(_0x11c8d9._0x4dab35)]('show'),_0x42819e[_0x188c26(0x127)]['color']=_0x188c26(_0x11c8d9._0x447ecf);else{_0x9c526a[_0x188c26(_0x11c8d9._0x5f8459)][_0x188c26(0x92)]('show'),_0x42819e[_0x188c26(0x127)][_0x188c26(_0x11c8d9._0x36f9ef)]=_0x188c26(_0x11c8d9._0x1fdc14);const _0x41026a=document[_0x188c26(_0x11c8d9._0x1316a6)]('gmp-playlist-popup');if(_0x41026a[_0x188c26(0xa9)][_0x188c26(_0x11c8d9._0x1a34f0)](_0x188c26(_0x11c8d9._0x18d072)))_0x41026a[_0x188c26(0xa9)][_0x188c26(0x92)](_0x188c26(0xdd));}}const splashScreen=document['getElementById'](_0xe9df91(0xf6));splashScreen&&splashScreen['addEventListener']('click',startExperience,{'once':!![]});DisableDevtool({'disableMenu':!![],'interval':0x3e8}),window[_0xe9df91(0x106)](_0xe9df91(0xac),function(_0x497bce){const _0xa8a287={_0x1da9ac:0x136,_0x4e7a95:0x13d,_0xa5cb36:0xc0,_0x5c76ae:0x88,_0x2b449d:0x136,_0x1a1754:0x136,_0x56ea05:0xa0},_0x27b7ac=_0xe9df91;if(_0x497bce[_0x27b7ac(0x88)]&&(_0x497bce['key']==='u'||_0x497bce[_0x27b7ac(_0xa8a287._0x1da9ac)]==='U')||_0x497bce[_0x27b7ac(_0xa8a287._0x4e7a95)]&&_0x497bce[_0x27b7ac(_0xa8a287._0xa5cb36)]&&(_0x497bce['key']==='u'||_0x497bce[_0x27b7ac(0x136)]==='U')||_0x497bce[_0x27b7ac(_0xa8a287._0x5c76ae)]&&(_0x497bce[_0x27b7ac(_0xa8a287._0x1da9ac)]==='s'||_0x497bce[_0x27b7ac(0x136)]==='S')||_0x497bce['metaKey']&&(_0x497bce[_0x27b7ac(_0xa8a287._0x1da9ac)]==='s'||_0x497bce[_0x27b7ac(0x136)]==='S')||_0x497bce[_0x27b7ac(0x88)]&&(_0x497bce[_0x27b7ac(0x136)]==='p'||_0x497bce[_0x27b7ac(_0xa8a287._0x2b449d)]==='P')||_0x497bce[_0x27b7ac(0x13d)]&&(_0x497bce[_0x27b7ac(_0xa8a287._0x2b449d)]==='p'||_0x497bce[_0x27b7ac(_0xa8a287._0x1a1754)]==='P'))return _0x497bce[_0x27b7ac(_0xa8a287._0x56ea05)](),![];});
+// === 음악 페이드 인/아웃 로직 (로컬 오디오 전용) ===
+let localFadeInterval = null;
+const fadeStepTime = 50; 
+const fadeTotalSteps = 20; // 50ms * 20 = 1000ms (1초 페이드)
+
+function doLocalPlay() {
+    clearInterval(localFadeInterval);
+    if (audio.paused) {
+        audio.volume = 0;
+        audio.play().catch(e => console.log("Auto-play prevented:", e));
+    }
+    let step = Math.floor(audio.volume * fadeTotalSteps);
+    localFadeInterval = setInterval(() => {
+        step++;
+        if (step >= fadeTotalSteps) {
+            audio.volume = 1;
+            clearInterval(localFadeInterval);
+        } else {
+            audio.volume = step / fadeTotalSteps;
+        }
+    }, fadeStepTime);
+}
+
+function doLocalPause() {
+    clearInterval(localFadeInterval);
+    let step = Math.floor(audio.volume * fadeTotalSteps);
+    localFadeInterval = setInterval(() => {
+        step--;
+        if (step <= 0) {
+            audio.volume = 0;
+            audio.pause();
+            clearInterval(localFadeInterval);
+        } else {
+            audio.volume = step / fadeTotalSteps;
+        }
+    }, fadeStepTime);
+}
+
+// --- 메인 앱 로직 ---
+const audio = document.getElementById('main-audio');
+const cText = document.getElementById('cinematic-text');
+const webDesc = document.getElementById('web-desc');
+const divineImage = document.querySelector('.divine-cross-image'); 
+
+const browser = document.getElementById('prayer-browser');
+const searchContainer = document.getElementById('search-container');
+const searchInput = document.getElementById('prayer-search-input');
+
+const backContainer = document.getElementById('back-container');
+const backBtn = document.getElementById('back-btn');
+
+const playSvg = document.getElementById('play-svg');
+const pauseSvg = document.getElementById('pause-svg');
+
+const scripts = [
+    { start: 0, text: "예수님은 누구신가" },
+    { start: 6, text: "약한 자의 강함과" },
+    { start: 13, text: "눈 먼 자의 빛이시며" },
+    { start: 20, text: "병든 자의 고침과" },
+    { start: 28, text: "죽은 자의 부활 되고" },
+    { start: 35, text: "우리 생명 되시네" },
+];
+
+let animationFrameId = null;
+let currentIdx = -1;
+
+let currentFontSize = 1.1; 
+let currentCategory = null; 
+let isSearching = false; 
+
+let currentPrayerList = []; 
+let currentDetailIndex = -1; 
+
+// 이벤트 리스너들
+searchInput.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase().trim();
+    
+    if (!term) {
+        isSearching = false;
+        renderCategoryIndex(false); 
+        return;
+    }
+
+    isSearching = true;
+    const results = [];
+    
+    if (typeof prayerData !== 'undefined') {
+        prayerData.forEach(cat => {
+            cat.list.forEach(item => {
+                if (item.title.toLowerCase().includes(term) || item.content.toLowerCase().includes(term)) {
+                    results.push({ item, category: cat });
+                }
+            });
+        });
+    }
+    renderSearchResults(results, term);
+});
+
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+        p.style.display = 'none';
+    });
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const targetPage = document.getElementById(`page-${pageId}`);
+    const targetNav = document.getElementById(`nav-${pageId}`);
+    
+    if (targetPage) {
+        targetPage.style.display = 'flex';
+        requestAnimationFrame(() => targetPage.classList.add('active'));
+    }
+    if (targetNav) targetNav.classList.add('active');
+    
+    if(pageId === 'prayer') {
+        searchInput.value = '';
+        isSearching = false;
+        currentDetailIndex = -1;
+        renderCategoryIndex();
+    } else {
+        searchContainer.style.display = 'none'; 
+        backContainer.style.display = 'none';
+    }
+    
+    if(pageId === 'home') currentIdx = -1;
+    applyFontSize();
+}
+
+function renderCategoryIndex(resetSearchInput = true) {
+    if (typeof prayerData === 'undefined') return;
+    
+    searchContainer.style.display = 'block'; 
+    backContainer.style.display = 'none'; 
+    currentDetailIndex = -1;
+
+    if(resetSearchInput) searchInput.value = ''; 
+
+    browser.innerHTML = `<h2 class="browser-section-title">Index</h2>`;
+    prayerData.forEach((cat, index) => {
+        const div = document.createElement('div');
+        div.className = 'browser-item';
+        div.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.1}s`;
+        div.innerHTML = `<span class="idx">${cat.id}</span><span class="label">${cat.category}</span>`;
+        div.onclick = () => renderPrayerList(cat);
+        browser.appendChild(div);
+    });
+    
+    browser.scrollTop = 0; 
+}
+
+function renderPrayerList(category) {
+    currentCategory = category;
+    searchContainer.style.display = 'none'; 
+    backContainer.style.display = 'block';
+    backBtn.onclick = isSearching ? restoreSearch : () => renderCategoryIndex(false);
+    currentDetailIndex = -1;
+    
+    currentPrayerList = category.list.map(item => ({ item, category }));
+
+    browser.innerHTML = '';
+    currentPrayerList.forEach((data, index) => {
+        const div = document.createElement('div');
+        div.className = 'browser-item';
+        div.innerHTML = `<span class="idx">${data.item.id}</span><span class="label">${data.item.title}</span>`;
+        div.onclick = () => renderPrayerDetail(index);
+        browser.appendChild(div);
+    });
+    browser.scrollTop = 0;
+}
+
+function renderSearchResults(results, term) {
+    searchContainer.style.display = 'block';
+    backContainer.style.display = 'none'; 
+    currentDetailIndex = -1;
+    currentPrayerList = results; 
+
+    browser.innerHTML = `<h2 class="browser-section-title" style="font-size: clamp(1.2rem, 4vw, 1.4rem);">검색 결과 (${results.length})</h2>`;
+    
+    if (results.length === 0) {
+        browser.innerHTML += `<div style="text-align:center; color:var(--text-secondary); margin-top: 50px; font-family: 'Noto Serif KR', serif; line-height: 1.6;">'${term}'에 대한<br>검색 결과가 없습니다.</div>`;
+        return;
+    }
+
+    results.forEach((res, index) => {
+        const div = document.createElement('div');
+        div.className = 'browser-item';
+        div.style.animation = `fadeInUp 0.4s ease forwards ${index * 0.05}s`;
+        div.innerHTML = `
+            <span class="idx" style="font-size: clamp(1rem, 3.5vw, 1.1rem); min-width: clamp(30px, 8vw, 40px);">${res.item.id}</span>
+            <div style="display:flex; flex-direction:column;">
+                <span class="label">${res.item.title}</span>
+                <span style="font-size:clamp(0.7rem, 2.5vw, 0.75rem); color:var(--accent-color); opacity:0.8; margin-top:6px;">${res.category.category}</span>
+            </div>
+        `;
+        div.onclick = () => renderPrayerDetail(index);
+        browser.appendChild(div);
+    });
+    browser.scrollTop = 0;
+}
+
+function renderPrayerDetail(index) {
+    currentDetailIndex = index;
+    const data = currentPrayerList[index];
+    const prayer = data.item;
+    const category = data.category;
+
+    searchContainer.style.display = 'none'; 
+    backContainer.style.display = 'block';
+    backBtn.onclick = isSearching ? restoreSearch : () => renderPrayerList(currentCategory);
+    
+    const prevDisabled = index === 0 ? 'disabled' : '';
+    const nextDisabled = index === currentPrayerList.length - 1 ? 'disabled' : '';
+
+    browser.innerHTML = '';
+    const detail = document.createElement('div');
+    detail.className = 'prayer-view-content';
+    
+    detail.innerHTML = `
+        <div class="prayer-category-label">${category.category}</div>
+        <div class="font-controls-container" style="margin-top:-20px;">
+            <button class="font-btn" onclick="adjustFontSize(-0.1)" title="글자 축소">
+                <span class="material-symbols-outlined">remove</span>
+            </button>
+            <button class="font-btn" onclick="adjustFontSize(0.1)" title="글자 확대">
+                <span class="material-symbols-outlined">add</span>
+            </button>
+        </div>
+        <h3>${prayer.title}</h3>
+        <div id="prayer-text">${prayer.content.replace(/\n/g, '<br>')}</div>
+        <div class="prayer-ending" style="margin-top:50px; text-align:center; color:var(--accent-color); opacity:0.6;">예수님의 이름으로 기도합니다. 아멘.</div>
+        
+        <div class="prayer-nav-buttons">
+            <button class="nav-action-btn" ${prevDisabled} onclick="renderPrayerDetail(${index - 1})">
+                <span class="material-symbols-outlined">arrow_back_ios</span> 이전
+            </button>
+            <span class="prayer-counter">${index + 1} / ${currentPrayerList.length}</span>
+            <button class="nav-action-btn" ${nextDisabled} onclick="renderPrayerDetail(${index + 1})">
+                다음 <span class="material-symbols-outlined">arrow_forward_ios</span>
+            </button>
+        </div>
+    `;
+    browser.appendChild(detail);
+    applyFontSize(); 
+    browser.scrollTop = 0;
+}
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+browser.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+
+browser.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+}, {passive: true});
+
+function handleSwipe() {
+    if (currentDetailIndex === -1 || !document.querySelector('.prayer-view-content')) return;
+    const swipeThreshold = 60; 
+    
+    if (touchEndX < touchStartX - swipeThreshold) {
+        if (currentDetailIndex < currentPrayerList.length - 1) {
+            renderPrayerDetail(currentDetailIndex + 1);
+        }
+    }
+    if (touchEndX > touchStartX + swipeThreshold) {
+        if (currentDetailIndex > 0) {
+            renderPrayerDetail(currentDetailIndex - 1);
+        }
+    }
+}
+
+function restoreSearch() {
+    searchContainer.style.display = 'block';
+    currentDetailIndex = -1;
+    searchInput.dispatchEvent(new Event('input')); 
+}
+
+function adjustFontSize(delta) {
+    const newSize = currentFontSize + delta;
+    if (newSize >= 0.8 && newSize <= 2.5) {
+        currentFontSize = newSize;
+        applyFontSize();
+    }
+}
+
+function applyFontSize() {
+    const lordsText = document.querySelector('.lords-prayer-text');
+    if (lordsText) {
+        lordsText.style.fontSize = `${currentFontSize}rem`;
+        lordsText.style.lineHeight = `${currentFontSize * 2.2}rem`;
+    }
+    const prayerText = document.getElementById('prayer-text');
+    if (prayerText) {
+        prayerText.style.fontSize = `${currentFontSize}rem`;
+        prayerText.style.lineHeight = `${currentFontSize * 2.2}rem`;
+    }
+}
+
+function updateImageColor() {
+    if (divineImage && audio.duration) {
+        const progress = audio.currentTime / audio.duration;
+        const grayscale = Math.max(0, 100 - (progress * 100));
+        divineImage.style.filter = `grayscale(${grayscale}%) brightness(1.2) contrast(1.1)`;
+    }
+}
+
+function updateLyrics() {
+    if (audio.paused || audio.ended) return; 
+    updateImageColor();
+
+    const now = audio.currentTime;
+    let targetIdx = -1;
+    for (let i = 0; i < scripts.length; i++) {
+        const nextStart = scripts[i+1] ? scripts[i+1].start : Infinity;
+        if (now >= scripts[i].start && now < nextStart - 0.3) {
+            targetIdx = i; break;
+        }
+    }
+    if (targetIdx !== currentIdx) {
+        currentIdx = targetIdx;
+        if (currentIdx !== -1) {
+            cText.classList.remove('active');
+            setTimeout(() => {
+                cText.innerText = scripts[currentIdx].text;
+                cText.classList.add('active');
+            }, 400);
+        } else {
+            cText.classList.remove('active');
+        }
+    }
+    animationFrameId = requestAnimationFrame(updateLyrics);
+}
+
+function toggleAudio() {
+    if (audio.paused) doLocalPlay();
+    else doLocalPause();
+}
+
+audio.addEventListener('play', () => {
+    playSvg.style.display = 'none';
+    pauseSvg.style.display = 'block';
+    if (!animationFrameId) updateLyrics();
+
+    // 상호 배제: 유튜브 재생 중일 경우 즉시 일시정지
+    if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
+        if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+            ytPlayer.pauseVideo();
+        }
+    }
+});
+
+audio.addEventListener('pause', () => {
+    playSvg.style.display = 'block';
+    pauseSvg.style.display = 'none';
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null; 
+    }
+});
+
+audio.addEventListener('seeked', updateImageColor);
+
+function startExperience() {
+    const splash = document.getElementById('splash-screen');
+    const splashContent = document.querySelector('.splash-content');
+    
+    splash.style.pointerEvents = 'none'; 
+    splash.style.transition = 'opacity 1.5s ease-in-out';
+    splash.style.opacity = '0';
+    
+    if (splashContent) {
+        splashContent.style.transition = 'transform 1.5s ease-in-out, opacity 1.5s ease-in-out';
+        splashContent.style.transform = 'scale(1.1)';
+        splashContent.style.opacity = '0';
+    }
+
+    setTimeout(() => {
+        splash.remove();
+        if(webDesc) webDesc.classList.add('show');
+    }, 1500);
+    
+    // 자연스러운 로컬 플레이어 페이드인 시작
+    doLocalPlay();
+}
+
+function copyShareLink(btnElement) {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        const originalText = btnElement.innerHTML;
+        btnElement.innerHTML = `<span class="material-symbols-outlined" style="font-size: 18px;">check</span> 복사 완료`;
+        btnElement.style.color = 'var(--bg-color)';
+        btnElement.style.backgroundColor = 'var(--accent-color)';
+        
+        setTimeout(() => {
+            btnElement.innerHTML = originalText;
+            btnElement.style.color = 'var(--accent-color)';
+            btnElement.style.backgroundColor = 'transparent';
+        }, 2000);
+    }).catch(err => {
+        console.error('복사 실패:', err);
+        alert('주소 복사를 지원하지 않는 브라우저입니다.');
+    });
+}
+
+function toggleEmailPolicy() {
+    const policyText = document.getElementById('email-policy-text');
+    if (!policyText) return;
+    
+    if (policyText.style.display === 'none') {
+        policyText.style.display = 'block';
+        policyText.animate([
+            { opacity: 0, transform: 'translateY(-5px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+        ], { duration: 300, easing: 'ease-out', fill: 'forwards' });
+    } else {
+        policyText.style.display = 'none';
+    }
+}
+
+document.getElementById('splash-screen').addEventListener('click', startExperience, { once: true });
+
+
+// === 글로벌 뮤직 플레이어 기능 (YouTube IFrame API 연동) ===
+const ytPlaylistData = [
+    { id: 'pZuW2CV0mXY', title: '은혜 (Grace)', artist: '손경민 (Vocal. 지선, 이윤화, 하니, 강찬)' },
+    { id: '2O_w1Am9cq0', title: '복음밖에 없습니다', artist: '손경민 (feat.지선, 이윤화, 아이빅밴드)' },
+    { id: 'acS4DAMFGWA', title: '내가 매일 해야 하는 말', artist: '손경민 (With 아이빅밴드, 지선, 이윤화)' },
+
+    { id: 'ovjWMKsks2Y', title: '하나님의 부르심', artist: '피아워십 (F.I.A Worship)' },
+    { id: 'KS4wNLfGD1s', title: '나는 일어섭니다', artist: '피아워십 (F.I.A Worship)' },
+    { id: 'Qek0xGCTCIc', title: '나는 믿네 (I Do Believe)', artist: '피아워십 (F.I.A Worship)' },
+    { id: 'AmwX2-BIpRU', title: '나는 주를 섬기는 것에 후회가 없습니다', artist: '피아워십 (F.I.A Worship)' },
+
+    { id: 'lToefu_xLQI', title: '예수 우리 왕이여', artist: '제이어스 (J-US)' },
+    { id: 'MMzUCCn6aQ4', title: 'Amazing Grace (나 같은 죄인 살리신)', artist: '제이어스 (J-US)' },
+    { id: 'NYiH9ftHjWo', title: 'Love Never Fails (여호와께 돌아가자)', artist: '제이어스 (J-US)' },
+
+    { id: 'yj1yyLyPiBE', title: '내일 일은 난 몰라요', artist: '마커스워십 (Markers Worship)' },
+    { id: '9vS0aGxVHjk', title: '전능하신 나의 주 하나님은', artist: '마커스워십 (Markers Worship)' },
+
+    { id: '9NhESBIGvWc', title: '비 준비하시니', artist: '예람워십 (Yeram Worship)' },
+    { id: '8PEKtpFsWiI', title: '주가 일하시네', artist: '예람워십 (Yeram Worship)' },
+
+    { id: 'c216NU8183o', title: '영접송 (내 맘을 엽니다)', artist: '팀룩워십 (Team Luke Worship)' },
+    { id: 'pqDTRgaY8q0', title: '고요한 밤 하늘 별들 반짝일 때', artist: '팀룩워십 (Team Luke Worship)' },
+
+    { id: '3ZFnSEH6Hfk', title: '나의 안에 거하라', artist: '달빛마을 (Moonlight Village)' },
+
+    { id: 'CDeWAlagzQc', title: '주님을 바라봅니다', artist: '위클레시아 (WECCLESIA)' },
+
+    { id: 'ctP6td3vTpo', title: 'Living Hope (주 예수 내 산 소망)', artist: '데이빗밴드 (Daybeat Band)' },
+];
+
+let ytPlayer;
+let isYtPlayerReady = false;
+let currentYtIdx = 0;
+let isPlayerVisible = false;
+    
+let ytIsShuffle = false;
+let ytRepeatMode = 0; // 0: 전체 반복, 1: 한곡 반복
+let ytPlayHistory = []; 
+
+let ytAnimFrameId = null;
+
+function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player('yt-player-container', {
+        height: '0',
+        width: '0',
+        videoId: ytPlaylistData[currentYtIdx].id,
+        playerVars: { 
+            'autoplay': 0, 'controls': 0, 'playsinline': 1, 'rel': 0 
+        },
+        events: {
+            'onReady': onYtPlayerReady,
+            'onStateChange': onYtPlayerStateChange,
+            'onError': onYtPlayerError
+        }
+    });
+}
+
+function onYtPlayerReady(event) {
+    isYtPlayerReady = true;
+    updateYtUIInfo();
+    renderYtPlaylistUI();
+}
+
+function onYtPlayerStateChange(event) {
+    const playpauseIcon = document.getElementById('gmp-playpause-icon');
+    
+    if (event.data === YT.PlayerState.PLAYING) {
+        playpauseIcon.textContent = 'pause_circle';
+        startYtProgressLoop();
+        
+        // 상호 배제: 로컬 플레이어 부드럽게 페이드아웃 정지
+        if (!audio.paused) {
+            doLocalPause();
+        }
+    } else {
+        playpauseIcon.textContent = 'play_circle';
+        stopYtProgressLoop();
+    }
+    
+    if (event.data === YT.PlayerState.ENDED) {
+        playNextYt(true);
+    }
+}
+
+function onYtPlayerError(event) {
+    console.error("YouTube Player Error", event.data);
+    playNextYt();
+}
+
+function toggleGlobalPlayer() {
+    const playerEl = document.getElementById('global-music-player');
+    const icon = document.getElementById('header-music-icon');
+    
+    isPlayerVisible = !isPlayerVisible;
+    if (isPlayerVisible) {
+        playerEl.classList.add('show');
+        icon.style.color = 'var(--accent-color)';
+    } else {
+        playerEl.classList.remove('show');
+        icon.style.color = 'var(--text-secondary)';
+        
+        const popup = document.getElementById('gmp-playlist-popup');
+        if (popup.classList.contains('show')) popup.classList.remove('show');
+    }
+}
+
+function toggleYtPlayPause() {
+    if (!isYtPlayerReady) return;
+    const state = ytPlayer.getPlayerState();
+    if (state === YT.PlayerState.PLAYING) {
+        // 모바일 호환성을 위해 직접 즉시 일시정지 호출
+        ytPlayer.pauseVideo();
+    } else {
+        // 볼륨 초기화(setVolume) 없이 바로 재생 호출
+        ytPlayer.playVideo();
+    }
+}
+
+function loadAndPlayYt(index) {
+    if (!isYtPlayerReady) return;
+    if (index < 0 || index >= ytPlaylistData.length) return;
+    
+    if (ytIsShuffle && index !== currentYtIdx) {
+        ytPlayHistory.push(currentYtIdx);
+    }
+
+    currentYtIdx = index;
+    // 볼륨 초기화 없이 로드
+    ytPlayer.loadVideoById(ytPlaylistData[currentYtIdx].id);
+    updateYtUIInfo();
+    renderYtPlaylistUI();
+}
+
+function playNextYt(isAutoPlay = false) {
+    if (!isYtPlayerReady) return;
+    
+    let nextIdx = currentYtIdx;
+    
+    if (isAutoPlay && ytRepeatMode === 1) {
+        ytPlayer.seekTo(0);
+        ytPlayer.playVideo();
+        return;
+    }
+
+    if (ytIsShuffle) {
+        ytPlayHistory.push(currentYtIdx);
+        if (ytPlaylistData.length > 1) {
+            do {
+                nextIdx = Math.floor(Math.random() * ytPlaylistData.length);
+            } while (nextIdx === currentYtIdx);
+        }
+    } else {
+        nextIdx = (currentYtIdx + 1) % ytPlaylistData.length;
+    }
+    
+    loadAndPlayYt(nextIdx);
+}
+
+function playPrevYt() {
+    if (!isYtPlayerReady) return;
+
+    if (ytPlayer.getCurrentTime() > 3) {
+        ytPlayer.seekTo(0);
+        return;
+    }
+
+    let prevIdx = currentYtIdx;
+
+    if (ytIsShuffle && ytPlayHistory.length > 0) {
+        prevIdx = ytPlayHistory.pop();
+    } else {
+        prevIdx = (currentYtIdx - 1 + ytPlaylistData.length) % ytPlaylistData.length;
+    }
+
+    currentYtIdx = prevIdx;
+    ytPlayer.loadVideoById(ytPlaylistData[currentYtIdx].id);
+    updateYtUIInfo();
+    renderYtPlaylistUI();
+}
+
+function toggleYtShuffle() {
+    ytIsShuffle = !ytIsShuffle;
+    const btn = document.getElementById('gmp-shuffle');
+    if (ytIsShuffle) {
+        btn.classList.add('active');
+        ytPlayHistory = [];
+    } else {
+        btn.classList.remove('active');
+    }
+}
+
+function toggleYtRepeat() {
+    ytRepeatMode = (ytRepeatMode + 1) % 2;
+    const icon = document.getElementById('gmp-repeat-icon');
+    const btn = document.getElementById('gmp-repeat');
+    
+    if (ytRepeatMode === 1) {
+        icon.textContent = 'repeat_one';
+        btn.classList.add('active');
+    } else {
+        icon.textContent = 'repeat';
+        btn.classList.remove('active');
+    }
+}
+
+function renderYtPlaylistUI() {
+    const ul = document.getElementById('gmp-playlist-ul');
+    ul.innerHTML = '';
+    
+    ytPlaylistData.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.className = `gmp-playlist-item ${index === currentYtIdx ? 'active' : ''}`;
+        li.onclick = () => {
+            loadAndPlayYt(index);
+            togglePlaylist();
+        };
+        li.innerHTML = `
+            <div class="p-title">${song.title}</div>
+            <div class="p-artist">${song.artist}</div>
+        `;
+        ul.appendChild(li);
+    });
+}
+
+function togglePlaylist() {
+    const popup = document.getElementById('gmp-playlist-popup');
+    const btn = document.getElementById('gmp-playlist-btn');
+    
+    if (popup.classList.contains('show')) {
+        popup.classList.remove('show');
+        btn.classList.remove('active');
+    } else {
+        popup.classList.add('show');
+        btn.classList.add('active');
+    }
+}
+
+function updateYtUIInfo() {
+    const song = ytPlaylistData[currentYtIdx];
+    document.getElementById('gmp-title').textContent = song.title;
+    document.getElementById('gmp-artist').textContent = song.artist;
+    document.getElementById('gmp-thumbnail').src = `https://img.youtube.com/vi/${song.id}/mqdefault.jpg`;
+}
+
+function startYtProgressLoop() {
+    if (!ytAnimFrameId) {
+        updateYtProgress();
+    }
+}
+
+function stopYtProgressLoop() {
+    if (ytAnimFrameId) {
+        cancelAnimationFrame(ytAnimFrameId);
+        ytAnimFrameId = null;
+    }
+}
+
+function updateYtProgress() {
+    if (ytPlayer && isYtPlayerReady) {
+        const dur = ytPlayer.getDuration();
+        const cur = ytPlayer.getCurrentTime();
+        if (dur > 0) {
+            const percent = (cur / dur) * 100;
+            document.getElementById('gmp-progress-bar').style.width = `${percent}%`;
+        }
+    }
+    ytAnimFrameId = requestAnimationFrame(updateYtProgress);
+}
+
+// 터치 시 즉각 반응 및 깜빡임 수정 포함
+function seekYtProgress(e) {
+    if (!ytPlayer || !isYtPlayerReady) return;
+    const container = document.getElementById('gmp-progress-container');
+    const rect = container.getBoundingClientRect();
+    let pos = (e.clientX - rect.left) / rect.width;
+    
+    // 클릭 범위(0~1)를 벗어나지 않도록 고정
+    pos = Math.max(0, Math.min(1, pos));
+    
+    // 즉각적인 시각적 업데이트 (깜빡임 완벽 차단)
+    document.getElementById('gmp-progress-bar').style.width = `${pos * 100}%`;
+    
+    const dur = ytPlayer.getDuration();
+    if (dur > 0) {
+        ytPlayer.seekTo(dur * pos, true);
+        if (ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
+            // 볼륨 초기화 코드 삭제
+            ytPlayer.playVideo();
+        }
+    }
+}
+
+window.addEventListener('beforeunload', () => {
+    if(animationFrameId) cancelAnimationFrame(animationFrameId);
+    stopYtProgressLoop();
+});
+
+DisableDevtool({
+    disableMenu: true,
+    interval: 1000,
+});
+
+window.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey && (e.key === 'u' || e.key === 'U')) || 
+        (e.metaKey && e.altKey && (e.key === 'u' || e.key === 'U'))) {
+        e.preventDefault();
+        return false;
+    }
+    if ((e.ctrlKey && (e.key === 's' || e.key === 'S')) || 
+        (e.metaKey && (e.key === 's' || e.key === 'S'))) {
+        e.preventDefault();
+        return false;
+    }
+    if ((e.ctrlKey && (e.key === 'p' || e.key === 'P')) || 
+        (e.metaKey && (e.key === 'p' || e.key === 'P'))) {
+        e.preventDefault();
+        return false;
+    }
+});
