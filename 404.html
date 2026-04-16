@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Dear Lord</title>
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Serif+KR:wght@400;700&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --surface-color: #1a1a1a;
+            --accent-color: #dcb850;
+            --text-primary: #f0f0f0;
+            --text-secondary: #999999;
+            --font-logo: 'Cormorant Garamond', serif;
+            --font-heading: 'Playfair Display', 'Noto Serif KR', serif;
+            --font-body: 'Montserrat', 'Noto Serif KR', sans-serif;
+            --glow-color: rgba(220, 184, 80, 0.15);
+            --glow-bg: rgba(13, 13, 13, 0);
+        }
+
+        body.theme-light {
+            --bg-color: #faf8f5;
+            --surface-color: #ffffff;
+            --accent-color: #b08419;
+            --text-primary: #2d2d2d;
+            --text-secondary: #6e6e6e;
+            --glow-color: rgba(176, 132, 25, 0.12);
+            --glow-bg: rgba(250, 248, 245, 0);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .not-found-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .divine-backglow {
+            position: absolute;
+            width: clamp(250px, 70vw, 500px);
+            height: clamp(250px, 70vw, 500px);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, var(--glow-color) 0%, var(--glow-bg) 70%);
+            filter: blur(50px);
+            animation: breatheGlow 5s infinite ease-in-out;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .error-code {
+            font-family: var(--font-logo);
+            font-size: clamp(6rem, 20vw, 10rem);
+            font-weight: 300;
+            color: var(--accent-color);
+            line-height: 1;
+            letter-spacing: 0.05em;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .error-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
+            font-style: italic;
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.2s;
+        }
+
+        .error-desc {
+            font-family: 'Noto Serif KR', serif;
+            font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+            color: var(--text-secondary);
+            line-height: 2.0;
+            word-break: keep-all;
+            margin-bottom: 45px;
+            max-width: 500px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.4s;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 40px;
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+            letter-spacing: 0.1em;
+            font-family: 'Noto Serif KR', serif;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.6s;
+        }
+
+        .cta-button:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            box-shadow: 0 0 25px rgba(220, 184, 80, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .cta-button:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes breatheGlow {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(0.95);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+        }
+
+        .footer-watermark {
+            position: absolute;
+            bottom: 30px;
+            font-family: var(--font-logo);
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+            opacity: 0.5;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="not-found-container">
+        <div class="divine-backglow"></div>
+
+        <h1 class="error-code">404</h1>
+
+        <h2 class="error-title">길을 잃으셨나요?</h2>
+        <p class="error-desc">
+            찾으시는 페이지가 존재하지 않거나 위치가 변경되었습니다.<br>
+            하지만 걱정하지 마세요.<br>
+            우리가 걷는 길에 때로는 예상치 못한 곳에 이르기도 하지만,<br>
+            주님은 언제나 바른 길로 인도하십니다.
+        </p>
+
+        <a href="/" class="cta-button">
+            <span class="material-symbols-outlined" style="font-size: 20px;">home</span>
+            메인으로 돌아가기
+        </a>
+    </div>
+
+    <div class="footer-watermark">
+        Dear Lord
+    </div>
+
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('dearLordTheme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('theme-light');
+            }
+
+            const btn = document.querySelector('.cta-button');
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const currentUrl = window.location.href;
+                const urlObj = new URL(currentUrl);
+                const pathArray = window.location.pathname.split('/');
+                let homePath = '/';
+                if (urlObj.hostname.includes('github.io') && pathArray.length > 1) {
+                    homePath = '/' + pathArray[1] + '/';
+                }
+                window.location.href = homePath;
+            });
+        })();
+    </script>
+</body>
+
+</html>
