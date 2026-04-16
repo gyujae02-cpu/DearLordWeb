@@ -29,11 +29,16 @@
 
     <header>
         <nav>
-            <div class="logo-group" style="display: flex; align-items: center; gap: 20px;">
+            <div class="logo-group" style="display: flex; align-items: center; gap: 15px;">
                 <a onclick="showPage('home')" class="logo">
                     <img src="img/DearLoadIcon_White.png" alt="Icon" class="logo-icon" onerror="this.style.display='none'">
                     <span class="logo-text">Dear Lord</span>
                 </a>
+                
+                <button id="theme-toggle-btn" onclick="toggleTheme()" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; outline:none; transition: color 0.3s; padding:5px; margin-left: auto;">
+                    <span class="material-symbols-outlined" id="theme-icon" style="font-size: 26px; font-variation-settings: 'Wght' 300;">light_mode</span>
+                </button>
+                
                 <button id="header-music-btn" onclick="toggleGlobalPlayer()" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; outline:none; transition: color 0.3s; padding:5px;">
                     <span class="material-symbols-outlined" id="header-music-icon" style="font-size: 26px; font-variation-settings: 'Wght' 300;">headset</span>
                 </button>
@@ -138,7 +143,7 @@
                             상한 마음을 어루만지시고 다시 일어설 힘을 주실 것입니다.
                         </p>
                         
-                        <div style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(212, 175, 55, 0.3); text-align: center;">
+                        <div style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(220, 184, 80, 0.3); text-align: center;">
                             <p style="font-family: 'Noto Serif KR', serif; font-size: 0.9rem; font-style: italic; color: var(--accent-color); line-height: 1.6; opacity: 0.9;">
                                 "수고하고 무거운 짐 진 자들아<br>다 내게로 오라 내가 너희를 쉬게 하리라"
                             </p>
@@ -172,7 +177,7 @@
                         <h4><span class="material-symbols-outlined">copyright</span>Resources & Credits</h4>
                         <p>
                             • <b>Scripture:</b> 성경전서 개역한글판<br>
-                            • <b>Prayers:</b> Instagram @Jun.Bible <a href="https://www.instagram.com/jun.bible/" target="_blank" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
+                            • <b>Prayers:</b> Instagram @jun.bible <a href="https://www.instagram.com/jun.bible/" target="_blank" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
                             • <b>Images:</b> The Chosen Series <a href="https://chosentv.kr/" target="_blank" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
                             • <b>Music:</b> "복음밖에 없습니다" 외 선별된 유튜브 찬양 모음
                         </p>
@@ -214,6 +219,7 @@
                     <span style="font-family: 'Noto Serif KR', serif; font-size: clamp(0.85rem, 3vw, 0.95rem); letter-spacing: 0.1em; font-style: italic; margin-bottom: 15px; color: var(--accent-color);">Jesus Loves You</span>
                     <img src="img/DearLoadIcon_White.png" alt="Dear Lord Watermark" onerror="this.style.display='none'">
                     <span class="watermark-text">Dear Lord</span>
+                    <span class="copyright-text">&copy; 2026 JAEGYU LEE. All Rights Reserved.</span>
                 </div>
             </div>
         </div>
