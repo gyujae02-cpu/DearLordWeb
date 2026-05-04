@@ -60,9 +60,9 @@
                 <li><a onclick="showPage('home')" id="nav-home" class="active"><span
                             class="material-symbols-outlined nav-icon">home</span><span class="nav-text">소개</span></a>
                 </li>
-                <li><a onclick="showPage('lords-prayer')" id="nav-lords-prayer"><span
+                <li><a onclick="showPage('bible')" id="nav-bible"><span
                             class="material-symbols-outlined nav-icon">menu_book</span><span
-                            class="nav-text">주기도문</span></a></li>
+                            class="nav-text">말씀</span></a></li>
                 <li><a onclick="showPage('prayer')" id="nav-prayer"><span
                             class="material-symbols-outlined nav-icon">front_hand</span><span class="nav-text">상황별
                             기도</span></a></li>
@@ -118,16 +118,25 @@
             </div>
         </div>
 
-        <div id="page-lords-prayer" class="page">
-            <!-- 3D Flip Card Container -->
-            <div class="flip-container scroll-area">
-                <div class="flip-inner">
-                    <!-- 앞면 -->
-                    <div class="flip-front lords-prayer-content">
-                        <div class="font-controls-container">
-                            <button class="font-btn card-flip-btn" onclick="window.flipCard(this)" title="카드 뒤집기">
-                                <span class="material-symbols-outlined">sync</span>
-                            </button>
+        <div id="page-bible" class="page">
+            <div class="bible-container scroll-area">
+                <div class="bible-header prayer-view-content" style="padding: 15px 25px; margin-bottom: 20px;">
+                    <div class="font-controls-container" style="justify-content: space-between; margin: 0; padding: 0; align-items: center;">
+                        <div class="bible-selectors">
+                            <div class="select-wrapper">
+                                <select id="bible-book-select" onchange="changeBibleBook()"></select>
+                                <span class="material-symbols-outlined select-arrow">expand_more</span>
+                            </div>
+                            <div class="select-wrapper">
+                                <select id="bible-chapter-select" onchange="changeBibleChapter()"></select>
+                                <span class="material-symbols-outlined select-arrow">expand_more</span>
+                            </div>
+                            <div class="select-wrapper">
+                                <select id="bible-verse-select" onchange="changeBibleVerse()"></select>
+                                <span class="material-symbols-outlined select-arrow">expand_more</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-shrink: 0;">
                             <button class="font-btn" onclick="adjustFontSize(-0.1)" title="글자 축소">
                                 <span class="material-symbols-outlined">remove</span>
                             </button>
@@ -135,32 +144,12 @@
                                 <span class="material-symbols-outlined">add</span>
                             </button>
                         </div>
-                        <h3>The Lord's Prayer</h3>
-                        <p class="lords-prayer-text">
-                            하늘에 계신 우리 아버지,<br>
-                            아버지의 이름을 거룩하게 하시며,<br>
-                            아버지의 나라가 오게 하시며,<br>
-                            아버지의 뜻이 하늘에서와 같이 땅에서도 이루어지게 하소서.<br>
-                            오늘 우리에게 일용할 양식을 주시고,<br>
-                            우리가 우리에게 잘못한 사람을 용서하여 준 것 같이<br>
-                            우리 죄를 용서하여 주시고,<br>
-                            우리를 시험에 빠지지 않게 하시고, 악에서 구하소서.<br>
-                            나라와 권능과 영광이 영원히 아버지의 것입니다. 아멘
-                        </p>
-                    </div>
-                    <!-- 뒷면 -->
-                    <div class="flip-back lords-prayer-content">
-                        <button class="font-btn card-flip-btn flip-back-btn" onclick="window.flipCard(this)" title="앞면으로">
-                            <span class="material-symbols-outlined">sync</span>
-                        </button>
-                        <div class="info-watermark" style="margin: 0; opacity: 1;">
-                            <img src="img/the_chosen_jesus_1.png" alt="Jesus" class="card-back-image" onerror="this.style.display='none'">
-                            <span style="font-family: 'Noto Serif KR', serif; font-size: clamp(0.85rem, 3vw, 0.95rem); letter-spacing: 0.1em; font-style: italic; margin-bottom: 15px; color: var(--accent-color);">Jesus Loves You</span>
-                            <img src="img/DearLoadIcon_White.png" alt="Dear Lord Watermark" onerror="this.style.display='none'">
-                            <span class="watermark-text">Dear Lord</span>
-                        </div>
                     </div>
                 </div>
+                
+                <div id="bible-content" class="prayer-view-content" style="padding: 30px; border-radius: 16px;"></div>
+                
+                <div id="bible-nav-buttons" class="prayer-nav-buttons" style="border-top: none; margin-top: 10px; margin-bottom: 20px;"></div>
             </div>
         </div>
 
@@ -374,6 +363,7 @@
     </footer>
 
     <script src="assets/js/prayers.js"></script>
+    <script src="assets/js/bible.js"></script> 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
     <script src="assets/js/script.js"></script>
