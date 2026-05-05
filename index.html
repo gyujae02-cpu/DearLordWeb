@@ -119,35 +119,37 @@
         </div>
 
         <div id="page-bible" class="page">
-            <div class="bible-container scroll-area">
-                <div class="bible-header prayer-view-content" style="padding: 15px 25px; margin-bottom: 20px;">
-                    <div class="font-controls-container" style="justify-content: space-between; margin: 0; padding: 0; align-items: center;">
-                        <div class="bible-selectors">
-                            <div class="select-wrapper">
-                                <select id="bible-book-select" onchange="changeBibleBook()"></select>
-                                <span class="material-symbols-outlined select-arrow">expand_more</span>
+            <div class="bible-container scroll-area" id="bible-scroll-container">
+                <div id="bible-header-wrap" style="position: sticky; top: 0; z-index: 100; padding: 10px 0; background: transparent; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);">
+                    <div class="bible-header prayer-view-content" style="padding: 15px 25px; margin: 0; background: rgba(26, 26, 26, 0.85);">
+                        <div class="font-controls-container" style="justify-content: space-between; margin: 0; padding: 0; align-items: center;">
+                            <div class="bible-selectors">
+                                <div class="select-wrapper">
+                                    <select id="bible-book-select" onchange="changeBibleBook()"></select>
+                                    <span class="material-symbols-outlined select-arrow">expand_more</span>
+                                </div>
+                                <div class="select-wrapper">
+                                    <select id="bible-chapter-select" onchange="changeBibleChapter()"></select>
+                                    <span class="material-symbols-outlined select-arrow">expand_more</span>
+                                </div>
+                                <div class="select-wrapper">
+                                    <select id="bible-verse-select" onchange="changeBibleVerse()"></select>
+                                    <span class="material-symbols-outlined select-arrow">expand_more</span>
+                                </div>
                             </div>
-                            <div class="select-wrapper">
-                                <select id="bible-chapter-select" onchange="changeBibleChapter()"></select>
-                                <span class="material-symbols-outlined select-arrow">expand_more</span>
+                            <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                                <button class="font-btn" onclick="adjustFontSize(-0.1)" title="글자 축소">
+                                    <span class="material-symbols-outlined">remove</span>
+                                </button>
+                                <button class="font-btn" onclick="adjustFontSize(0.1)" title="글자 확대">
+                                    <span class="material-symbols-outlined">add</span>
+                                </button>
                             </div>
-                            <div class="select-wrapper">
-                                <select id="bible-verse-select" onchange="changeBibleVerse()"></select>
-                                <span class="material-symbols-outlined select-arrow">expand_more</span>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                            <button class="font-btn" onclick="adjustFontSize(-0.1)" title="글자 축소">
-                                <span class="material-symbols-outlined">remove</span>
-                            </button>
-                            <button class="font-btn" onclick="adjustFontSize(0.1)" title="글자 확대">
-                                <span class="material-symbols-outlined">add</span>
-                            </button>
                         </div>
                     </div>
                 </div>
                 
-                <div id="bible-content" class="prayer-view-content" style="padding: 30px; border-radius: 16px;"></div>
+                <div id="bible-content" class="prayer-view-content" style="padding: 30px; border-radius: 16px; margin-top: 10px;"></div>
                 
                 <div id="bible-nav-buttons" class="prayer-nav-buttons" style="border-top: none; margin-top: 10px; margin-bottom: 20px;"></div>
             </div>
@@ -290,7 +292,7 @@
     </main>
 
     <div id="global-music-player">
-        <div id="yt-player-container" style="display:none;"></div>
+        <div id="yt-player-container" style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0.01; pointer-events: none;"></div>
 
         <div id="gmp-playlist-popup" class="scroll-area">
             <div class="gmp-playlist-header">
@@ -361,9 +363,10 @@
     <footer>
         <p>Jesus Loves You</p>
     </footer>
-
+    
     <script src="assets/js/prayers.js"></script>
     <script src="assets/js/bible.js"></script> 
+    <script src="assets/js/playlist.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
     <script src="assets/js/script.js"></script>
