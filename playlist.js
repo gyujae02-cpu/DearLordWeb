@@ -4,7 +4,6 @@
     window.ytPlaylistData = [
         { id: 'RzxpiSMyJ8o', title: '주님 손 잡고 일어서세요', artist: '호연하다' },
         { id: 'BanVgeqO7m4', title: '하나님은 너를 지키시는 자', artist: '호연하다' },
-        { id: 'zxsPkTaN24', title: '내 이름 아시죠', artist: '호연하다' },
 
         { id: 'GU6VfynUTuA', title: '베드로의 고백', artist: '아가파오 워십'},
         { id: 'H9ZNXLhnI7M', title: '주님 무어라 말할까요', artist: '아가파오 워십' },
@@ -33,10 +32,8 @@
         { id: '8PEKtpFsWiI', title: '주가 일하시네', artist: '예람워십 (Yeram Worship)' },
         { id: 'pjoTQN7Sy1I', title: '오직 주만이 / 주의 음성을 내가 들으니', artist: '예람워십 (Yeram Worship)' },
 
-        { id: '3ZFnSEH6Hfk', title: '나의 안에 거하라', artist: '달빛마을 (Moonlight Village)' },
-        { id: 'EDvF_eGRt48', title: '나 주를 사랑합니다', artist: '달빛마을 (Moonlight Village)' },
-
         { id: 't0CYXeqYdnE', title: '꽃들도 (花も)', artist: '제이워십' },
+        { id: '3ZFnSEH6Hfk', title: '나의 안에 거하라', artist: '달빛마을 (Moonlight Village)' },
         { id: 'CDeWAlagzQc', title: '주님을 바라봅니다', artist: '위클레시아 (WECCLESIA)' },
         { id: 'ctP6td3vTpo', title: '주 예수 내 산 소망', artist: '데이빗밴드 (Daybeat Band)' },
         { id: 'Wxp2h2a9P34', title: '아무것도 두려워 말라', artist: 'Gina' },
