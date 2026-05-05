@@ -4,9 +4,8 @@
     window.ytPlaylistData = [
         { id: 'RzxpiSMyJ8o', title: '주님 손 잡고 일어서세요', artist: '호연하다' },
         { id: 'BanVgeqO7m4', title: '하나님은 너를 지키시는 자', artist: '호연하다' },
-        { id: 'eWOOx1J-vJk', title: '내 이름 아시죠', artist: '호연하다' },
 
-        { id: 'GU6VfynUTuA', title: '베드로의 고백', artist: '아가파오 워십' },
+        { id: 'GU6VfynUTuA', title: '베드로의 고백', artist: '아가파오 워십'},
         { id: 'H9ZNXLhnI7M', title: '주님 무어라 말할까요', artist: '아가파오 워십' },
 
         { id: '1PldxiT4bro', title: '탕자의 고백', artist: '팀룩워십 (Team Luke Worship)' },
@@ -43,8 +42,6 @@
         { id: 'zZLNzOMIZKY', title: '기대 (주 안에 우린 하나)', artist: 'Luvim' },
         { id: '9vS0aGxVHjk', title: '전능하신 나의 주 하나님은', artist: '마커스워십 (Markers Worship)' },
         { id: '_OJLMWtkYWE', title: '깊은 곳에 나아가 / 주 품에', artist: 'WELOVE' },
-
-        { id: 'Jy6AOGRsR80', title: 'The Battle Hymn of the Republic', artist: 'The United States Army Field Band' },
 
     ];
 })();
