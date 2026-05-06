@@ -303,11 +303,11 @@
             <ul id="gmp-playlist-ul" style="list-style: none;"></ul>
         </div>
 
-        <div class="gmp-progress-container" id="gmp-progress-container" onclick="seekYtProgress(event)">
+        <div class="gmp-progress-container" id="gmp-progress-container" onclick="seekYtProgress(event, 'gmp-progress-container')">
             <div class="gmp-progress-bar" id="gmp-progress-bar"></div>
         </div>
         <div class="gmp-controls-wrapper">
-            <div class="gmp-info">
+            <div class="gmp-info" onclick="openFullscreenPlayer()" style="cursor: pointer;">
                 <div class="gmp-thumbnail-wrapper">
                     <img id="gmp-thumbnail" src="" alt="Thumbnail">
                 </div>
@@ -339,7 +339,81 @@
                 <button class="gmp-btn" id="gmp-playlist-btn" onclick="togglePlaylist()" title="플레이리스트">
                     <span class="material-symbols-outlined">queue_music</span>
                 </button>
+                <button class="gmp-btn" id="gmp-fullscreen-btn" onclick="openFullscreenPlayer()" title="전체화면">
+                    <span class="material-symbols-outlined">keyboard_arrow_up</span>
+                </button>
             </div>
+        </div>
+    </div>
+
+    <!-- 전체화면 플레이어 -->
+    <div id="fullscreen-player">
+        <div id="fs-bg"></div>
+        <div class="fs-header">
+            <button onclick="closeFullscreenPlayer()" title="닫기">
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <button id="fs-playlist-btn" onclick="toggleFsPlaylist()" title="플레이리스트">
+                <span class="material-symbols-outlined">queue_music</span>
+            </button>
+        </div>
+        
+        <div class="fs-content">
+            <div class="fs-artwork-wrap">
+                <img id="fs-artwork" src="" alt="Artwork">
+            </div>
+            
+            <div class="fs-right-column">
+                <div class="fs-info-area">
+                    <div class="fs-text-info">
+                        <h2 id="fs-title-large">-</h2>
+                        <p id="fs-artist-large">-</p>
+                    </div>
+                </div>
+
+                <!-- 가사 영역 -->
+                <div class="fs-lyrics-area">
+                    <div id="fs-lyrics-container">
+                        <!-- JS에서 가사 생성 -->
+                    </div>
+                </div>
+
+                <div class="fs-progress-area">
+                    <div class="fs-progress-container" id="fs-progress-container" onclick="seekYtProgress(event, 'fs-progress-container')">
+                        <div class="fs-progress-bar" id="fs-progress-bar"></div>
+                    </div>
+                    <div class="fs-time-labels">
+                        <span id="fs-time-current">0:00</span>
+                        <span id="fs-time-total">0:00</span>
+                    </div>
+                </div>
+
+                <div class="fs-controls">
+                    <button class="gmp-btn" id="fs-shuffle" onclick="toggleYtShuffle()">
+                        <span class="material-symbols-outlined">shuffle</span>
+                    </button>
+                    <button class="gmp-btn" id="fs-prev" onclick="playPrevYt()">
+                        <span class="material-symbols-outlined">skip_previous</span>
+                    </button>
+                    <button class="gmp-btn gmp-play-btn" id="fs-playpause" onclick="toggleYtPlayPause()">
+                        <span class="material-symbols-outlined" id="fs-playpause-icon">play_circle</span>
+                    </button>
+                    <button class="gmp-btn" id="fs-next" onclick="playNextYt()">
+                        <span class="material-symbols-outlined">skip_next</span>
+                    </button>
+                    <button class="gmp-btn" id="fs-repeat" onclick="toggleYtRepeat()">
+                        <span class="material-symbols-outlined" id="fs-repeat-icon">repeat</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 전체화면 플레이리스트 오버레이 -->
+        <div id="fs-playlist-overlay">
+            <div class="fs-playlist-overlay-header">
+                <h3>플레이리스트</h3>
+            </div>
+            <ul id="fs-playlist-ul" class="scroll-area"></ul>
         </div>
     </div>
 
