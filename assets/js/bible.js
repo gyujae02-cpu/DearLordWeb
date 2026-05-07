@@ -18,7 +18,7 @@
     };
 
     const rawBibleText =
-    `창1:1 태초에 하나님이 천지를 창조하시니라
+        `창1:1 태초에 하나님이 천지를 창조하시니라
 창1:2 땅이 혼돈하고 공허하며 흑암이 깊음 위에 있고 하나님의 신은 수면에 운행하시니라
 창1:3 하나님이 가라사대 빛이 있으라 하시매 빛이 있었고
 창1:4 그 빛이 하나님의 보시기에 좋았더라 하나님이 빛과 어두움을 나누사
@@ -31125,13 +31125,13 @@
 
     function initBibleData() {
         const lines = rawBibleText.trim().split('\n');
-        
+
         lines.forEach(line => {
             line = line.trim();
             if (!line) return;
 
             const match = line.match(/^([가-힣]+)(\d+):(\d+)\s+(.+)$/);
-            
+
             if (match) {
                 const book = match[1];
                 const chapter = parseInt(match[2], 10);
@@ -31142,11 +31142,11 @@
                     window.bibleData[book] = {};
                     window.bibleBooks.push(book);
                 }
-                
+
                 if (!window.bibleData[book][chapter]) {
                     window.bibleData[book][chapter] = [];
                 }
-                
+
                 window.bibleData[book][chapter].push({ verse, text });
             }
         });
