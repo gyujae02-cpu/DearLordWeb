@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Serif+KR:wght@400;700&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;700&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
@@ -31,7 +31,10 @@
                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2Q0YWYzNyI+PHBhdGggZD0iTTEyIDJMMTIgMjJNMCAxMkwyNCAxMiIgc3Ryb2tlPSIjZDRhZjM3IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4='">
                 <div class="splash-text">Dear Lord</div>
             </div>
-            <div class="splash-subtext">TAP TO BEGIN</div>
+            <div class="splash-subtext" id="loading-text">0%</div>
+            <div class="splash-progress-wrap">
+                <div class="splash-progress-bar" id="loading-bar"></div>
+            </div>
         </div>
     </div>
 
@@ -58,7 +61,7 @@
             </div>
             <ul class="nav-links">
                 <li><a onclick="showPage('home')" id="nav-home" class="active"><span
-                            class="material-symbols-outlined nav-icon">home</span><span class="nav-text">소개</span></a>
+                            class="material-symbols-outlined nav-icon">home</span><span class="nav-text">홈</span></a>
                 </li>
                 <li><a onclick="showPage('bible')" id="nav-bible"><span
                             class="material-symbols-outlined nav-icon">menu_book</span><span
@@ -75,54 +78,82 @@
 
     <main>
         <div id="page-home" class="page active">
-            <div class="cinematic-container scroll-area"
-                style="overflow-y: auto; max-height: 100%; padding: 10px 0; scrollbar-width: none;">
-                <section class="web-description" id="web-desc">
-                    <h2>Psalms 86:6-7</h2>
-                    <p class="bible-verse">
-                        여호와여 나의 기도에 귀를 기울이시고 나의 간구하는 소리를 들으소서,<br>
-                        나의 환난 날에 내가 주께 부르짖으리니 주께서 내게 응답하시리이다
-                    </p>
-                    <a href="javascript:void(0)" onclick="showPage('prayer')" class="cta-button">상황별 기도문 보기</a>
-                </section>
+            <div class="cinematic-container scroll-area">
 
                 <div class="cinematic-header">
                     <div class="divine-backglow"></div>
-                    <img src="img/the_chosen_jesus.png" alt="Jesus" class="divine-cross-image"
-                        onerror="this.style.opacity='0'">
+                    <div class="home-yt-wrapper" id="home-yt-wrapper">
+                        <div id="home-yt-player"></div>
+                        <!-- 추가된 오버레이 영역 (영상 종료 시 표시) -->
+                        <div id="home-yt-overlay">
+                            <button class="play-btn overlay-replay-btn" onclick="replayHomeYt()" title="다시 재생">
+                                <div class="play-icon-container">
+                                    <span class="material-symbols-outlined" style="font-size: 32px;">replay</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="lyrics-wrap"
-                    style="min-height:70px; display:flex; justify-content:center; align-items:center;">
+                <div class="lyrics-wrap">
                     <div id="cinematic-text"></div>
                 </div>
 
                 <div class="song-control-wrap">
-                    <button id="play-pause-btn" class="play-btn" onclick="toggleAudio()" title="재생/일시정지">
-                        <div class="play-icon-container">
-                            <svg id="play-svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"
-                                style="transform: translateX(1px); transition: opacity 0.3s;">
-                                <polygon points="8 5 19 12 8 19"></polygon>
-                            </svg>
-                            <svg id="pause-svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"
-                                style="display: none; transition: opacity 0.3s;">
-                                <line x1="9" y1="5" x2="9" y2="19"></line>
-                                <line x1="15" y1="5" x2="15" y2="19"></line>
-                            </svg>
-                        </div>
-                    </button>
-                    <div class="song-info">주님여 이 손을 - 호연하다</div>
+                    <div class="song-info" id="home-yt-info"
+                        style="margin-bottom: 12px; font-weight: 400; font-size: 0.85rem;">
+                        &lt;더 초즌&gt; 시즌 3 에피소드 2 中
+                    </div>
+
+                    <div style="display: flex; gap: 20px; align-items: center; justify-content: center;">
+                        <button id="replay-btn" class="play-btn" onclick="replayHomeYt()" title="다시 재생">
+                            <div class="play-icon-container">
+                                <span class="material-symbols-outlined" style="font-size: 24px;">replay</span>
+                            </div>
+                        </button>
+
+                        <button id="mute-toggle-btn" class="play-btn" onclick="toggleHomeMute()" title="음소거/해제">
+                            <div class="play-icon-container">
+                                <svg id="vol-off-svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="transition: opacity 0.3s;">
+                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                                </svg>
+                                <svg id="vol-up-svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="display: none; transition: opacity 0.3s;">
+                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                </svg>
+                            </div>
+                        </button>
+                    </div>
                 </div>
+
+                <div class="home-cta-capsule">
+                    <a href="javascript:void(0)" onclick="showPage('bible')" class="capsule-btn border-right">
+                        <span class="material-symbols-outlined">menu_book</span>
+                        <span class="capsule-text">말씀 보기</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="showPage('prayer')" class="capsule-btn">
+                        <span class="material-symbols-outlined">front_hand</span>
+                        <span class="capsule-text">상황별 기도</span>
+                    </a>
+                </div>
+
             </div>
         </div>
 
         <div id="page-bible" class="page">
             <div class="bible-container scroll-area" id="bible-scroll-container">
-                <div id="bible-header-wrap" style="position: sticky; top: 0; z-index: 100; padding: 10px 0; background: transparent; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);">
-                    <div class="bible-header prayer-view-content" style="padding: 15px 25px; margin: 0; background: rgba(26, 26, 26, 0.85);">
-                        <div class="font-controls-container" style="justify-content: space-between; margin: 0; padding: 0; align-items: center;">
+                <div id="bible-header-wrap"
+                    style="position: sticky; top: 0; z-index: 100; padding: 10px 0; background: transparent; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);">
+                    <div class="bible-header prayer-view-content"
+                        style="padding: 15px 25px; margin: 0; background: rgba(26, 26, 26, 0.85);">
+                        <div class="font-controls-container"
+                            style="justify-content: space-between; margin: 0; padding: 0; align-items: center;">
                             <div class="bible-selectors">
                                 <div class="select-wrapper">
                                     <select id="bible-book-select" onchange="changeBibleBook()"></select>
@@ -148,10 +179,11 @@
                         </div>
                     </div>
                 </div>
-                
-                <div id="bible-content" class="prayer-view-content" style="padding: 30px; border-radius: 16px; margin-top: 10px;"></div>
-                
-                <div id="bible-nav-buttons" class="prayer-nav-buttons" style="border-top: none; margin-top: 10px; margin-bottom: 20px;"></div>
+
+                <div id="bible-content" class="prayer-view-content"
+                    style="padding: 30px; border-radius: 16px; margin-top: 10px;"></div>
+                <div id="bible-nav-buttons" class="prayer-nav-buttons"
+                    style="border-top: none; margin-top: 10px; margin-bottom: 20px;"></div>
             </div>
         </div>
 
@@ -180,8 +212,11 @@
                     <div class="info-card">
                         <h4><span class="material-symbols-outlined">auto_awesome</span>Vision & Purpose</h4>
                         <p>
-                            당신과 주님이 만나는 진실한 기도의 자리에 따뜻한 동행이 되어 드립니다.<br>
-                            매일의 일상 속에서 변함없는 은혜와 사랑을 경험해 보세요.
+                            모든 상황 속에 살아있는 말씀의 능력을 선포하며,<br>
+                            주님과 마주하는 담대한 기도의 자리를 세워갑니다.<br>
+                            <br>
+                            매일의 삶을 관통하는 변함없는 진리 안에서<br>
+                            참된 평안과 위로와 권세를 누리십시오.
                         </p>
 
                         <div
@@ -218,13 +253,18 @@
                     <div class="info-card">
                         <h4><span class="material-symbols-outlined">copyright</span>Resources & Credits</h4>
                         <p>
-                            • <b>Scripture:</b> 성경전서 개역한글판<br>
+                            • <b>Scripture:</b> 성경전서 개역한글판 <a
+                                href="https://www.bskorea.or.kr/bbs/content.php?co_id=subpage2_3_4_1" target="_blank"
+                                style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
+
                             • <b>Prayers:</b> Instagram @jun.bible <a href="https://www.instagram.com/jun.bible/"
                                 target="_blank"
                                 style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
-                            • <b>Images:</b> The Chosen Series <a href="https://chosentv.kr/" target="_blank"
+
+                            • <b>Videos:</b> The Chosen Series <a href="https://watch.thechosen.tv/" target="_blank"
                                 style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
-                            • <b>Music:</b> "주님여 이 손을 - 호연하다" 외 선별된 유튜브 찬양 모음
+
+                            • <b>Music:</b> 선별된 유튜브 찬양 모음
                         </p>
                     </div>
                 </section>
@@ -246,9 +286,8 @@
 
                 <div
                     style="text-align: center; margin-top: 30px; animation: fadeInUp 1s ease forwards; animation-delay: 0.4s; opacity: 0;">
-                    <a onclick="copyShareLink(this)" class="cta-button"
-                        style="margin-top: 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 300px;">
-                        <span class="material-symbols-outlined" style="font-size: 18px;">link</span> 주소 복사하기
+                    <a onclick="copyShareLink(this)" class="cta-button">
+                        <span class="material-symbols-outlined">link</span> 주소 복사하기
                     </a>
                 </div>
 
@@ -265,34 +304,35 @@
                     </div>
                 </div>
 
-               <div class="info-watermark" style="animation-delay: 0.5s; animation: fadeInUp 1s ease forwards;">
-                <span style="font-family: 'Noto Serif KR', serif; font-size: clamp(0.85rem, 3vw, 0.95rem); letter-spacing: 0.1em; font-style: italic; margin-bottom: 15px; color: var(--accent-color);">
-                    Jesus Loves You
-                </span>
+                <div class="info-watermark" style="animation-delay: 0.5s; animation: fadeInUp 1s ease forwards;">
+                    <span
+                        style="font-family: 'Noto Serif KR', serif; font-size: clamp(0.85rem, 3vw, 0.95rem); letter-spacing: 0.1em; font-style: italic; margin-bottom: 15px; color: var(--accent-color);">
+                        Jesus Loves You
+                    </span>
 
-                <img src="img/DearLoadIcon_White.png" alt="Dear Lord Watermark" onerror="this.style.display='none'">
-                <span class="watermark-text">Dear Lord</span>
-                <div style="margin: 20px 0 0 0;">
-                    <img src="https://hits.sh/dearlord.kr.svg?style=for-the-badge&label=VISITS&color=dcb850" 
-                    alt="VISITS" 
-                    style="width: 77px !important; height: auto !important; 
+                    <img src="img/DearLoadIcon_White.png" alt="Dear Lord Watermark" onerror="this.style.display='none'">
+                    <span class="watermark-text">Dear Lord</span>
+                    <div style="margin: 20px 0 0 0;">
+                        <img src="https://hits.sh/dearlord.kr.svg?style=for-the-badge&label=VISITS&color=dcb850"
+                            alt="VISITS" style="width: 77px !important; height: auto !important; 
                     filter: none !important; 
                     -webkit-filter: none !important;
                     opacity: 1 !important; 
                     display: inline-block !important;
                     aspect-ratio: auto !important;
                     background: none !important;
-                    border: none !important;"
-                    onerror="this.style.display='none'">
-                </div>
+                    border: none !important;" onerror="this.style.display='none'">
+                    </div>
 
-                <span class="copyright-text">&copy; 2026 JAEGYU LEE. All Rights Reserved.</span>
+                    <span class="copyright-text">&copy; 2026 JAEGYU LEE. All Rights Reserved.</span>
+                </div>
             </div>
-        </div>
     </main>
 
     <div id="global-music-player">
-        <div id="yt-player-container" style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0.01; pointer-events: none;"></div>
+        <div id="yt-player-container"
+            style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0.01; pointer-events: none;">
+        </div>
 
         <div id="gmp-playlist-popup" class="scroll-area">
             <div class="gmp-playlist-header">
@@ -303,7 +343,8 @@
             <ul id="gmp-playlist-ul" style="list-style: none;"></ul>
         </div>
 
-        <div class="gmp-progress-container" id="gmp-progress-container" onclick="seekYtProgress(event, 'gmp-progress-container')">
+        <div class="gmp-progress-container" id="gmp-progress-container"
+            onclick="seekYtProgress(event, 'gmp-progress-container')">
             <div class="gmp-progress-bar" id="gmp-progress-bar"></div>
         </div>
         <div class="gmp-controls-wrapper">
@@ -357,12 +398,12 @@
                 <span class="material-symbols-outlined">queue_music</span>
             </button>
         </div>
-        
+
         <div class="fs-content">
             <div class="fs-artwork-wrap">
                 <img id="fs-artwork" src="" alt="Artwork">
             </div>
-            
+
             <div class="fs-right-column">
                 <div class="fs-info-area">
                     <div class="fs-text-info">
@@ -371,15 +412,13 @@
                     </div>
                 </div>
 
-                <!-- 가사 영역 -->
                 <div class="fs-lyrics-area">
-                    <div id="fs-lyrics-container">
-                        <!-- JS에서 가사 생성 -->
-                    </div>
+                    <div id="fs-lyrics-container"></div>
                 </div>
 
                 <div class="fs-progress-area">
-                    <div class="fs-progress-container" id="fs-progress-container" onclick="seekYtProgress(event, 'fs-progress-container')">
+                    <div class="fs-progress-container" id="fs-progress-container"
+                        onclick="seekYtProgress(event, 'fs-progress-container')">
                         <div class="fs-progress-bar" id="fs-progress-bar"></div>
                     </div>
                     <div class="fs-time-labels">
@@ -401,14 +440,13 @@
                     <button class="gmp-btn" id="fs-next" onclick="playNextYt()">
                         <span class="material-symbols-outlined">skip_next</span>
                     </button>
-                    <button class="gmp-btn" id="fs-repeat" onclick="toggleYtRepeat()">
+                    <button class="gmp-btn" id="fs-repeat" onclick="toggleYtRepeat()" title="반복 재생">
                         <span class="material-symbols-outlined" id="fs-repeat-icon">repeat</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- 전체화면 플레이리스트 오버레이 -->
         <div id="fs-playlist-overlay">
             <div class="fs-playlist-overlay-header">
                 <h3>플레이리스트</h3>
@@ -430,16 +468,8 @@
         </div>
     </div>
 
-    <audio id="main-audio" preload="auto">
-        <source src="주님여_이_손을-호연하다.mp3" type="audio/mpeg">
-    </audio>
-
-    <footer>
-        <p>Jesus Loves You</p>
-    </footer>
-    
     <script src="assets/js/prayers.js"></script>
-    <script src="assets/js/bible.js"></script> 
+    <script src="assets/js/bible.js"></script>
     <script src="assets/js/playlist.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
