@@ -84,7 +84,6 @@
                     <div class="divine-backglow"></div>
                     <div class="home-yt-wrapper" id="home-yt-wrapper">
                         <div id="home-yt-player"></div>
-                        <!-- 추가된 오버레이 영역 (영상 종료 시 표시) -->
                         <div id="home-yt-overlay">
                             <button class="play-btn overlay-replay-btn" onclick="replayHomeYt()" title="다시 재생">
                                 <div class="play-icon-container">
@@ -132,14 +131,15 @@
                     </div>
                 </div>
 
-                <div class="home-cta-capsule">
-                    <a href="javascript:void(0)" onclick="showPage('bible')" class="capsule-btn border-right">
+                <div class="home-minimal-cta">
+                    <a href="javascript:void(0)" onclick="showPage('bible')" class="minimal-btn">
                         <span class="material-symbols-outlined">menu_book</span>
-                        <span class="capsule-text">말씀 보기</span>
+                        <span class="minimal-text">말씀 보기</span>
                     </a>
-                    <a href="javascript:void(0)" onclick="showPage('prayer')" class="capsule-btn">
+                    <span class="cta-divider">|</span>
+                    <a href="javascript:void(0)" onclick="showPage('prayer')" class="minimal-btn">
                         <span class="material-symbols-outlined">front_hand</span>
-                        <span class="capsule-text">상황별 기도</span>
+                        <span class="minimal-text">상황별 기도</span>
                     </a>
                 </div>
 
@@ -214,20 +214,17 @@
                         <p>
                             모든 상황 속에 살아있는 말씀의 능력을 선포하며,<br>
                             주님과 마주하는 담대한 기도의 자리를 세워갑니다.<br>
-                            <br>
-                            매일의 삶을 관통하는 변함없는 진리 안에서<br>
-                            참된 평안과 위로와 권세를 누리십시오.
                         </p>
 
                         <div
                             style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(220, 184, 80, 0.3); text-align: center;">
                             <p
                                 style="font-family: 'Noto Serif KR', serif; font-size: 0.9rem; font-style: italic; color: var(--accent-color); line-height: 1.6; opacity: 0.9;">
-                                "수고하고 무거운 짐 진 자들아<br>다 내게로 오라 내가 너희를 쉬게 하리라"
+                                "아무것도 염려하지 말고 오직 모든 일에 기도와 간구로<br>너희 구할 것을 감사함으로 하나님께 아뢰라"
                             </p>
                             <span
                                 style="display: block; margin-top: 8px; font-size: 0.75rem; color: var(--text-secondary); opacity: 0.7;">
-                                - 마태복음 11:28 -
+                                - 빌립보서 4:6 -
                             </span>
                         </div>
                     </div>
@@ -457,19 +454,23 @@
 
     <div id="inapp-warning-modal" class="modal-overlay">
         <div class="modal-content">
+            <button class="modal-close-icon" onclick="closeInAppWarning()" title="닫기">
+                <span class="material-symbols-outlined">close</span>
+            </button>
             <span class="material-symbols-outlined modal-icon">open_in_browser</span>
             <h3>기본 브라우저 사용 권장</h3>
             <p>카카오톡, 인스타그램 등의 앱 내 브라우저에서는<br>유튜브 음악 재생이 원활하지 않을 수 있습니다.<br>안정적인 감상을 위해 <b>삼성, 사파리, 크롬, 파이어폭스 브라우저
                     등</b><br>기본 브라우저를 이용해 주세요.</p>
             <div class="modal-buttons">
-                <button class="modal-btn btn-close" onclick="closeInAppWarning()">그냥 재생하기</button>
+                <button class="modal-btn btn-close" id="modal-btn-close" onclick="closeInAppWarning()">그냥 재생하기</button>
                 <button class="modal-btn btn-copy" onclick="copyUrlForExternal()">주소 복사하기</button>
             </div>
         </div>
     </div>
+    
+    <div id="toast-container" class="toast-container"></div>
 
     <script src="assets/js/prayers.js"></script>
-    <script src="assets/js/bible.js"></script>
     <script src="assets/js/playlist.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
