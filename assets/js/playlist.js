@@ -51,6 +51,9 @@
             ]
         },
         {
+            id: 'zOB-p6q87KY', title: '너는 내게 와 편히 쉬어라', artist: '호연하다'
+        },
+        {
             id: 'BanVgeqO7m4', title: '하나님은 너를 지키시는 자', artist: '호연하다',
             lyrics: [
                 { start: "00:00.00", text: "하나님은 너를 지키시는 자" },
@@ -523,10 +526,12 @@
         { id: 'acS4DAMFGWA', title: '내가 매일 해야 하는 말', artist: '손경민 (With 아이빅밴드, 지선, 이윤화)' },
 
         { id: 'Qek0xGCTCIc', title: '나는 믿네', artist: '피아워십 (F.I.A Worship)' },
+        { id: 'z7S7lnKVhRU', title: '십자가 군병들아', artist: '피아워십 (F.I.A Worship)' },
         { id: 'ovjWMKsks2Y', title: '하나님의 부르심', artist: '피아워십 (F.I.A Worship)' },
         { id: 'KS4wNLfGD1s', title: '나는 일어섭니다', artist: '피아워십 (F.I.A Worship)' },
         { id: '7hm8LjSGVck', title: '난 예수가 좋다오', artist: '피아워십 (F.I.A Worship)' },
         { id: 'AmwX2-BIpRU', title: '나는 주를 섬기는 것에 후회가 없습니다', artist: '피아워십 (F.I.A Worship)' },
+        { id: 'jjnTbmY6iIk', title: '밤이나 낮이나 + 더 원합니다 + 예수님은 누구신가 + 온 맘 다해', artist: '피아워십 (F.I.A Worship)' },
 
         { id: 'ZQppjVXpbbA', title: 'LOVE LETTER', artist: '제이어스 (J-US)' },
         { id: 'lToefu_xLQI', title: '예수 우리 왕이여', artist: '제이어스 (J-US)' },
@@ -537,8 +542,10 @@
         { id: '8PEKtpFsWiI', title: '주가 일하시네', artist: '예람워십 (Yeram Worship)' },
         { id: 'pjoTQN7Sy1I', title: '오직 주만이 / 주의 음성을 내가 들으니', artist: '예람워십 (Yeram Worship)' },
 
+        
         { id: 't0CYXeqYdnE', title: '꽃들도 (花も)', artist: '제이워십' },
         { id: 'TA0qBWcDwZU', title: '하나님의 세계', artist: 'WAYHOME' },
+        { id: 'K_qpao_i1b8', title: '이제 역전되리라', artist: '시와그림' },
         { id: 'CDeWAlagzQc', title: '주님을 바라봅니다', artist: '위클레시아 (WECCLESIA)' },
         { id: '2hpCeV0_tO4', title: '주 예수 내 산 소망', artist: '아이자야씩스티원' },
         { id: 'Ohyi6WsdbVQ', title: 'The Lord\'s Prayer', artist: '브리지임팩트 프레이즈' },
