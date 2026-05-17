@@ -681,6 +681,9 @@
             ]
         },
 
+        { id: 'XYwVtG5OBsw', title: '한 사람', artist: 'Keepers Worship' },
+        { id: 'r2By2a00ljg', title: '주 나타내시네 + 성령의 비가 내리네', artist: 'Keepers Worship' },
+
         { id: 'CDeWAlagzQc', title: '주님을 바라봅니다', artist: '위클레시아 (WECCLESIA)' },
         { id: 'sPvC2YPLu8w', title: '창조의 아버지 | 꽃들도', artist: '위클레시아 (WECCLESIA)' },
 
