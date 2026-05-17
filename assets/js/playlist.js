@@ -708,13 +708,13 @@
         { id: 'MMzUCCn6aQ4', title: '나 같은 죄인 살리신', artist: '제이어스 (J-US)' },
 
         { id: '8PEKtpFsWiI', title: '주가 일하시네', artist: '예람워십 (Yeram Worship)' },
-        { id: 'wphhsg7D5rM', title: '낮은자의 하나님(나의 가장 낮은 마음) 모두의 마블 Ver.', artist: '예람워십 (Yeram Worship)' },
         { id: 'I6zEuEteBKI', title: '예수 예수 / 슬픈 마음 있는 사람', artist: '예람워십 (Yeram Worship)' },
         { id: 'pjoTQN7Sy1I', title: '오직 주만이 / 주의 음성을 내가 들으니', artist: '예람워십 (Yeram Worship)' },
 
         { id: 't0CYXeqYdnE', title: '꽃들도 (花も)', artist: '제이워십' },
         { id: 'TA0qBWcDwZU', title: '하나님의 세계', artist: 'WAYHOME' },
         { id: 'K_qpao_i1b8', title: '이제 역전되리라', artist: '시와그림' },
+        { id: 'jySU6LpdnBc', title: '사랑한다 말하시네', artist: 'GIFTED' },
         { id: 'Ohyi6WsdbVQ', title: 'The Lord\'s Prayer', artist: '브리지임팩트 프레이즈' },
         { id: 'Wxp2h2a9P34', title: '아무것도 두려워 말라', artist: 'Gina' },
         { id: '95vtJk3nEOQ', title: '비 준비하시니 Psalm 147', artist: '심형진 | Stonegate Music' },

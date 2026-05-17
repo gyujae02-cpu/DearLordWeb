@@ -32,6 +32,17 @@ body {
     transition: background-color 0.4s ease, color 0.4s ease;
 }
 
+/* Lucide Icon Base Styles */
+.lucide {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.5;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
 #splash-screen {
     position: fixed;
     top: 0;
@@ -240,10 +251,7 @@ nav {
 
 #page-bible,
 #page-prayer,
-#page-info {
-    justify-content: flex-start;
-}
-
+#page-info,
 #page-home {
     justify-content: flex-start;
 }
@@ -454,9 +462,9 @@ nav {
     padding: 8px 12px;
 }
 
-.minimal-btn .material-symbols-outlined {
-    font-size: 20px;
-    font-variation-settings: 'Wght' 300;
+.minimal-btn .lucide {
+    width: 20px;
+    height: 20px;
     transition: transform 0.4s ease;
 }
 
@@ -495,9 +503,9 @@ nav {
     -webkit-backdrop-filter: blur(10px);
 }
 
-.cta-button .material-symbols-outlined {
-    font-size: 20px;
-    font-variation-settings: 'Wght' 300;
+.cta-button .lucide {
+    width: 20px;
+    height: 20px;
 }
 
 .cta-button:hover {
@@ -505,6 +513,34 @@ nav {
     color: var(--bg-color);
     box-shadow: 0 8px 25px rgba(220, 184, 80, 0.4);
     transform: translateY(-2px);
+}
+
+/* 성경 버전 인포 텍스트 */
+.bible-version-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-family: 'Noto Sans KR', sans-serif;
+    margin-bottom: 12px;
+    opacity: 0.8;
+}
+
+.bible-version-info .lucide {
+    width: 14px;
+    height: 14px;
+}
+
+/* 현재 선택된 권/장 타이틀 */
+.bible-chapter-title {
+    font-family: 'Noto Serif KR', serif;
+    color: var(--accent-color);
+    margin-top: 0;
+    margin-bottom: clamp(20px, 5vw, 30px);
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    text-align: center;
+    font-weight: 700;
 }
 
 .font-controls-container {
@@ -531,9 +567,9 @@ nav {
     outline: none;
 }
 
-.font-btn .material-symbols-outlined {
-    font-size: 18px;
-    font-variation-settings: 'Wght' 300;
+.font-btn .lucide {
+    width: 18px;
+    height: 18px;
 }
 
 .search-container {
@@ -577,7 +613,8 @@ nav {
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-secondary);
-    font-size: 1.4rem;
+    width: 20px;
+    height: 20px;
     transition: color 0.3s ease;
     pointer-events: none;
 }
@@ -749,7 +786,8 @@ nav {
     transform: translateY(-50%);
     color: var(--accent-color);
     pointer-events: none;
-    font-size: 1.1rem;
+    width: 18px;
+    height: 18px;
 }
 
 .verse-row {
@@ -864,8 +902,9 @@ nav {
     cursor: default;
 }
 
-.nav-action-btn .material-symbols-outlined {
-    font-size: 1.1rem;
+.nav-action-btn .lucide {
+    width: 18px;
+    height: 18px;
 }
 
 .prayer-counter {
@@ -1115,9 +1154,9 @@ footer {
 
 #gmp-title {
     font-size: 0.95rem;
-    font-family: 'Noto Serif KR', serif;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
     color: var(--text-primary);
-    font-weight: 700;
     text-overflow: ellipsis;
     overflow: hidden;
     margin-bottom: 4px;
@@ -1125,7 +1164,8 @@ footer {
 
 #gmp-artist {
     font-size: 0.75rem;
-    font-family: var(--font-body);
+    font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+    font-weight: 400;
     color: var(--text-secondary);
     text-overflow: ellipsis;
     overflow: hidden;
@@ -1159,18 +1199,19 @@ footer {
     color: var(--accent-color);
 }
 
-.gmp-btn .material-symbols-outlined {
-    font-size: 24px;
-    font-variation-settings: 'Wght' 300;
+.gmp-btn .lucide {
+    width: 24px;
+    height: 24px;
 }
 
 .gmp-play-btn {
     color: var(--text-primary);
 }
 
-.gmp-play-btn .material-symbols-outlined {
-    font-size: 40px;
-    font-variation-settings: 'Wght' 200, 'FILL' 0;
+.gmp-play-btn .lucide {
+    width: 40px;
+    height: 40px;
+    stroke-width: 1;
 }
 
 .gmp-play-btn:hover {
@@ -1195,6 +1236,7 @@ footer {
     overflow-y: auto;
     background: rgba(26, 26, 26, 0.95);
     backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px 12px 0 0;
     padding: 15px 0;
@@ -1217,7 +1259,8 @@ footer {
     align-items: center;
     padding: 0 20px 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-family: 'Noto Serif KR', serif;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
     font-size: 0.9rem;
     color: var(--text-secondary);
     margin-bottom: 10px;
@@ -1242,14 +1285,16 @@ footer {
 }
 
 .gmp-playlist-item .p-title {
-    font-family: 'Noto Serif KR', serif;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
     font-size: 0.9rem;
     color: var(--text-primary);
     margin-bottom: 4px;
 }
 
 .gmp-playlist-item .p-artist {
-    font-family: var(--font-body);
+    font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+    font-weight: 400;
     font-size: 0.75rem;
     color: var(--text-secondary);
 }
@@ -1312,17 +1357,23 @@ footer {
     outline: none;
 }
 
+.modal-close-icon .lucide {
+    width: 24px;
+    height: 24px;
+}
+
 .modal-close-icon:hover {
     color: var(--text-primary);
     transform: scale(1.1);
 }
 
 .modal-icon {
-    font-size: 45px !important;
+    width: 45px;
+    height: 45px;
     color: var(--accent-color);
     margin-bottom: 15px;
     display: inline-block;
-    font-variation-settings: 'Wght' 300;
+    stroke-width: 1.5;
 }
 
 .modal-content h3 {
@@ -1460,7 +1511,7 @@ body.theme-light .toast-message {
         text-shadow: 0 0 12px rgba(220, 184, 80, 0.4);
         transform: translateY(-2px);
     }
-    .minimal-btn:hover .material-symbols-outlined {
+    .minimal-btn:hover .lucide {
         transform: translateY(-2px);
     }
 }
@@ -1560,12 +1611,12 @@ body.theme-light .toast-message {
     }
     .nav-icon {
         display: block;
-        font-size: 22px;
-        font-variation-settings: 'Wght' 300;
+        width: 22px;
+        height: 22px;
         transition: all 0.3s ease;
     }
     .nav-links a.active .nav-icon {
-        font-variation-settings: 'Wght' 500, 'FILL' 1;
+        stroke-width: 2;
         transform: translateY(-2px);
     }
     .info-card {
@@ -1577,7 +1628,8 @@ body.theme-light .toast-message {
     }
     .search-icon {
         left: 14px;
-        font-size: 1.2rem;
+        width: 18px;
+        height: 18px;
     }
     .prayer-view-content {
         padding: 20px 20px;
@@ -1643,7 +1695,8 @@ body.theme-light .toast-message {
         font-size: 0.65rem;
     }
     .nav-icon {
-        font-size: 20px;
+        width: 20px;
+        height: 20px;
     }
     .modal-content {
         width: 90%;
@@ -1861,11 +1914,6 @@ body.theme-light .splash-progress-wrap {
     justify-content: center;
 }
 
-.fs-header button .material-symbols-outlined {
-    font-size: 32px;
-    font-variation-settings: 'Wght' 300;
-}
-
 .fs-header button.active {
     color: #dcb850 !important;
 }
@@ -1948,8 +1996,8 @@ body.theme-light .fs-header button.active {
 
 #fs-title-large {
     font-size: clamp(1.3rem, 5vw, 1.6rem);
-    font-family: 'Noto Serif KR', serif;
-    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
     color: #fff;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -1960,7 +2008,8 @@ body.theme-light .fs-header button.active {
 #fs-artist-large {
     font-size: clamp(0.9rem, 3vw, 1rem);
     color: rgba(255, 255, 255, 0.7);
-    font-family: var(--font-body);
+    font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+    font-weight: 400;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -1989,7 +2038,8 @@ body.theme-light .fs-header button.active {
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.3);
     text-align: left;
-    font-family: 'Noto Serif KR', serif;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
     height: 36px;
     line-height: 36px;
     overflow: hidden;
@@ -2009,7 +2059,7 @@ body.theme-light .fs-header button.active {
 .fs-lyric-line.current {
     color: #fff;
     font-size: 1.15rem;
-    font-weight: 700;
+    font-weight: 500;
     opacity: 1;
     filter: blur(0);
     transform: scale(1);
@@ -2077,9 +2127,10 @@ body.theme-light .fs-header button.active {
     color: #fff;
 }
 
-.fs-controls .gmp-play-btn .material-symbols-outlined {
-    font-size: 64px;
-    font-variation-settings: 'Wght' 300, 'FILL' 1;
+.fs-controls .gmp-play-btn .lucide {
+    width: 64px;
+    height: 64px;
+    stroke-width: 1;
 }
 
 #fs-playlist-overlay {
@@ -2114,7 +2165,8 @@ body.theme-light #fs-playlist-overlay {
 
 .fs-playlist-overlay-header {
     padding: 20px;
-    font-family: 'Noto Serif KR', serif;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
     font-size: 1.1rem;
     color: #fff;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -2160,14 +2212,16 @@ body.theme-light .fs-playlist-item.active {
 }
 
 .fs-playlist-item .p-title {
-    font-family: 'Noto Serif KR', serif;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
     font-size: 1rem;
     color: #fff;
     margin-bottom: 4px;
 }
 
 .fs-playlist-item .p-artist {
-    font-family: var(--font-body);
+    font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+    font-weight: 400;
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.6);
 }
