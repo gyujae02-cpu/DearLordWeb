@@ -696,12 +696,18 @@
         { id: '-gJCKrDkoJ4', title: '빛나는 유산', artist: 'WELOVE CREATIVE TEAM' },
         { id: '_OJLMWtkYWE', title: '깊은 곳에 나아가 / 주 품에', artist: 'WELOVE CREATIVE TEAM' },
 
+
+
+        { id: 'dtdUwy2vWhA', title: '실로암', artist: '피아워십 (F.I.A Worship)' },
         { id: 'Qek0xGCTCIc', title: '나는 믿네', artist: '피아워십 (F.I.A Worship)' },
         { id: 'z7S7lnKVhRU', title: '십자가 군병들아', artist: '피아워십 (F.I.A Worship)' },
         { id: 'ovjWMKsks2Y', title: '하나님의 부르심', artist: '피아워십 (F.I.A Worship)' },
         { id: 'KS4wNLfGD1s', title: '나는 일어섭니다', artist: '피아워십 (F.I.A Worship)' },
         { id: '7hm8LjSGVck', title: '난 예수가 좋다오', artist: '피아워십 (F.I.A Worship)' },
+        { id: 'RJFBiob8vp8', title: '주님의 임재 앞에서', artist: '피아워십 (F.I.A Worship)' },
         { id: 'AmwX2-BIpRU', title: '나는 주를 섬기는 것에 후회가 없습니다', artist: '피아워십 (F.I.A Worship)' },
+        { id: 'AXuFo4O1-2E', title: '행군 나팔 소리에 (찬송가 360장/피아버전)', artist: '피아워십 (F.I.A Worship)' },
+        { id: 'b9gNwbv5iB4', title: '주와 같이 길 가는 것 (찬송가 430장/피아버전)', artist: '피아워십 (F.I.A Worship)' },
         { id: 'jjnTbmY6iIk', title: '밤이나 낮이나 + 더 원합니다 + 예수님은 누구신가 + 온 맘 다해', artist: '피아워십 (F.I.A Worship)' },
 
         { id: 'ZQppjVXpbbA', title: 'LOVE LETTER', artist: '제이어스 (J-US)' },
