@@ -210,16 +210,16 @@
         <div class="divine-backglow"></div>
 
         <h1 class="error-code">404</h1>
-        <div class="error-subtitle">페이지를 찾을 수 없습니다.</div>
+        <div class="error-subtitle">Not Found</div>
 
-        <h2 class="error-title">길 잃은 어린 양 발견!</h2>
+        <h2 class="error-title">원하시는 페이지를 찾을 수 없습니다.</h2>
         <p class="error-desc">
-            이곳은 빈 들판인가 봅니다.<br>
-            목자 되신 주님을 따라 다시 안전한 길로 돌아가 볼까요?
+            입력하신 주소가 잘못되었거나,<br>
+            페이지가 변경 혹은 삭제되어 현재 접근할 수 없습니다.
         </p>
 
         <a href="/" class="cta-button">
-            <span class="material-symbols-outlined" style="font-size: 20px;">home</span>
+            <i data-lucide="home" style="width: 20px; height: 20px;"></i>
             메인으로 돌아가기
         </a>
     </div>
@@ -230,13 +230,11 @@
 
     <script>
         (function () {
-            // 테마 설정
             const savedTheme = localStorage.getItem('dearLordTheme');
             if (savedTheme === 'light') {
                 document.body.classList.add('theme-light');
             }
 
-            // 라우팅 처리 및 메모리 누수 방지 (이벤트 리스너는 페이지 전환 시 자동 해제됨)
             const btn = document.querySelector('.cta-button');
             if (btn) {
                 btn.addEventListener('click', function (e) {
@@ -245,8 +243,7 @@
                     const urlObj = new URL(currentUrl);
                     const pathArray = window.location.pathname.split('/');
                     let homePath = '/';
-                    
-                    // GitHub Pages 대응
+
                     if (urlObj.hostname.includes('github.io') && pathArray.length > 1) {
                         homePath = '/' + pathArray[1] + '/';
                     }
