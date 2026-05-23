@@ -1943,12 +1943,16 @@ body.theme-light .fs-header button.active {
     display: none;
 }
 
+/* ── 앨범 아트 래퍼 ── */
 .fs-artwork-wrap {
     width: min(100%, 45vh, 380px);
     aspect-ratio: 1;
     border-radius: 20px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease;
+    /* 재생/멈춤 크기 전환 */
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+                box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    transform: scale(1);
     flex-shrink: 1;
     margin: auto auto 0 auto;
     position: relative;
@@ -1958,6 +1962,12 @@ body.theme-light .fs-header button.active {
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
     background: rgba(255, 255, 255, 0.05);
+}
+
+/* 멈췄을 때 살짝 축소 */
+.fs-artwork-wrap.paused {
+    transform: scale(0.92);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 #fs-artwork {
