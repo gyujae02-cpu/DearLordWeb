@@ -1943,13 +1943,11 @@ body.theme-light .fs-header button.active {
     display: none;
 }
 
-/* ── 앨범 아트 래퍼 ── */
 .fs-artwork-wrap {
     width: min(100%, 45vh, 380px);
     aspect-ratio: 1;
     border-radius: 20px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    /* 재생/멈춤 크기 전환 */
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
                 box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
     transform: scale(1);
@@ -1964,7 +1962,6 @@ body.theme-light .fs-header button.active {
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* 멈췄을 때 살짝 축소 */
 .fs-artwork-wrap.paused {
     transform: scale(0.92);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -2036,6 +2033,16 @@ body.theme-light .fs-header button.active {
     margin-bottom: clamp(15px, 3vh, 25px);
     mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer;
+}
+
+.fs-lyrics-area:hover #fs-lyrics-container {
+    opacity: 0.8;
+}
+
+.fs-lyrics-area.hidden {
+    display: none;
 }
 
 #fs-lyrics-container {
@@ -2082,6 +2089,96 @@ body.theme-light .fs-header button.active {
 .fs-lyric-line.next {
     opacity: 0.6;
     filter: blur(0px);
+}
+
+.fs-lyrics-full-area {
+    display: none;
+    position: relative;
+    width: 100%;
+    max-height: clamp(160px, 28vh, 260px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: clamp(15px, 3vh, 25px);
+    mask-image: linear-gradient(to bottom,
+        transparent 0%,
+        black 12%,
+        black 88%,
+        transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom,
+        transparent 0%,
+        black 12%,
+        black 88%,
+        transparent 100%);
+    background: none;
+    border: none;
+    scrollbar-width: none;
+}
+
+.fs-lyrics-full-area::-webkit-scrollbar {
+    display: none;
+}
+
+.fs-lyrics-full-area.show {
+    display: block;
+}
+
+.fs-lyrics-collapse-btn {
+    position: sticky;
+    top: 6px;
+    margin-left: auto;
+    width: fit-content;
+    margin-bottom: -24px;
+    z-index: 50;
+    color: rgba(255, 255, 255, 0.45);
+    transition: color 0.2s ease;
+}
+
+.fs-lyrics-collapse-btn:hover {
+    color: #fff;
+}
+
+#fs-lyrics-full-list {
+    padding: 20px 0;
+}
+
+.fs-full-lyric-item {
+    padding: 10px 4px;
+    cursor: pointer;
+    transition: opacity 0.35s ease;
+    user-select: none;
+}
+
+.fs-full-lyric-item .lyric-text {
+    font-family: var(--font-apple);
+    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.25);
+    letter-spacing: -0.03em;
+    line-height: 1.45;
+    word-break: keep-all;
+    transition: color 0.4s ease, font-size 0.4s ease;
+}
+
+.fs-full-lyric-item.current .lyric-text {
+    color: #ffffff;
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+}
+
+.fs-full-lyric-item.prev .lyric-text,
+.fs-full-lyric-item.adj-next .lyric-text {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.fs-full-lyric-item:hover .lyric-text {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.fs-lyrics-empty {
+    padding: 30px 4px;
+    font-family: var(--font-apple);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: -0.01em;
 }
 
 .fs-progress-area {
@@ -2264,6 +2361,9 @@ body.theme-light .fs-playlist-item .p-artist {
     .fs-lyrics-area {
         height: 140px;
     }
+    .fs-lyrics-full-area {
+        max-height: clamp(180px, 30vh, 300px);
+    }
     #fs-playlist-overlay {
         top: 0;
         left: auto;
@@ -2315,6 +2415,9 @@ body.theme-light .fs-playlist-item .p-artist {
     .fs-lyrics-area {
         height: 160px;
     }
+    .fs-lyrics-full-area {
+        max-height: clamp(200px, 32vh, 320px);
+    }
 }
 
 @media (min-width: 1200px) {
@@ -2331,6 +2434,9 @@ body.theme-light .fs-playlist-item .p-artist {
     }
     .fs-lyrics-area {
         height: 180px;
+    }
+    .fs-lyrics-full-area {
+        max-height: 340px;
     }
 }
 

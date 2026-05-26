@@ -268,7 +268,7 @@
                             • <b>Videos:</b> 더 초즌 시리즈 <a href="https://watch.thechosen.tv/" target="_blank"
                                 style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
 
-                            • <b>Music:</b> 유튜브 <호연하다> 채널 외 선별된 유튜브 찬양 모음
+                            • <b>Music:</b> 유튜브 &lt;호연하다&gt; 채널 외 선별된 유튜브 찬양 모음
                         </p>
                     </div>
                 </section>
@@ -318,10 +318,10 @@
                     <span class="watermark-text">Dear Lord</span>
                     <div style="margin: 20px 0 0 0;">
                         <img src="https://hits.sh/dearlord.kr.svg?style=for-the-badge&label=VISITS&color=dcb850"
-                            alt="VISITS" style="width: 77px !important; height: auto !important; 
-                    filter: none !important; 
+                            alt="VISITS" style="width: 77px !important; height: auto !important;
+                    filter: none !important;
                     -webkit-filter: none !important;
-                    opacity: 1 !important; 
+                    opacity: 1 !important;
                     display: inline-block !important;
                     aspect-ratio: auto !important;
                     background: none !important;
@@ -394,7 +394,6 @@
         </div>
     </div>
 
-    <!-- 전체화면 플레이어 -->
     <div id="fullscreen-player">
         <div id="fs-bg"></div>
         <div class="fs-header">
@@ -419,8 +418,15 @@
                     </div>
                 </div>
 
-                <div class="fs-lyrics-area">
+                <div class="fs-lyrics-area" id="fs-lyrics-focus-area" onclick="toggleFsLyricsMode()">
                     <div id="fs-lyrics-container"></div>
+                </div>
+
+                <div class="fs-lyrics-full-area" id="fs-lyrics-full-area">
+                    <button class="gmp-btn fs-lyrics-collapse-btn" onclick="toggleFsLyricsMode()" title="접기">
+                        <i data-lucide="chevron-up"></i>
+                    </button>
+                    <div id="fs-lyrics-full-list"></div>
                 </div>
 
                 <div class="fs-progress-area">
@@ -449,11 +455,12 @@
                     <button class="gmp-btn" id="fs-next" onclick="playNextYt()">
                         <i data-lucide="skip-forward"></i>
                     </button>
-                    <button class="gmp-btn" id="fs-repeat" onclick="toggleYtRepeat()" title="반복 재생">
+                    <button class="gmp-btn" id="fs-repeat" onclick="toggleYtRepeat()">
                         <span id="fs-repeat-wrap" style="display:flex;">
                             <i data-lucide="repeat"></i>
                         </span>
                     </button>
+
                 </div>
             </div>
         </div>
