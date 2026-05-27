@@ -2143,7 +2143,6 @@ body.theme-light .fs-header button.active {
 
 .fs-full-lyric-item {
     padding: 10px 4px;
-    cursor: pointer;
     transition: opacity 0.35s ease;
     user-select: none;
 }
@@ -2157,6 +2156,7 @@ body.theme-light .fs-header button.active {
     line-height: 1.45;
     word-break: keep-all;
     transition: color 0.4s ease, font-size 0.4s ease;
+    cursor: pointer; 
 }
 
 .fs-full-lyric-item.current .lyric-text {
