@@ -2014,6 +2014,13 @@ body.theme-light .fs-header button.active {
     letter-spacing: -0.03em;
 }
 
+.fs-artist-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+}
+
 #fs-artist-large {
     font-size: clamp(1rem, 4vw, 1.15rem);
     color: rgba(255, 255, 255, 0.65);
@@ -2023,6 +2030,31 @@ body.theme-light .fs-header button.active {
     overflow: hidden;
     white-space: nowrap;
     letter-spacing: -0.01em;
+    flex: 1;
+    min-width: 0;
+}
+
+.fs-yt-link-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.fs-yt-link-btn .lucide {
+    width: 24px;
+    height: 24px;
+}
+
+.fs-yt-link-btn:hover {
+    color: #fff;
 }
 
 .fs-lyrics-area {
