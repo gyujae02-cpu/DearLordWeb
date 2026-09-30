@@ -1,506 +1,1049 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Dear Lord</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#F1F6FB" />
+  <title>PinLog</title>
 
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="fonts/SebangGothic-Regular.woff2" as="font" type="font/woff2" crossorigin />
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;700&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" as="style" crossorigin
-        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#EEF7FF', 100: '#D9EDFF', 200: '#B8DEFF', 300: '#85C6FA',
+              400: '#52ADF2', 500: '#2E9BE6', 600: '#0B6FB5', 700: '#095A94',
+              800: '#0A4A79', 900: '#0B3D63'
+            },
+            ink: { 900: '#16202B', 700: '#33414F', 500: '#64748B', 400: '#94A3B8', 200: '#E2E8F0' },
+            canvas: '#F1F6FB',
+            wish: { 50: '#FFF1F5', 100: '#FFE1EA', 500: '#FF5C8A', 600: '#E8386F' }
+          },
+          fontFamily: {
+            sans: ['Sebang Gothic', 'system-ui', '-apple-system', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 4px 18px rgba(29,26,47,.06)',
+            card: '0 10px 30px rgba(29,26,47,.10)',
+            lift: '0 18px 48px rgba(29,26,47,.16)',
+            glow: '0 14px 40px rgba(108,71,255,.30)'
+          }
+        }
+      }
+    };
+  </script>
 
-    <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=8847bde4928641b8979855917e77783a&libraries=services&autoload=false"></script>
+
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.2/kakao.min.js"
+          integrity="sha384-zt/G7/KfaRQ9dT/QIkS0ujMtzouJqzuSJcXVQu50x0rl/+mD1dc70AeOejVbMD9E"
+          crossorigin="anonymous"></script>
+  <script>
+    // 카카오내비 앱 실행에 쓴다. 바로 위 지도 SDK 와 같은 JavaScript 키다.
+    if (window.Kakao && !Kakao.isInitialized()) Kakao.init('8847bde4928641b8979855917e77783a');
+  </script>
+
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
-<body>
+<body class="font-sans bg-canvas text-ink-900 antialiased select-none">
 
-    <div id="splash-screen">
-        <div class="splash-bg-glow"></div>
-        <div class="splash-content">
-            <div class="splash-logo-wrap">
-                <img src="img/DearLoadIcon_White.png" alt="Icon" class="splash-icon"
-                    onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2Q0YWYzNyI+PHBhdGggZD0iTTEyIDJMMTIgMjJNMCAxMkwyNCAxMiIgc3Ryb2tlPSIjZDRhZjM3IiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4='">
-                <div class="splash-text">Dear Lord</div>
-            </div>
-            <div class="splash-subtext" id="loading-text">0%</div>
-            <div class="splash-progress-wrap">
-                <div class="splash-progress-bar" id="loading-bar"></div>
-            </div>
-        </div>
+  <section id="screen-login" class="screen is-active">
+
+    <!-- 배경 레이어. 영상 교체는 vid/login-bg.mp4 를 갈아끼우면 된다.
+         영상을 못 받거나 재생이 막히면 .login-bg 의 CSS 그라디언트가 그대로 보인다.
+         첫 프레임 이미지를 뽑았다면 video 에 poster="img/login-bg.jpg" 를 추가한다. -->
+    <div id="login-bg" class="login-bg" aria-hidden="true">
+      <video id="login-video" class="login-bg__video"
+             muted loop playsinline preload="none" tabindex="-1">
+        <!-- WebM 을 추가한다면 이 자리에 <source ... type="video/webm"> 를 먼저 둔다. -->
+        <source src="vid/login-bg.mp4" type="video/mp4" />
+      </video>
+      <div class="login-bg__scrim"></div>
     </div>
 
-    <header>
-        <nav>
-            <div class="logo-group" style="display: flex; align-items: center; gap: 15px;">
-                <a onclick="showPage('home')" class="logo">
-                    <img src="img/DearLoadIcon_White.png" alt="Icon" class="logo-icon"
-                        onerror="this.style.display='none'">
-                    <span class="logo-text">Dear Lord</span>
-                </a>
+    <div class="login-layout">
 
-                <button id="theme-toggle-btn" onclick="toggleTheme()"
-                    style="background:none; border:none; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; outline:none; transition: color 0.3s; padding:5px; margin-left: auto;">
-                    <span id="theme-icon-wrap" style="display:flex;">
-                        <i data-lucide="sun"></i>
-                    </span>
-                </button>
+      <h1 class="login-title" aria-label="PinLog">P<svg class="wordmark-pin" viewBox="0 0 10 20" aria-hidden="true"><rect x="3.7" y="8" width="2.6" height="12" rx="1.3" fill="var(--ink-500)"/><circle cx="5" cy="5" r="5" fill="currentColor"/><circle cx="3.3" cy="3.3" r="1.6" fill="#fff" fill-opacity=".3"/></svg>n<em>Log</em></h1>
 
-                <button id="header-music-btn" onclick="toggleGlobalPlayer()"
-                    style="background:none; border:none; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; outline:none; transition: color 0.3s; padding:5px;">
-                    <i data-lucide="headphones" id="header-music-icon"></i>
-                </button>
+      <div class="login-stage">
+        <div id="login-card" class="login-card">
+          <div class="login-card__sheen"></div>
+
+          <form id="login-form" class="login-form" novalidate>
+            <label class="field">
+              <span class="field__icon">
+                <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+                  <circle cx="12" cy="8.5" r="3.6" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="M4.8 19.2a7.2 7.2 0 0 1 14.4 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <input id="login-id" type="text" autocomplete="username" inputmode="latin"
+                     autocapitalize="none" autocorrect="off" spellcheck="false"
+                     placeholder="아이디" class="field__input" />
+            </label>
+
+            <label class="field">
+              <span class="field__icon">
+                <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+                  <rect x="4" y="10" width="16" height="10" rx="3" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="M8 10V7.5a4 4 0 1 1 8 0V10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <input id="login-password" type="password" autocomplete="current-password"
+                     placeholder="비밀번호" class="field__input" />
+            </label>
+
+            <div class="login-options">
+              <label class="check">
+                <input id="save-id" type="checkbox" class="check__input" />
+                <span class="check__box">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="m5 12.5 4.4 4.4L19 7.6" stroke="currentColor" stroke-width="2.6"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span class="check__label">아이디 저장</span>
+              </label>
+
+              <div class="login-links">
+                <button id="login-signup" type="button" class="login-link">회원가입</button>
+                <span class="login-links__dot" aria-hidden="true"></span>
+                <button id="login-find-pw" type="button" class="login-link">비밀번호 찾기</button>
+              </div>
             </div>
-            <ul class="nav-links">
-                <li><a onclick="showPage('home')" id="nav-home" class="active"><i data-lucide="home"
-                            class="nav-icon"></i><span class="nav-text">홈</span></a>
-                </li>
-                <li><a onclick="showPage('bible')" id="nav-bible"><i data-lucide="book-open" class="nav-icon"></i><span
-                            class="nav-text">말씀</span></a></li>
-                <li><a onclick="showPage('prayer')" id="nav-prayer"><i data-lucide="heart-handshake"
-                            class="nav-icon"></i><span class="nav-text">상황별
-                            기도</span></a></li>
-                <li><a onclick="showPage('info')" id="nav-info"><i data-lucide="info" class="nav-icon"></i><span
-                            class="nav-text">정보</span></a>
-                </li>
-            </ul>
-        </nav>
+
+            <p id="login-error" class="login-error" hidden></p>
+
+            <button id="login-submit" type="submit" class="btn-primary login-submit">
+              <span class="btn-label">로그인</span>
+              <span class="spinner" hidden></span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <p class="login-note">초대된 두 사람만 사용할 수 있어요</p>
+
+      <p class="copyright copyright--login">© 2026 JAEGYU LEE</p>
+    </div>
+  </section>
+
+  <section id="screen-map" class="screen">
+    <div id="map" class="absolute inset-0"></div>
+    <div class="map-vignette"></div>
+
+    <header class="top-bar">
+      <div class="top-bar__row">
+
+        <button id="brand" type="button" class="brand" title="새로고침" aria-label="PinLog — 새로고침">
+          <span class="brand__text" aria-hidden="true">P<svg class="wordmark-pin" viewBox="0 0 10 20" aria-hidden="true"><rect x="3.7" y="8" width="2.6" height="12" rx="1.3" fill="var(--ink-500)"/><circle cx="5" cy="5" r="5" fill="currentColor"/><circle cx="3.3" cy="3.3" r="1.6" fill="#fff" fill-opacity=".3"/></svg>n<em>Log</em></span>
+        </button>
+
+        <div class="search-wrap">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px] text-ink-400 shrink-0">
+              <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/>
+              <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input id="search-input" type="search" placeholder="장소 검색"
+                   autocomplete="off" class="search-box__input" />
+            <button id="search-clear" type="button" class="search-box__clear" hidden aria-label="검색어 지우기">
+              <svg viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]">
+                <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <div id="search-panel" class="search-panel" hidden>
+            <div class="search-panel__head">
+              <span id="search-count" class="text-[12.5px] font-normal text-ink-700">검색 결과</span>
+              <span class="text-[11.5px] text-ink-400">선택하면 핀을 추가해요</span>
+            </div>
+            <ul id="search-results" class="search-panel__list"></ul>
+            <div id="search-empty" class="search-panel__empty" hidden>검색 결과가 없어요</div>
+          </div>
+        </div>
+
+        <div class="top-bar__actions">
+          <div id="me-pill" class="me-pill" title="로그인한 계정">
+            <span id="me-pill-dot" class="me-pill__dot"></span>
+            <span id="me-pill-name" class="me-pill__name">-</span>
+          </div>
+
+          <button id="btn-feed" type="button" class="icon-btn" aria-label="댓글 모아보기" title="댓글 모아보기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[19px] h-[19px]">
+              <path d="M6.5 4h11A2.5 2.5 0 0 1 20 6.5v7A2.5 2.5 0 0 1 17.5 16H8l-4 4V6.5A2.5 2.5 0 0 1 6.5 4Z"
+                    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M8.5 9h7M8.5 12h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <button id="btn-courses" type="button" class="icon-btn" aria-label="데이트 코스" title="데이트 코스">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[19px] h-[19px]">
+              <circle cx="6" cy="6.5" r="2.1" stroke="currentColor" stroke-width="1.7"/>
+              <circle cx="18" cy="17.5" r="2.1" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M8.1 6.5H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.9" stroke="currentColor" stroke-width="1.7"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <button id="btn-timeline" type="button" class="icon-btn" aria-label="핀 모아보기" title="핀 모아보기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[19px] h-[19px]">
+              <circle cx="6" cy="7" r="2.1" stroke="currentColor" stroke-width="1.7"/>
+              <circle cx="6" cy="17" r="2.1" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M6 9.2v5.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M11.5 7h8M11.5 17h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <button id="btn-logout" type="button" class="icon-btn" aria-label="로그아웃" title="로그아웃">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[19px] h-[19px]">
+              <path d="M15 8V6.5A2.5 2.5 0 0 0 12.5 4h-6A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h6a2.5 2.5 0 0 0 2.5-2.5V16"
+                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M10 12h10m0 0-3-3m3 3-3 3" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="filter-row" class="filter-row"></div>
     </header>
 
-    <main>
-        <div id="page-home" class="page active">
-            <div class="cinematic-container scroll-area">
-
-                <div class="cinematic-header">
-                    <div class="divine-backglow"></div>
-                    <div class="home-yt-wrapper" id="home-yt-wrapper">
-                        <div id="home-yt-player"></div>
-                        <div id="home-yt-overlay">
-                            <button class="play-btn overlay-replay-btn" onclick="replayHomeYt()" title="다시 재생">
-                                <div class="play-icon-container">
-                                    <i data-lucide="rotate-cw" style="width: 32px; height: 32px;"></i>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lyrics-wrap">
-                    <div id="cinematic-text"></div>
-                </div>
-
-                <div class="song-control-wrap">
-                    <div class="song-info" id="home-yt-info"
-                        style="margin-bottom: 12px; font-weight: 400; font-size: 0.85rem;">
-                        &lt;더 초즌&gt; 시즌 2 에피소드 8: 산지 너머
-                    </div>
-
-                    <div style="display: flex; gap: 20px; align-items: center; justify-content: center;">
-                        <button id="replay-btn" class="play-btn" onclick="replayHomeYt()" title="다시 재생">
-                            <div class="play-icon-container">
-                                <i data-lucide="rotate-cw"></i>
-                            </div>
-                        </button>
-
-                        <button id="mute-toggle-btn" class="play-btn" onclick="toggleHomeMute()" title="음소거/해제">
-                            <div class="play-icon-container">
-                                <svg id="vol-off-svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" style="transition: opacity 0.3s;">
-                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                                    <line x1="23" y1="9" x2="17" y2="15"></line>
-                                    <line x1="17" y1="9" x2="23" y2="15"></line>
-                                </svg>
-                                <svg id="vol-up-svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" style="display: none; transition: opacity 0.3s;">
-                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                                </svg>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="home-minimal-cta">
-                    <a href="javascript:void(0)" onclick="showPage('bible')" class="minimal-btn">
-                        <i data-lucide="book-open"></i>
-                        <span class="minimal-text">말씀 보기</span>
-                    </a>
-                    <span class="cta-divider">|</span>
-                    <a href="javascript:void(0)" onclick="showPage('prayer')" class="minimal-btn">
-                        <i data-lucide="heart-handshake"></i>
-                        <span class="minimal-text">상황별 기도</span>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-
-        <div id="page-bible" class="page">
-            <div class="bible-container scroll-area" id="bible-scroll-container">
-                <div id="bible-header-wrap"
-                    style="position: sticky; top: 0; z-index: 100; padding: 10px 0; background: transparent; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);">
-                    <div class="bible-header prayer-view-content"
-                        style="padding: 15px 25px; margin: 0; background: rgba(26, 26, 26, 0.85);">
-
-                        <div class="bible-version-info">
-                            <i data-lucide="info"></i> 성경전서 개역한글판
-                        </div>
-
-                        <div class="font-controls-container"
-                            style="justify-content: space-between; margin: 0; padding: 0; align-items: center;">
-                            <div class="bible-selectors">
-                                <div class="select-wrapper">
-                                    <select id="bible-book-select" onchange="changeBibleBook()"></select>
-                                    <i data-lucide="chevron-down" class="select-arrow"></i>
-                                </div>
-                                <div class="select-wrapper">
-                                    <select id="bible-chapter-select" onchange="changeBibleChapter()"></select>
-                                    <i data-lucide="chevron-down" class="select-arrow"></i>
-                                </div>
-                                <div class="select-wrapper">
-                                    <select id="bible-verse-select" onchange="changeBibleVerse()"></select>
-                                    <i data-lucide="chevron-down" class="select-arrow"></i>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                                <button class="font-btn" onclick="adjustFontSize(-0.1)" title="글자 축소">
-                                    <i data-lucide="minus"></i>
-                                </button>
-                                <button class="font-btn" onclick="adjustFontSize(0.1)" title="글자 확대">
-                                    <i data-lucide="plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="bible-content" class="prayer-view-content"
-                    style="padding: 30px; border-radius: 16px; margin-top: 10px;"></div>
-                <div id="bible-nav-buttons" class="prayer-nav-buttons"
-                    style="border-top: none; margin-top: 10px; margin-bottom: 20px;"></div>
-            </div>
-        </div>
-
-        <div id="page-prayer" class="page">
-            <div class="search-container" id="search-container" style="display: none;">
-                <input type="text" id="prayer-search-input" class="search-input" placeholder="기도문 제목이나 내용을 검색해보세요..."
-                    autocomplete="off">
-                <i data-lucide="search" class="search-icon"></i>
-            </div>
-
-            <div id="back-container"
-                style="display: none; width: 100%; max-width: 700px; text-align: left; padding-bottom: 15px; flex-shrink: 0;">
-                <span class="back-nav" id="back-btn"
-                    style="color:var(--accent-color); cursor:pointer; font-family: 'Noto Serif KR', serif; font-size: 1.05rem; transition: opacity 0.3s ease; display:flex; align-items:center; gap:5px;">
-                    <i data-lucide="chevron-left" style="width:18px; height:18px;"></i> 목록으로
-                </span>
-            </div>
-
-            <div id="prayer-browser" class="scroll-area"></div>
-        </div>
-
-        <div id="page-info" class="page">
-            <div class="info-container scroll-area">
-                <h2 class="info-header-title">Information</h2>
-
-                <section class="info-section">
-                    <div class="info-card">
-                        <h4><i data-lucide="sparkles"></i>Vision & Purpose</h4>
-                        <p>
-                            <b>말씀</b>과 <b>기도</b>, <b>찬양</b>을 일상 속에서 가까이.<br>
-                            평안한 묵상을 돕는 공간, Dear Lord입니다.
-                        </p>
-
-                        <div
-                            style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(220, 184, 80, 0.3); text-align: center;">
-                            <p
-                                style="font-family: 'Noto Serif KR', serif; font-size: 0.9rem; font-style: italic; color: var(--accent-color); line-height: 1.6; opacity: 0.9;">
-                                "아무것도 염려하지 말고 오직 모든 일에 기도와 간구로<br>너희 구할 것을 감사함으로 하나님께 아뢰라"
-                            </p>
-                            <span
-                                style="display: block; margin-top: 8px; font-size: 0.75rem; color: var(--text-secondary); opacity: 0.7;">
-                                - 빌립보서 4:6 -
-                            </span>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="info-section" style="animation-delay: 0.1s;">
-                    <div class="info-card">
-                        <h4><i data-lucide="user"></i>Developer</h4>
-
-                        <p
-                            style="margin-bottom: 15px; font-size: 0.9rem; line-height: 1.6; color: var(--text-secondary); word-break: keep-all;">
-                            나누고 싶은 기도문이나 찬양이 있다면 이메일로 보내주세요.<br>
-                            검토 후 소중히 반영하겠습니다.
-                        </p>
-
-                        <div class="contact-links">
-                            <a href="mailto:gyujae02@gmail.com">
-                                <i data-lucide="mail"></i> Email
-                            </a>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="info-section" style="animation-delay: 0.2s;">
-                    <div class="info-card">
-                        <h4><i data-lucide="copyright"></i>Resources & Credits</h4>
-                        <p>
-                            • <b>Scripture:</b> 성경전서 개역한글판 <a
-                                href="https://www.bskorea.or.kr/bbs/content.php?co_id=subpage2_3_4_1" target="_blank"
-                                style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
-
-                            • <b>Prayers:</b> 인스타그램 @jun.bible <a href="https://www.instagram.com/jun.bible/"
-                                target="_blank"
-                                style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
-
-                            • <b>Videos:</b> 더 초즌 시리즈 <a href="https://watch.thechosen.tv/" target="_blank"
-                                style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; margin-left: 5px;">[Link]</a><br>
-
-                            • <b>Music:</b> 유튜브 &lt;호연하다&gt; 채널 외 선별된 유튜브 찬양 모음
-                        </p>
-                    </div>
-                </section>
-
-                <section class="info-section notice-box" style="animation-delay: 0.3s;">
-                    <span>
-                        본 서비스는 비영리 목적으로 운영되는 프로젝트이며,<br>
-                        <b>방문자의 어떠한 개인정보도 직접 수집하거나 저장하지 않습니다.</b>
-                    </span>
-                    <span style="margin-top: 15px;">
-                        서비스 내 모든 콘텐츠의 저작권은 원저작권자에게 귀속되며,<br>
-                        본 서비스는 이를 통해 어떠한 상업적 수익도 창출하지 않습니다.
-                    </span>
-                    <span style="margin-top: 15px;">
-                        만약 제공되는 콘텐츠가 귀하의 권리를 침해한다고 판단될 경우,<br>
-                        관리자에게 문의해 주시면 즉시 검토 후 삭제 등의 필요한 조치를 취하겠습니다.
-                    </span>
-                </section>
-
-                <div
-                    style="text-align: center; margin-top: 30px; animation: fadeInUp 1s ease forwards; animation-delay: 0.4s; opacity: 0;">
-                    <a onclick="copyShareLink(this)" class="cta-button">
-                        <i data-lucide="link"></i> 주소 복사하기
-                    </a>
-                </div>
-
-                <div
-                    style="text-align: center; margin-top: 20px; animation: fadeInUp 1s ease forwards; animation-delay: 0.45s; opacity: 0;">
-                    <button onclick="toggleEmailPolicy()"
-                        style="background: none; border: none; color: var(--text-secondary); text-decoration: underline; font-size: 0.8rem; cursor: pointer; font-family: 'Noto Serif KR', serif; outline: none; padding: 5px;">
-                        이메일 무단 수집 거부
-                    </button>
-                    <div id="email-policy-text"
-                        style="display: none; margin-top: 15px; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.6; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); text-align: left; word-break: keep-all; font-family: 'Noto Serif KR', serif; transition: all 0.3s ease;">
-                        본 웹사이트는 게시된 이메일 주소가 전자우편 수집 프로그램이나 그 밖의 기술적 장치를 이용하여 무단 수집되는 것을 거부합니다.<br>
-                        이를 위반 시 『정보통신망 이용 촉진 및 정보보호 등에 관한 법률』등에 의해 처벌받을 수 있습니다.
-                    </div>
-                </div>
-
-                <div class="info-watermark" style="animation-delay: 0.5s; animation: fadeInUp 1s ease forwards;">
-                    <span
-                        style="font-family: 'Noto Serif KR', serif; font-size: clamp(0.85rem, 3vw, 0.95rem); letter-spacing: 0.1em; font-style: italic; margin-bottom: 15px; color: var(--accent-color);">
-                        Jesus Loves You
-                    </span>
-
-                    <img src="img/DearLoadIcon_White.png" alt="Dear Lord Watermark" onerror="this.style.display='none'">
-                    <span class="watermark-text">Dear Lord</span>
-                    <div style="margin: 20px 0 0 0;">
-                        <img src="https://hits.sh/dearlord.kr.svg?style=for-the-badge&label=VISITS&color=dcb850"
-                            alt="VISITS" style="width: 77px !important; height: auto !important;
-                    filter: none !important;
-                    -webkit-filter: none !important;
-                    opacity: 1 !important;
-                    display: inline-block !important;
-                    aspect-ratio: auto !important;
-                    background: none !important;
-                    border: none !important;" onerror="this.style.display='none'">
-                    </div>
-
-                    <span class="copyright-text">&copy; 2026 Jaegyu Lee. All Rights Reserved.</span>
-                </div>
-            </div>
-    </main>
-
-    <div id="global-music-player">
-        <div id="yt-player-container"
-            style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0.01; pointer-events: none;">
-        </div>
-
-        <div id="gmp-playlist-popup" class="scroll-area">
-            <div class="gmp-playlist-header">
-                <span>플레이리스트</span>
-                <i data-lucide="x" onclick="togglePlaylist()" style="cursor:pointer; width: 18px; height: 18px;"></i>
-            </div>
-            <ul id="gmp-playlist-ul" style="list-style: none;"></ul>
-        </div>
-
-        <div class="gmp-progress-container" id="gmp-progress-container"
-            onclick="seekYtProgress(event, 'gmp-progress-container')">
-            <div class="gmp-progress-bar" id="gmp-progress-bar"></div>
-        </div>
-        <div class="gmp-controls-wrapper">
-            <div class="gmp-info" onclick="openFullscreenPlayer()" style="cursor: pointer;">
-                <div class="gmp-thumbnail-wrapper">
-                    <img id="gmp-thumbnail" src="" alt="Thumbnail">
-                </div>
-                <div class="gmp-track-info">
-                    <div id="gmp-title">-</div>
-                    <div id="gmp-artist">-</div>
-                </div>
-            </div>
-
-            <div class="gmp-controls">
-                <button class="gmp-btn" id="gmp-shuffle" onclick="toggleYtShuffle()" title="랜덤 재생">
-                    <i data-lucide="shuffle"></i>
-                </button>
-                <button class="gmp-btn" id="gmp-prev" onclick="playPrevYt()" title="이전곡">
-                    <i data-lucide="skip-back"></i>
-                </button>
-                <button class="gmp-btn gmp-play-btn" id="gmp-playpause" onclick="toggleYtPlayPause()" title="재생/일시정지">
-                    <span id="gmp-playpause-wrap" style="display:flex;">
-                        <i data-lucide="circle-play"></i>
-                    </span>
-                </button>
-                <button class="gmp-btn" id="gmp-next" onclick="playNextYt()" title="다음곡">
-                    <i data-lucide="skip-forward"></i>
-                </button>
-                <button class="gmp-btn" id="gmp-repeat" onclick="toggleYtRepeat()" title="반복 재생">
-                    <span id="gmp-repeat-wrap" style="display:flex;">
-                        <i data-lucide="repeat"></i>
-                    </span>
-                </button>
-            </div>
-
-            <div class="gmp-extra">
-                <button class="gmp-btn" id="gmp-playlist-btn" onclick="togglePlaylist()" title="플레이리스트">
-                    <i data-lucide="list-music"></i>
-                </button>
-                <button class="gmp-btn" id="gmp-fullscreen-btn" onclick="openFullscreenPlayer()" title="전체화면">
-                    <i data-lucide="chevron-up"></i>
-                </button>
-            </div>
-        </div>
+    <div id="locating-pill" class="status-pill" hidden>
+      <span class="status-pill__spin"></span>현재 위치를 찾는 중…
     </div>
 
-    <div id="fullscreen-player">
-        <div id="fs-bg"></div>
-        <div class="fs-header">
-            <button onclick="closeFullscreenPlayer()" title="닫기">
-                <i data-lucide="chevron-down" style="width: 32px; height: 32px;"></i>
-            </button>
-            <button id="fs-playlist-btn" onclick="toggleFsPlaylist()" title="플레이리스트">
-                <i data-lucide="list-music"></i>
-            </button>
-        </div>
+    <div id="hint-pill" class="hint-pill">장소를 검색하거나 <b>+</b> 버튼으로 핀을 추가해요</div>
 
-        <div class="fs-content">
-            <div class="fs-artwork-wrap">
-                <img id="fs-artwork" src="" alt="Artwork">
-            </div>
+    <button id="btn-about" type="button" class="about-btn" aria-label="앱 정보">
+      <svg viewBox="0 0 24 24" fill="none" class="w-[12px] h-[12px]" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9"/>
+        <path d="M12 11.2v4.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+        <circle cx="12" cy="8.1" r="1.05" fill="currentColor"/>
+      </svg>
+      About
+    </button>
 
-            <div class="fs-right-column">
-                <div class="fs-info-area">
-                    <div class="fs-text-info">
-                        <h2 id="fs-title-large">-</h2>
-                        <div class="fs-artist-row">
-                            <p id="fs-artist-large">-</p>
-                            <a id="fs-yt-link" href="#" target="_blank" rel="noopener noreferrer" class="fs-yt-link-btn" title="YouTube에서 보기">
-                                <i data-lucide="external-link"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+    <div class="bottom-controls">
+      <div class="layer-ctl">
+        <button id="btn-maptype" type="button" class="layer-ctl__btn" aria-pressed="false" aria-label="위성 지도" title="위성 지도">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[20px] h-[20px]">
+            <path d="M12 3.5 21 8l-9 4.5L3 8l9-4.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="m3.5 12.4 8.5 4.2 8.5-4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <span class="layer-ctl__div" aria-hidden="true"></span>
+        <button id="btn-roadview" type="button" class="layer-ctl__btn" aria-pressed="false" aria-label="로드뷰" title="로드뷰">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[20px] h-[20px]">
+            <circle cx="12" cy="5.4" r="2.6" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M9 21v-5H7.4l1.3-4.6A3.4 3.4 0 0 1 12 9a3.4 3.4 0 0 1 3.3 2.4L16.6 16H15v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
 
-                <div class="fs-lyrics-area" id="fs-lyrics-focus-area" onclick="toggleFsLyricsMode()">
-                    <div id="fs-lyrics-container"></div>
-                </div>
+      <button id="btn-locate" type="button" class="round-btn" aria-label="내 위치로 이동" title="내 위치로 이동">
+        <svg viewBox="0 0 24 24" fill="none" class="w-[21px] h-[21px]">
+          <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 2v2.5M12 19.5V22M22 12h-2.5M4.5 12H2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
 
-                <div class="fs-lyrics-full-area" id="fs-lyrics-full-area">
-                    <button class="gmp-btn fs-lyrics-collapse-btn" onclick="toggleFsLyricsMode()" title="접기">
-                        <i data-lucide="chevron-up"></i>
-                    </button>
-                    <div id="fs-lyrics-full-list"></div>
-                </div>
+      <div class="zoom-ctl">
+        <button id="btn-zoom-in" type="button" class="zoom-ctl__btn" aria-label="지도 확대" title="확대">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[19px] h-[19px]">
+            <path d="M12 5.5v13M5.5 12h13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="zoom-ctl__div" aria-hidden="true"></span>
+        <button id="btn-zoom-out" type="button" class="zoom-ctl__btn" aria-label="지도 축소" title="축소">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[19px] h-[19px]">
+            <path d="M5.5 12h13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
 
-                <div class="fs-progress-area">
-                    <div class="fs-progress-container" id="fs-progress-container"
-                        onclick="seekYtProgress(event, 'fs-progress-container')">
-                        <div class="fs-progress-bar" id="fs-progress-bar"></div>
-                    </div>
-                    <div class="fs-time-labels">
-                        <span id="fs-time-current">0:00</span>
-                        <span id="fs-time-total">0:00</span>
-                    </div>
-                </div>
-
-                <div class="fs-controls">
-                    <button class="gmp-btn" id="fs-shuffle" onclick="toggleYtShuffle()">
-                        <i data-lucide="shuffle"></i>
-                    </button>
-                    <button class="gmp-btn" id="fs-prev" onclick="playPrevYt()">
-                        <i data-lucide="skip-back"></i>
-                    </button>
-                    <button class="gmp-btn gmp-play-btn" id="fs-playpause" onclick="toggleYtPlayPause()">
-                        <span id="fs-playpause-wrap" style="display:flex;">
-                            <i data-lucide="circle-play"></i>
-                        </span>
-                    </button>
-                    <button class="gmp-btn" id="fs-next" onclick="playNextYt()">
-                        <i data-lucide="skip-forward"></i>
-                    </button>
-                    <button class="gmp-btn" id="fs-repeat" onclick="toggleYtRepeat()">
-                        <span id="fs-repeat-wrap" style="display:flex;">
-                            <i data-lucide="repeat"></i>
-                        </span>
-                    </button>
-
-                </div>
-            </div>
-        </div>
-
-        <div id="fs-playlist-overlay">
-            <div class="fs-playlist-overlay-header">
-                <h3>플레이리스트</h3>
-            </div>
-            <ul id="fs-playlist-ul" class="scroll-area"></ul>
-        </div>
+      <button id="btn-add" type="button" class="fab" aria-label="핀 추가">
+        <svg viewBox="0 0 24 24" fill="none" class="w-6 h-6">
+          <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        <span class="fab__label">핀 추가</span>
+      </button>
     </div>
 
-    <div id="inapp-warning-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-icon" onclick="closeInAppWarning()" title="닫기">
-                <i data-lucide="x"></i>
-            </button>
-            <i data-lucide="external-link" class="modal-icon"></i>
-            <h3>외부 브라우저 사용 권장</h3>
-            <p>인스타그램 등의 앱 내 브라우저에서는<br>정책으로 인하여 오디오를 재생할 수 없습니다.<br>감상을 위해 <b>삼성, 사파리, 크롬, 파이어폭스 브라우저 등</b><br>외부 브라우저로
-                접속해 주세요.</p>
-            <div class="modal-buttons">
-                <button class="modal-btn btn-copy" onclick="copyUrlForExternal()">주소 복사하기</button>
-            </div>
+    <div id="picker" class="picker" hidden>
+      <div class="picker__crosshair">
+        <div class="picker__pin">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 21s7-5.686 7-11a7 7 0 1 0-14 0c0 5.314 7 11 7 11Z" fill="currentColor"/>
+            <circle cx="12" cy="10" r="2.6" fill="#fff"/>
+          </svg>
         </div>
+        <div class="picker__shadow"></div>
+      </div>
+      <div class="picker__bar">
+        <div class="min-w-0">
+          <p class="text-[12px] text-ink-400 leading-none mb-1.5">지도를 움직여 위치를 맞춰주세요</p>
+          <p id="picker-address" class="text-[14px] font-normal truncate leading-none">위치를 찾는 중…</p>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <button id="picker-cancel" type="button" class="btn-ghost h-11 px-4">취소</button>
+          <button id="picker-confirm" type="button" class="btn-primary h-11 px-5">여기로</button>
+        </div>
+      </div>
     </div>
 
-    <div id="toast-container" class="toast-container"></div>
+    <!-- 코스 보기 — 지도에 번호와 선이 그려지는 동안 아래에 떠 있는 카드 -->
+    <div id="course-bar" class="course-bar" hidden>
+      <div class="course-bar__head">
+        <div class="min-w-0 flex-1">
+          <div class="course-bar__meta">
+            <span id="course-bar-badge" class="badge badge--wish">예정</span>
+            <span id="course-bar-date" class="course-bar__date"></span>
+          </div>
+          <p id="course-bar-name" class="course-bar__name"></p>
+        </div>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="assets/js/prayers.js"></script>
-    <script src="assets/js/playlist.js"></script>
-    <script src="https://www.youtube.com/iframe_api" async></script>
-    <script src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
-    <script src="assets/js/script.js"></script>
+        <!-- 카드(가로 줄) ↔ 표 전환. 마지막 선택을 기억한다. -->
+        <div class="view-toggle" role="radiogroup" aria-label="장소 보기 방식">
+          <button type="button" class="view-toggle__btn is-on" data-course-view="cards"
+                  role="radio" aria-checked="true" aria-label="카드로 보기" title="카드로 보기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px]" aria-hidden="true">
+              <rect x="3" y="6" width="7.5" height="12" rx="2.2" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="13.5" y="6" width="7.5" height="12" rx="2.2" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </button>
+          <button type="button" class="view-toggle__btn" data-course-view="table"
+                  role="radio" aria-checked="false" aria-label="표로 보기" title="표로 보기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px]" aria-hidden="true">
+              <rect x="3.5" y="4.5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M3.5 9.5h17M3.5 14.5h17M9 9.5v10" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </button>
+        </div>
+
+        <button id="course-bar-close" type="button" class="sheet__close" aria-label="코스 보기 닫기">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+      </div>
+
+      <!-- 휠 · 화살표 버튼은 마우스가 있는 기기에서만 켠다 (ui.js initCourseBarScroll) -->
+      <div class="course-bar__track">
+        <div id="course-bar-stops" class="course-bar__stops"></div>
+
+        <button type="button" id="course-bar-prev" class="gallery__nav course-bar__nav--prev" aria-label="이전 장소" hidden>
+          <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px]">
+            <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button type="button" id="course-bar-next" class="gallery__nav course-bar__nav--next" aria-label="다음 장소" hidden>
+          <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px]">
+            <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 표 보기 — 순서는 코스 순서 그대로, 정렬 없음 -->
+      <div id="course-bar-table" class="course-bar__table scroll-y" hidden></div>
+
+      <div class="course-bar__actions">
+        <button id="course-bar-edit" type="button" class="btn-ghost h-11 flex-1">수정</button>
+        <button id="course-bar-done" type="button" class="btn-primary h-11 flex-[1.5]">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[17px] h-[17px]">
+            <path d="m5 12.5 4.4 4.4L19 7.6" stroke="currentColor" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          다녀왔어요
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div id="timeline" class="timeline" hidden role="dialog" aria-modal="true" aria-label="핀 모아보기">
+    <div class="timeline__scrim" data-close-timeline></div>
+
+    <div class="timeline__panel">
+      <header class="timeline__head">
+        <div class="min-w-0">
+          <h2 class="text-[20px] font-normal tracking-[-.03em] leading-none">핀 모아보기</h2>
+          <p id="timeline-sub" class="mt-2 text-[12px] text-ink-400 tracking-tight">불러오는 중…</p>
+        </div>
+        <div class="timeline__head-actions">
+          <button id="btn-export" type="button" class="sheet__close" aria-label="기록 내보내기" title="기록 내보내기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[17px] h-[17px]">
+              <path d="M12 4v11m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="1.9"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5 18.5h14" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <button type="button" class="sheet__close" data-close-timeline aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="timeline__tools">
+        <div class="timeline__search">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px] text-ink-400 shrink-0">
+            <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/>
+            <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <input id="timeline-search" type="search" autocomplete="off"
+                 placeholder="이름·메모·주소로 찾기" />
+          <button id="timeline-search-clear" type="button" hidden aria-label="검색어 지우기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[13px] h-[13px]">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <select id="timeline-sort" class="timeline__sort" aria-label="정렬 기준">
+          <option value="recent">최신순</option>
+          <option value="fav">즐겨찾기 먼저</option>
+          <option value="oldest">오래된순</option>
+          <option value="near">가까운 순</option>
+          <option value="region">지역순</option>
+          <option value="name">이름순</option>
+        </select>
+      </div>
+
+      <div id="timeline-filter" class="filter-row timeline__filter"></div>
+
+      <div id="timeline-list" class="timeline__list scroll-y"></div>
+      <div id="timeline-empty" class="timeline__empty" hidden>
+        <div class="timeline__empty-mark">📍</div>
+        <p class="mt-3 text-[13.5px] font-normal text-ink-700" data-empty-title>아직 기록이 없어요</p>
+        <p class="mt-1.5 text-[12.5px] text-ink-400" data-empty-desc>지도에서 핀을 추가하면 여기에 쌓여요</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 댓글 모아보기 — '핀 모아보기' 와 같은 패널 스타일을 그대로 쓴다. -->
+  <div id="feed" class="timeline feed" hidden role="dialog" aria-modal="true" aria-label="댓글 모아보기">
+    <div class="timeline__scrim" data-close-feed></div>
+
+    <div class="timeline__panel">
+      <header class="timeline__head">
+        <div class="min-w-0">
+          <h2 class="text-[20px] font-normal tracking-[-.03em] leading-none">댓글 모아보기</h2>
+          <p id="feed-sub" class="mt-2 text-[12px] text-ink-400 tracking-tight">불러오는 중…</p>
+        </div>
+        <div class="timeline__head-actions">
+          <button type="button" class="sheet__close" data-close-feed aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="timeline__tools">
+        <div class="timeline__search">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px] text-ink-400 shrink-0">
+            <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/>
+            <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <input id="feed-search" type="search" autocomplete="off"
+                 placeholder="댓글·장소·이름으로 찾기" />
+          <button id="feed-search-clear" type="button" hidden aria-label="검색어 지우기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[13px] h-[13px]">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <select id="feed-sort" class="timeline__sort" aria-label="정렬 기준">
+          <option value="recent">최신순</option>
+          <option value="oldest">오래된순</option>
+        </select>
+      </div>
+
+      <div id="feed-list" class="timeline__list scroll-y" hidden></div>
+      <div id="feed-empty" class="timeline__empty" hidden>
+        <div class="timeline__empty-mark">💬</div>
+        <p class="mt-3 text-[13.5px] font-normal text-ink-700" data-empty-title>아직 댓글이 없어요</p>
+        <p class="mt-1.5 text-[12.5px] text-ink-400" data-empty-desc>핀을 열어 첫 댓글을 남겨보세요</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 데이트 코스 목록 — 역시 '핀 모아보기' 패널 스타일을 그대로 쓴다. -->
+  <div id="courses" class="timeline" hidden role="dialog" aria-modal="true" aria-label="데이트 코스">
+    <div class="timeline__scrim" data-close-courses></div>
+
+    <div class="timeline__panel">
+      <header class="timeline__head">
+        <div class="min-w-0">
+          <h2 class="text-[20px] font-normal tracking-[-.03em] leading-none">데이트 코스</h2>
+          <p id="courses-sub" class="mt-2 text-[12px] text-ink-400 tracking-tight">불러오는 중…</p>
+        </div>
+        <div class="timeline__head-actions">
+          <button id="btn-course-new" type="button" class="cs-new">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[15px] h-[15px]" aria-hidden="true">
+              <path d="M12 5.5v13M5.5 12h13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+            새 코스
+          </button>
+          <button type="button" class="sheet__close" data-close-courses aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div id="courses-list" class="timeline__list scroll-y" hidden></div>
+      <div id="courses-empty" class="timeline__empty" hidden>
+        <div class="timeline__empty-mark">🗺️</div>
+        <p class="mt-3 text-[13.5px] font-normal text-ink-700">아직 코스가 없어요</p>
+        <p class="mt-1.5 text-[12.5px] text-ink-400">가볼 곳을 묶어 다음 데이트를 계획해보세요</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
+
+  <div id="sheet" class="sheet" hidden role="dialog" aria-modal="true">
+    <div class="sheet__grip"></div>
+
+    <div id="panel-form" class="sheet__panel" hidden>
+      <div class="sheet__head">
+        <h2 id="form-title" class="sheet__title">새로운 핀</h2>
+        <button type="button" class="sheet__close" data-close-sheet aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <p id="form-address" class="sheet__address">
+        <svg viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px] shrink-0">
+          <path d="M12 21s7-5.686 7-11a7 7 0 1 0-14 0c0 5.314 7 11 7 11Z" stroke="currentColor" stroke-width="1.7"/>
+          <circle cx="12" cy="10" r="2.2" fill="currentColor"/>
+        </svg>
+        <span id="form-address-text">주소를 불러오는 중…</span>
+      </p>
+
+      <form id="pin-form" class="mt-4 space-y-3.5" novalidate>
+        <div>
+          <label class="label" for="pin-name">장소 이름</label>
+          <input id="pin-name" type="text" maxlength="40" placeholder="예: 우물집 광주점" class="input" />
+        </div>
+
+        <div>
+          <span class="label">카테고리</span>
+          <div class="segmented" role="radiogroup">
+            <button type="button" class="segmented__item is-on" data-category="visited" role="radio" aria-checked="true">
+              <span class="segmented__dot"></span> 가본 곳
+            </button>
+            <button type="button" class="segmented__item" data-category="wish" role="radio" aria-checked="false">
+              <span class="segmented__dot"></span> 가볼 곳
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <span class="label" id="date-label">다녀온 날</span>
+          <div class="date-row">
+            <input id="pin-date" type="date" class="input date-input" />
+            <button type="button" id="date-today" class="btn-ghost h-[50px] px-3.5 shrink-0 text-[13px]">오늘</button>
+            <button type="button" id="date-clear" class="btn-ghost h-[50px] px-3.5 shrink-0 text-[13px]">비우기</button>
+          </div>
+        </div>
+
+        <div>
+          <span class="label">
+            태그 <span class="label__sub" id="tag-hint">최대 3개</span>
+          </span>
+          <p class="field-note">아무것도 고르지 않으면 자동으로 '기타'로 저장돼요</p>
+          <div id="tag-picker" class="tag-picker"></div>
+        </div>
+
+        <div>
+          <span class="label">조건</span>
+          <div id="feature-picker" class="tag-picker"></div>
+        </div>
+
+        <div>
+          <span class="label">
+            사진 <span class="label__sub" id="photo-count-label">0/5</span>
+          </span>
+          <div id="photo-strip" class="photo-strip">
+            <button type="button" id="photo-add" class="photo-add">
+              <svg viewBox="0 0 24 24" fill="none" class="w-[19px] h-[19px]">
+                <path d="M12 7v10M7 12h10" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+              </svg>
+              <span>추가</span>
+            </button>
+          </div>
+          <input id="photo-input" type="file" accept="image/*" multiple hidden />
+        </div>
+
+        <div>
+          <label class="label" for="pin-memo">메모</label>
+          <textarea id="pin-memo" rows="3" maxlength="300"
+                    placeholder="예: 분위기가 참 좋았어~!" class="input resize-none"></textarea>
+        </div>
+
+        <div class="flex gap-2.5 pt-1.5">
+          <button id="form-delete" type="button" class="btn-danger h-[52px] px-5 shrink-0" hidden>삭제</button>
+          <button id="form-submit" type="submit" class="btn-primary flex-1 h-[52px]">
+            <span class="btn-label">저장하기</span>
+            <span class="spinner" hidden></span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div id="panel-course" class="sheet__panel" hidden>
+      <div class="sheet__head">
+        <h2 id="course-form-title" class="sheet__title">새 코스</h2>
+        <button type="button" class="sheet__close" data-close-sheet aria-label="닫기">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+      </div>
+
+      <form id="course-form" class="mt-4 space-y-3.5" novalidate>
+        <div>
+          <label class="label" for="course-name">코스 이름</label>
+          <input id="course-name" type="text" maxlength="40" placeholder="예: 성수 데이트" class="input" />
+        </div>
+
+        <div>
+          <span class="label">날짜</span>
+          <div class="date-row">
+            <input id="course-date" type="date" class="input date-input" />
+            <button type="button" id="course-date-today" class="btn-ghost h-[50px] px-3.5 shrink-0 text-[13px]">오늘</button>
+            <button type="button" id="course-date-clear" class="btn-ghost h-[50px] px-3.5 shrink-0 text-[13px]">비우기</button>
+          </div>
+        </div>
+
+        <div>
+          <span class="label">
+            장소 <span class="label__sub" id="course-stop-count">0/30</span>
+          </span>
+          <ol id="course-stops" class="cs-stops"></ol>
+          <p id="course-stops-empty" class="cs-stops__empty">아래에서 장소를 찾아 순서대로 담아요</p>
+        </div>
+
+        <div>
+          <div class="timeline__search">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px] text-ink-400 shrink-0">
+              <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/>
+              <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input id="course-search" type="search" autocomplete="off" enterkeyhint="search"
+                   placeholder="내 핀이나 새 장소 검색" />
+            <button id="course-search-clear" type="button" hidden aria-label="검색어 지우기">
+              <svg viewBox="0 0 24 24" fill="none" class="w-[13px] h-[13px]">
+                <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <div id="course-results" class="cs-results"></div>
+        </div>
+
+        <div class="flex gap-2.5 pt-1.5">
+          <button id="course-delete" type="button" class="btn-danger h-[52px] px-5 shrink-0" hidden>삭제</button>
+          <button id="course-submit" type="submit" class="btn-primary flex-1 h-[52px]">
+            <span class="btn-label">저장하기</span>
+            <span class="spinner" hidden></span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div id="panel-detail" class="sheet__panel" hidden>
+      <div class="sheet__head">
+        <div class="min-w-0 flex-1">
+          <div class="detail-badges">
+            <span id="detail-badge" class="badge badge--visited">가본 곳</span>
+            <span id="detail-fav-note" class="badge badge--fav" hidden></span>
+          </div>
+          <div class="detail-title">
+            <h2 id="detail-name" class="sheet__title truncate">장소 이름</h2>
+            <button id="detail-name-copy" type="button" class="copy-btn" aria-label="장소 이름 복사" title="이름 복사"><svg data-copy-icon viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M15 6.2V5.6A2.6 2.6 0 0 0 12.4 3H6.6A2.6 2.6 0 0 0 4 5.6v5.8A2.6 2.6 0 0 0 6.6 14h.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg data-copy-done viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]" aria-hidden="true" hidden><path d="m5 12.5 4.4 4.4L19 7.6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+        <div class="detail-head-actions">
+          <button id="detail-fav" type="button" class="fav-btn" aria-pressed="false" aria-label="즐겨찾기에 넣기" title="즐겨찾기">
+            <svg viewBox="0 0 24 24" class="w-[18px] h-[18px]" aria-hidden="true"><path d="m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="sheet__close" data-close-sheet aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+              <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <p class="sheet__address mt-1">
+        <svg viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px] shrink-0">
+          <path d="M12 21s7-5.686 7-11a7 7 0 1 0-14 0c0 5.314 7 11 7 11Z" stroke="currentColor" stroke-width="1.7"/>
+          <circle cx="12" cy="10" r="2.2" fill="currentColor"/>
+        </svg>
+        <span id="detail-address">-</span>
+        <button id="detail-address-copy" type="button" class="copy-btn" aria-label="주소 복사" title="주소 복사"><svg data-copy-icon viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M15 6.2V5.6A2.6 2.6 0 0 0 12.4 3H6.6A2.6 2.6 0 0 0 4 5.6v5.8A2.6 2.6 0 0 0 6.6 14h.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg data-copy-done viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]" aria-hidden="true" hidden><path d="m5 12.5 4.4 4.4L19 7.6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </p>
+
+      <p id="detail-when" class="sheet__address mt-1.5" hidden>
+        <svg viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px] shrink-0">
+          <rect x="4" y="5.5" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/>
+          <path d="M4 10h16M8.5 3.5V7M15.5 3.5V7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+        <span id="detail-when-text"></span>
+      </p>
+
+      <!-- 윗줄: 길찾기 · 검색 / 아랫줄: 코스에 담기 · 카드 만들기 -->
+      <div class="detail-actions">
+        <button id="detail-route" type="button" class="detail-brand"
+                aria-label="카카오내비로 길찾기" title="카카오내비로 길찾기">
+          <img src="img/kakaonavi.png" alt="카카오내비" />
+        </button>
+
+        <a id="detail-search" class="detail-brand" target="_blank" rel="noopener noreferrer"
+           aria-label="네이버에서 검색" title="네이버에서 검색">
+          <img src="img/naver.png" alt="네이버" />
+        </a>
+      </div>
+
+      <div class="detail-actions detail-actions--sub">
+        <button id="detail-course" type="button" class="detail-course">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px]" aria-hidden="true">
+              <circle cx="6" cy="6.5" r="2.1" stroke="currentColor" stroke-width="1.9"/>
+              <circle cx="18" cy="17.5" r="2.1" stroke="currentColor" stroke-width="1.9"/>
+              <path d="M8.1 6.5H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.9" stroke="currentColor" stroke-width="1.9"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          코스에 담기
+        </button>
+
+        <button id="detail-card" type="button" class="detail-course">
+          <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px]" aria-hidden="true">
+            <rect x="6" y="2.8" width="12" height="18.4" rx="3" stroke="currentColor" stroke-width="1.9"/>
+            <path d="m9 15.5 2.2-2.6 1.6 1.8 1.2-1.3 1.5 2.1" stroke="currentColor" stroke-width="1.7"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="10.2" cy="8.4" r="1.4" fill="currentColor"/>
+          </svg>
+          카드 만들기
+        </button>
+      </div>
+
+      <div id="detail-tags" class="tag-row mt-3" hidden></div>
+      <div id="detail-features" class="tag-row mt-2" hidden></div>
+
+      <div id="detail-gallery" class="gallery-wrap mt-4" hidden>
+        <div id="detail-photos" class="gallery"></div>
+
+        <button type="button" id="gallery-prev" class="gallery__nav gallery__nav--prev" aria-label="이전 사진" hidden>
+          <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px]">
+            <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button type="button" id="gallery-next" class="gallery__nav gallery__nav--next" aria-label="다음 사진" hidden>
+          <svg viewBox="0 0 24 24" fill="none" class="w-[16px] h-[16px]">
+            <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="detail-memo-wrap" class="memo-box mt-4">
+        <p id="detail-memo" class="whitespace-pre-wrap break-words"></p>
+        <button id="detail-memo-copy" type="button" class="copy-btn memo-copy" aria-label="메모 복사" title="메모 복사"><svg data-copy-icon viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.6" stroke="currentColor" stroke-width="1.8"/><path d="M15 6.2V5.6A2.6 2.6 0 0 0 12.4 3H6.6A2.6 2.6 0 0 0 4 5.6v5.8A2.6 2.6 0 0 0 6.6 14h.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg data-copy-done viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]" aria-hidden="true" hidden><path d="m5 12.5 4.4 4.4L19 7.6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+
+      <p id="detail-meta" class="mt-3.5 text-[11.5px] text-ink-400"></p>
+
+      <section class="comments">
+        <h3 class="comments__title">
+          댓글
+          <span id="comment-count" class="comments__count">0</span>
+        </h3>
+
+        <ul id="comment-list" class="comments__list"></ul>
+        <p id="comment-empty" class="comments__empty">아직 댓글이 없어요. 먼저 남겨보세요.</p>
+
+        <form id="comment-form" class="comments__form">
+          <input id="comment-input" type="text" maxlength="200" autocomplete="off"
+                 placeholder="댓글 남기기" class="comments__input" />
+          <button id="comment-submit" type="submit" class="comments__send" aria-label="댓글 보내기">
+            <svg viewBox="0 0 24 24" fill="none" class="w-[17px] h-[17px]">
+              <path d="M5 12h13m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </form>
+      </section>
+
+      <button id="detail-visit" type="button" class="btn-primary detail-visit" hidden>
+        <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]">
+          <path d="m5 12.5 4.4 4.4L19 7.6" stroke="currentColor" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        다녀왔어요
+      </button>
+
+      <div class="flex gap-2.5 mt-5">
+        <button id="detail-delete" type="button" class="btn-danger h-[52px] px-5">삭제</button>
+        <button id="detail-edit" type="button" class="btn-ghost flex-1 h-[52px]">수정하기</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="roadview" class="roadview" hidden role="dialog" aria-modal="true" aria-label="로드뷰">
+    <div id="roadview-view" class="roadview__view"></div>
+
+    <button type="button" id="roadview-close" class="roadview__close" aria-label="로드뷰 닫기">
+      <svg viewBox="0 0 24 24" fill="none" class="w-[20px] h-[20px]">
+        <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <p id="roadview-address" class="roadview__address"></p>
+  </div>
+
+  <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="사진 보기">
+    <button type="button" id="lightbox-close" class="lightbox__close" aria-label="닫기">
+      <svg viewBox="0 0 24 24" fill="none" class="w-[20px] h-[20px]">
+        <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <button type="button" id="lightbox-prev" class="lightbox__nav lightbox__nav--prev" aria-label="이전 사진">
+      <svg viewBox="0 0 24 24" fill="none" class="w-[22px] h-[22px]">
+        <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <img id="lightbox-img" class="lightbox__img" alt="핀에 첨부된 사진" />
+
+    <button type="button" id="lightbox-next" class="lightbox__nav lightbox__nav--next" aria-label="다음 사진">
+      <svg viewBox="0 0 24 24" fill="none" class="w-[22px] h-[22px]">
+        <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div id="lightbox-count" class="lightbox__count">1 / 1</div>
+  </div>
+
+  <div id="story" class="story" hidden role="dialog" aria-modal="true" aria-label="스토리 카드 만들기">
+    <button type="button" id="story-close" class="lightbox__close" aria-label="닫기">
+      <svg viewBox="0 0 24 24" fill="none" class="w-[20px] h-[20px]">
+        <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <div class="story__stage">
+      <canvas id="story-canvas" class="story__canvas" width="1080" height="1920"
+              role="img" aria-label="스토리 카드 미리보기"></canvas>
+    </div>
+
+    <div class="story__panel">
+      <div id="story-photos" class="story__photos" role="group" aria-label="카드에 쓸 사진"></div>
+
+      <!-- 사진 위치 조절: 미리보기 사진을 끌어 옮기고, 두 손가락 · 휠 · 슬라이더로 확대 -->
+      <div id="story-crop" class="story__crop" hidden>
+        <svg viewBox="0 0 24 24" fill="none" class="story__crop-ico" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/>
+          <path d="M8 11h6M16 16l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input id="story-zoom" class="story__zoom" type="range" min="100" max="300" step="1" value="100"
+               aria-label="사진 확대">
+        <svg viewBox="0 0 24 24" fill="none" class="story__crop-ico" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/>
+          <path d="M8 11h6M11 8v6M16 16l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <button type="button" id="story-crop-reset" class="story__crop-reset">원위치</button>
+      </div>
+
+      <div id="story-formats" class="story__formats" role="group" aria-label="카드 비율">
+        <!-- 파일이 아직 없으면 깨진 그림 대신 숨긴다 -->
+        <img class="story__formats-logo" src="img/instagram.png" alt="" aria-hidden="true"
+             onerror="this.hidden = true">
+        <button type="button" class="story__format" data-format="story" aria-pressed="true">스토리</button>
+        <button type="button" class="story__format" data-format="feed45" aria-pressed="false">피드 4:5</button>
+        <button type="button" class="story__format" data-format="square" aria-pressed="false">피드 1:1</button>
+      </div>
+
+      <div id="story-themes" class="story__themes" role="group" aria-label="카드 배경">
+        <button type="button" class="story__swatch story__swatch--photo" data-theme="photo" aria-label="사진 배경"></button>
+        <button type="button" class="story__swatch story__swatch--charcoal" data-theme="charcoal" aria-label="차콜 배경"></button>
+        <button type="button" class="story__swatch story__swatch--blue" data-theme="blue" aria-label="블루 배경"></button>
+        <button type="button" class="story__swatch story__swatch--rose" data-theme="rose" aria-label="로즈 배경"></button>
+        <button type="button" class="story__swatch story__swatch--dusk" data-theme="dusk" aria-label="노을 배경"></button>
+      </div>
+
+      <button type="button" id="story-edit-toggle" class="story__chip" aria-expanded="false" aria-controls="story-edit">
+        카드 내용 고치기
+      </button>
+
+      <!-- 여기서 고친 내용은 카드에만 쓰이고 핀에는 저장되지 않는다. -->
+      <div id="story-edit" class="story__edit" hidden>
+        <label class="story__field">
+          <span class="story__label">이름</span>
+          <input id="story-name" class="story__input" type="text" maxlength="40" autocomplete="off">
+        </label>
+        <label class="story__field">
+          <span class="story__label">주소 <em>비우면 빠져요</em></span>
+          <input id="story-address" class="story__input" type="text" maxlength="80" autocomplete="off">
+        </label>
+        <label class="story__field">
+          <span class="story__label">
+            메모 <em>비우면 빠져요</em>
+            <button type="button" id="story-memo-fill" class="story__link">핀 메모 가져오기</button>
+          </span>
+          <textarea id="story-memo" class="story__input story__input--area" rows="2" maxlength="200"></textarea>
+        </label>
+        <div class="story__field" id="story-tags-field">
+          <span class="story__label">태그 <em>✕ 로 카드에서 빼요</em></span>
+          <div id="story-tags" class="story__tokens"></div>
+        </div>
+        <div class="story__field">
+          <span class="story__label">해시태그</span>
+          <form id="story-hash-form" class="story__hash-row" autocomplete="off">
+            <input id="story-hash-input" class="story__input" type="text" maxlength="20"
+                   placeholder="#데이트" enterkeyhint="done">
+            <button type="submit" class="story__hash-add">추가</button>
+          </form>
+          <div id="story-hashtags" class="story__tokens"></div>
+        </div>
+        <label class="story__switch-row">
+          <span class="story__label">저작권 표시</span>
+          <input id="story-copyright" class="story__switch" type="checkbox" role="switch" checked>
+        </label>
+      </div>
+
+      <button type="button" id="story-save" class="btn-primary story__save">
+        <svg viewBox="0 0 24 24" fill="none" class="w-[18px] h-[18px]" aria-hidden="true">
+          <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        저장 · 공유
+      </button>
+    </div>
+  </div>
+
+  <div id="confirm" class="confirm" hidden role="dialog" aria-modal="true">
+    <div class="confirm__box">
+      <h3 id="confirm-title" class="text-[17px] font-normal tracking-tight">핀을 삭제할까요?</h3>
+      <p id="confirm-desc" class="mt-2 text-[13.5px] text-ink-500 leading-relaxed">삭제한 핀은 되돌릴 수 없어요.</p>
+      <div class="flex gap-2.5 mt-5">
+        <button id="confirm-cancel" type="button" class="btn-ghost flex-1 h-12">취소</button>
+        <button id="confirm-ok" type="button" class="btn-danger flex-1 h-12">삭제</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="about" class="confirm" hidden role="dialog" aria-modal="true" aria-label="앱 정보">
+    <div class="confirm__box about">
+      <p class="about__mark" aria-label="PinLog">P<svg class="wordmark-pin" viewBox="0 0 10 20" aria-hidden="true"><rect x="3.7" y="8" width="2.6" height="12" rx="1.3" fill="var(--ink-500)"/><circle cx="5" cy="5" r="5" fill="currentColor"/><circle cx="3.3" cy="3.3" r="1.6" fill="#fff" fill-opacity=".3"/></svg>n<em>Log</em></p>
+      <p class="about__desc">다혜랑 재규랑 <span aria-hidden="true">❤️</span></p>
+
+      <div class="about__dday">
+        <p class="about__dday-label">함께한 지</p>
+        <p class="about__dday-count"><span id="about-days">–</span><em>일</em></p>
+        <p class="about__dday-since">2026.08.27부터</p>
+      </div>
+
+      <a class="btn-ghost about__mail" href="mailto:gyujae02@gmail.com"
+         aria-label="이메일로 문의하기" title="이메일로 문의하기">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/>
+          <path d="m4.5 8.5 6.9 4.8a1 1 0 0 0 1.2 0l6.9-4.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        문의
+      </a>
+
+      <details id="about-notice" class="about__notice">
+        <summary class="about__notice-head">
+          이메일 무단수집 거부
+          <svg class="about__chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </summary>
+        <div class="about__notice-body">
+          <p>본 웹사이트는 게시된 이메일 주소가 전자우편 수집 프로그램이나 그 밖의 기술적 장치를 이용하여 무단 수집되는 것을 거부합니다.</p>
+          <p>이를 위반 시 『정보통신망 이용 촉진 및 정보보호 등에 관한 법률』등에 의해 처벌받을 수 있습니다.</p>
+        </div>
+      </details>
+
+      <details id="about-font" class="about__notice">
+        <summary class="about__notice-head">
+          폰트 저작권
+          <svg class="about__chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </summary>
+        <div class="about__notice-body">
+          <p>본 웹사이트는 세방그룹이 배포한 세방고딕 2.0 폰트가 사용되었습니다.</p>
+          <p>Copyright(c) SEBANG GROUP., LTD ALL RIGHT RESERVED</p>
+        </div>
+      </details>
+
+      <p class="about__by">© 2026 JAEGYU LEE</p>
+      <p class="about__ver">v20260930</p>
+
+      <button id="about-close" type="button" class="btn-primary about__close">닫기</button>
+    </div>
+  </div>
+
+  <div id="export" class="confirm" hidden role="dialog" aria-modal="true" aria-labelledby="export-title">
+    <div class="confirm__box">
+      <h3 id="export-title" class="text-[17px] font-normal tracking-tight">기록을 내보낼까요?</h3>
+      <p class="mt-2 text-[13.5px] text-ink-500 leading-relaxed">
+        핀·사진·댓글은 모두 서버에만 있어요. 실수로 지우거나 계정에 문제가 생기면
+        되돌릴 방법이 없으니, 가끔 파일로 받아두면 안심할 수 있어요.
+      </p>
+      <p class="mt-2.5 text-[12.5px] text-ink-400 leading-relaxed">
+        사진까지 담으면 파일이 크고 시간이 걸려요. 목록만 받으면 금방 끝납니다.
+      </p>
+
+      <div class="export__actions">
+        <button id="export-photos" type="button" class="btn-primary h-12">사진까지 받기</button>
+        <button id="export-list" type="button" class="btn-ghost h-12">목록만 받기</button>
+        <button id="export-cancel" type="button" class="export__cancel">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="course-pick" class="confirm" hidden role="dialog" aria-modal="true" aria-labelledby="course-pick-title">
+    <div class="confirm__box">
+      <h3 id="course-pick-title" class="text-[17px] font-normal tracking-tight">어느 코스에 담을까요?</h3>
+      <p id="course-pick-desc" class="mt-2 text-[13.5px] text-ink-500 leading-relaxed"></p>
+
+      <ul id="course-pick-list" class="cp-list scroll-y"></ul>
+
+      <div class="export__actions">
+        <button id="course-pick-new" type="button" class="btn-primary h-12">새 코스 만들기</button>
+        <button id="course-pick-cancel" type="button" class="export__cancel">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden>
+    <span id="toast-text"></span>
+    <button id="toast-action" type="button" class="toast__action" hidden></button>
+  </div>
+
+  <div id="boot" class="boot">
+    <p class="boot__mark" aria-label="PinLog">P<svg class="wordmark-pin" viewBox="0 0 10 20" aria-hidden="true"><rect x="3.7" y="8" width="2.6" height="12" rx="1.3" fill="var(--ink-500)"/><circle cx="5" cy="5" r="5" fill="currentColor"/><circle cx="3.3" cy="3.3" r="1.6" fill="#fff" fill-opacity=".3"/></svg>n<em>Log</em></p>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
 </body>
-
 </html>

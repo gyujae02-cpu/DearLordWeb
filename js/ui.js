@@ -1,0 +1,3842 @@
+import { compressPhoto, MAX_PHOTOS } from './photo.js';
+import { drawStoryCard, storyCardBlob, clampCrop, cropScale, DEFAULT_CROP, CROP_ZOOM_MAX } from './storycard.js';
+import { TAGS, MAX_TAGS, tagById, normalizeTags, FEATURES, featureById, normalizeFeatures } from './tags.js';
+import { userColor, displayName, normalizeId } from './users.js';
+import { distanceMeters, formatDistance } from './geo.js';
+
+const $ = (sel) => document.querySelector(sel);
+
+export const el = {
+  boot:          $('#boot'),
+
+  screenLogin:   $('#screen-login'),
+  screenMap:     $('#screen-map'),
+  topBar:        $('.top-bar'),
+
+  loginBg:       $('#login-bg'),
+  loginVideo:    $('#login-video'),
+  loginCard:     $('#login-card'),
+  loginForm:     $('#login-form'),
+  loginId:       $('#login-id'),
+  loginPassword: $('#login-password'),
+  loginSubmit:   $('#login-submit'),
+  loginError:    $('#login-error'),
+  saveId:        $('#save-id'),
+  loginSignup:   $('#login-signup'),
+  loginFindPw:   $('#login-find-pw'),
+
+  map:           $('#map'),
+
+  searchInput:   $('#search-input'),
+  searchClear:   $('#search-clear'),
+  searchPanel:   $('#search-panel'),
+  searchResults: $('#search-results'),
+  searchCount:   $('#search-count'),
+  searchEmpty:   $('#search-empty'),
+
+  filterRow:     $('#filter-row'),
+  timelineFilter:$('#timeline-filter'),
+
+  mePill:        $('#me-pill'),
+  mePillDot:     $('#me-pill-dot'),
+  mePillName:    $('#me-pill-name'),
+
+  brand:         $('#brand'),
+  btnLogout:     $('#btn-logout'),
+  btnTimeline:   $('#btn-timeline'),
+  btnFeed:       $('#btn-feed'),
+  btnCourses:    $('#btn-courses'),
+  btnLocate:     $('#btn-locate'),
+  btnMapType:    $('#btn-maptype'),
+  btnRoadview:   $('#btn-roadview'),
+  roadview:      $('#roadview'),
+  roadviewView:  $('#roadview-view'),
+  roadviewClose: $('#roadview-close'),
+  roadviewAddr:  $('#roadview-address'),
+  btnAdd:        $('#btn-add'),
+  btnZoomIn:     $('#btn-zoom-in'),
+  btnZoomOut:    $('#btn-zoom-out'),
+  hintPill:      $('#hint-pill'),
+  locatingPill:  $('#locating-pill'),
+
+  picker:        $('#picker'),
+  pickerAddress: $('#picker-address'),
+  pickerCancel:  $('#picker-cancel'),
+  pickerConfirm: $('#picker-confirm'),
+
+  timeline:      $('#timeline'),
+  timelineSub:   $('#timeline-sub'),
+  timelineSearch:      $('#timeline-search'),
+  timelineSearchClear: $('#timeline-search-clear'),
+  timelineSort:        $('#timeline-sort'),
+  timelineList:  $('#timeline-list'),
+  timelineEmpty: $('#timeline-empty'),
+
+  feed:            $('#feed'),
+  feedSub:         $('#feed-sub'),
+  feedSearch:      $('#feed-search'),
+  feedSearchClear: $('#feed-search-clear'),
+  feedSort:        $('#feed-sort'),
+  feedList:        $('#feed-list'),
+  feedEmpty:       $('#feed-empty'),
+
+  courses:         $('#courses'),
+  coursesSub:      $('#courses-sub'),
+  coursesList:     $('#courses-list'),
+  coursesEmpty:    $('#courses-empty'),
+  btnCourseNew:    $('#btn-course-new'),
+
+  courseBar:       $('#course-bar'),
+  courseBarBadge:  $('#course-bar-badge'),
+  courseBarDate:   $('#course-bar-date'),
+  courseBarName:   $('#course-bar-name'),
+  courseBarClose:  $('#course-bar-close'),
+  courseBarStops:  $('#course-bar-stops'),
+  courseBarPrev:   $('#course-bar-prev'),
+  courseBarNext:   $('#course-bar-next'),
+  courseBarTrack:  $('.course-bar__track'),
+  courseBarTable:  $('#course-bar-table'),
+  courseViewBtns:  [...document.querySelectorAll('[data-course-view]')],
+  courseBarEdit:   $('#course-bar-edit'),
+  courseBarDone:   $('#course-bar-done'),
+
+  coursePick:       $('#course-pick'),
+  coursePickDesc:   $('#course-pick-desc'),
+  coursePickList:   $('#course-pick-list'),
+  coursePickNew:    $('#course-pick-new'),
+  coursePickCancel: $('#course-pick-cancel'),
+
+  backdrop:      $('#sheet-backdrop'),
+  sheet:         $('#sheet'),
+  panelForm:     $('#panel-form'),
+  panelDetail:   $('#panel-detail'),
+  panelCourse:   $('#panel-course'),
+
+  courseFormTitle:   $('#course-form-title'),
+  courseForm:        $('#course-form'),
+  courseName:        $('#course-name'),
+  courseDate:        $('#course-date'),
+  courseDateToday:   $('#course-date-today'),
+  courseDateClear:   $('#course-date-clear'),
+  courseStops:       $('#course-stops'),
+  courseStopsEmpty:  $('#course-stops-empty'),
+  courseStopCount:   $('#course-stop-count'),
+  courseSearch:      $('#course-search'),
+  courseSearchClear: $('#course-search-clear'),
+  courseResults:     $('#course-results'),
+  courseDelete:      $('#course-delete'),
+  courseSubmit:      $('#course-submit'),
+
+  formTitle:     $('#form-title'),
+  formAddress:   $('#form-address-text'),
+  pinForm:       $('#pin-form'),
+  pinName:       $('#pin-name'),
+  pinMemo:       $('#pin-memo'),
+  pinDate:       $('#pin-date'),
+  dateLabel:     $('#date-label'),
+  dateToday:     $('#date-today'),
+  dateClear:     $('#date-clear'),
+  tagPicker:     $('#tag-picker'),
+  featurePicker: $('#feature-picker'),
+  photoStrip:    $('#photo-strip'),
+  photoAdd:      $('#photo-add'),
+  photoInput:    $('#photo-input'),
+  photoCountLbl: $('#photo-count-label'),
+  formSubmit:    $('#form-submit'),
+  formDelete:    $('#form-delete'),
+
+  detailBadge:   $('#detail-badge'),
+  detailFav:     $('#detail-fav'),
+  detailFavNote: $('#detail-fav-note'),
+  detailName:    $('#detail-name'),
+  detailAddress: $('#detail-address'),
+  detailRoute:   $('#detail-route'),
+  detailSearch:  $('#detail-search'),
+  detailWhen:    $('#detail-when'),
+  detailWhenText:$('#detail-when-text'),
+  detailTags:    $('#detail-tags'),
+  detailFeatures:$('#detail-features'),
+  detailGallery: $('#detail-gallery'),
+  detailPhotos:  $('#detail-photos'),
+  galleryPrev:   $('#gallery-prev'),
+  galleryNext:   $('#gallery-next'),
+  detailMemoWrap:$('#detail-memo-wrap'),
+  detailMemo:    $('#detail-memo'),
+  detailMemoCopy:$('#detail-memo-copy'),
+  detailNameCopy:$('#detail-name-copy'),
+  detailAddrCopy:$('#detail-address-copy'),
+  detailMeta:    $('#detail-meta'),
+  detailEdit:    $('#detail-edit'),
+  detailDelete:  $('#detail-delete'),
+  detailVisit:   $('#detail-visit'),
+  detailCourse:  $('#detail-course'),
+
+  commentList:   $('#comment-list'),
+  commentEmpty:  $('#comment-empty'),
+  commentCount:  $('#comment-count'),
+  commentForm:   $('#comment-form'),
+  commentInput:  $('#comment-input'),
+  commentSubmit: $('#comment-submit'),
+
+  lightbox:      $('#lightbox'),
+  lightboxImg:   $('#lightbox-img'),
+  lightboxClose: $('#lightbox-close'),
+  lightboxPrev:  $('#lightbox-prev'),
+  lightboxNext:  $('#lightbox-next'),
+  lightboxCount: $('#lightbox-count'),
+
+  detailCard:      $('#detail-card'),
+  story:           $('#story'),
+  storyCanvas:     $('#story-canvas'),
+  storyClose:      $('#story-close'),
+  storyPhotos:     $('#story-photos'),
+  storyFormats:    $('#story-formats'),
+  storyThemes:     $('#story-themes'),
+  storyCrop:       $('#story-crop'),
+  storyZoom:       $('#story-zoom'),
+  storyCropReset:  $('#story-crop-reset'),
+  storyEditToggle: $('#story-edit-toggle'),
+  storyEdit:       $('#story-edit'),
+  storyName:       $('#story-name'),
+  storyAddress:    $('#story-address'),
+  storyMemo:       $('#story-memo'),
+  storyMemoFill:   $('#story-memo-fill'),
+  storyTagsField:  $('#story-tags-field'),
+  storyTags:       $('#story-tags'),
+  storyHashForm:   $('#story-hash-form'),
+  storyHashInput:  $('#story-hash-input'),
+  storyHashtags:   $('#story-hashtags'),
+  storyCopyright:  $('#story-copyright'),
+  storySave:       $('#story-save'),
+
+  btnAbout:      $('#btn-about'),
+  about:         $('#about'),
+  aboutDays:     $('#about-days'),
+  aboutNotice:   $('#about-notice'),
+  aboutFont:     $('#about-font'),
+  aboutClose:    $('#about-close'),
+
+  export:        $('#export'),
+  exportPhotos:  $('#export-photos'),
+  exportList:    $('#export-list'),
+  exportCancel:  $('#export-cancel'),
+
+  confirm:       $('#confirm'),
+  confirmTitle:  $('#confirm-title'),
+  confirmDesc:   $('#confirm-desc'),
+  confirmOk:     $('#confirm-ok'),
+  confirmCancel: $('#confirm-cancel'),
+
+  toast:         $('#toast'),
+  toastText:     $('#toast-text'),
+  toastAction:   $('#toast-action')
+};
+
+// fav 는 켜면 '누구든 별을 준 핀만' 남긴다. 기본은 꺼짐(거르지 않음).
+// features 는 켠 조건을 '모두' 가진 핀만 남긴다(AND). 태그의 OR 과 다르다.
+export const filters = { visited: true, wish: true, fav: false, tags: [], features: [], users: [] };
+
+let sheetMode = null;
+let formCategory = 'visited';
+let formTags = [];
+let formFeatures = [];
+let formPhotos = [];
+let formOriginalIds = [];
+let formSession = 0;
+let photoKeySeq = 0;
+let photoBusy = false;
+
+let cb = {};
+let toastTimer = null;
+let exportResolve = null;
+let toastActionFn = null;
+let hintTimer = null;
+let locatingTimer = null;
+
+let timelinePins = [];
+let timelineOpen = false;
+let timelineQuery = '';
+let timelineSort = 'recent';
+let timelineOrigin = null;
+
+let feedOpen = false;
+let feedQuery = '';
+let feedSort = 'recent';
+let feedItems = [];
+let feedLoading = false;
+let feedError = false;
+
+let lightboxPhotos = [];
+let lightboxIndex = 0;
+
+// 스토리 카드 미리보기 상태. blob 은 그릴 때마다 미리 만들어 둔다 —
+// iOS 는 탭 직후가 아니면 공유 시트를 막아서, 누른 순간 바로 넘겨야 한다.
+let story = null;
+let storySeq = 0;
+let storyRenderTimer = 0;
+
+let myId = '';
+let userIds = [];
+let tagFilterOpen = false;
+let filterRows = [];
+let featureCounts = {};
+
+const TAG_FILTER_VISIBLE = 3;
+
+function h(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text != null) node.textContent = text;
+  return node;
+}
+
+export function initUI(handlers) {
+  cb = handlers || {};
+
+  el.loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    setLoginError('');
+    cb.onLogin && cb.onLogin(el.loginId.value, el.loginPassword.value, el.saveId.checked);
+  });
+
+  // 계정은 관리자가 직접 만들고 관리하므로 안내 팝업만 띄운다.
+  el.loginSignup.addEventListener('click', () => confirmDialog({
+    title: '회원가입은 관리자에게 문의해 주세요',
+    desc: 'PinLog는 초대된 사람만 사용할 수 있어요.',
+    okText: '확인', cancelText: null, tone: 'primary',
+  }));
+  el.loginFindPw.addEventListener('click', () => confirmDialog({
+    title: '비밀번호 찾기는 관리자에게 문의해 주세요',
+    desc: '계정 정보는 관리자가 직접 관리하고 있어요.',
+    okText: '확인', cancelText: null, tone: 'primary',
+  }));
+
+  initLoginBg();
+  initCardTilt();
+  watchTopBarMetrics();
+
+  bindCopy(el.detailNameCopy, () => el.detailName.textContent,    '장소 이름을 복사했어요.');
+  bindCopy(el.detailAddrCopy, () => el.detailAddress.textContent, '주소를 복사했어요.');
+  bindCopy(el.detailMemoCopy, () => el.detailMemo.textContent,    '메모를 복사했어요.');
+
+  el.exportPhotos.addEventListener('click', () => finishExport('photos'));
+  el.exportList.addEventListener('click', () => finishExport('list'));
+  el.exportCancel.addEventListener('click', () => finishExport(null));
+  el.export.addEventListener('click', (e) => { if (e.target === el.export) finishExport(null); });
+
+  el.btnAbout.addEventListener('click', openAbout);
+  el.aboutClose.addEventListener('click', () => closeAbout());
+  el.about.addEventListener('click', (e) => { if (e.target === el.about) closeAbout(); });
+
+  el.brand.addEventListener('click', () => cb.onBrandClick && cb.onBrandClick());
+  el.btnLogout.addEventListener('click', () => cb.onLogout && cb.onLogout());
+  el.btnLocate.addEventListener('click', () => cb.onLocate && cb.onLocate());
+  el.btnMapType.addEventListener('click', () => cb.onToggleMapType && cb.onToggleMapType());
+  el.btnRoadview.addEventListener('click', () => cb.onToggleRoadview && cb.onToggleRoadview());
+  el.roadviewClose.addEventListener('click', () => closeRoadview());
+  el.btnAdd.addEventListener('click', () => cb.onAddClick && cb.onAddClick());
+  el.btnTimeline.addEventListener('click', () => cb.onOpenTimeline && cb.onOpenTimeline());
+  el.btnFeed.addEventListener('click', () => cb.onOpenFeed && cb.onOpenFeed());
+  el.btnCourses.addEventListener('click', () => cb.onOpenCourses && cb.onOpenCourses());
+  el.btnZoomIn.addEventListener('click', () => cb.onZoomIn && cb.onZoomIn());
+  el.btnZoomOut.addEventListener('click', () => cb.onZoomOut && cb.onZoomOut());
+
+  // 지도와 핀 모아보기가 같은 filters 를 보고, 같은 모양의 줄을 각각 그린다.
+  buildFilterRow(el.filterRow);
+  buildFilterRow(el.timelineFilter);
+  paintFilters();
+
+  let searchTimer = null;
+  el.searchInput.addEventListener('input', () => {
+    const kw = el.searchInput.value;
+    el.searchClear.hidden = kw.length === 0;
+
+    clearTimeout(searchTimer);
+    if (!kw.trim()) { hideSearchPanel(); return; }
+
+    searchTimer = setTimeout(() => cb.onSearch && cb.onSearch(kw), 280);
+  });
+
+  el.searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      clearTimeout(searchTimer);
+      if (el.searchInput.value.trim()) cb.onSearch && cb.onSearch(el.searchInput.value);
+    }
+    if (e.key === 'Escape') clearSearch();
+  });
+
+  el.searchClear.addEventListener('click', () => {
+    clearSearch();
+    el.searchInput.focus();
+  });
+
+  document.addEventListener('pointerdown', (e) => {
+    if (el.searchPanel.hidden) return;
+    if (!e.target.closest('.search-wrap')) hideSearchPanel();
+  });
+
+  el.backdrop.addEventListener('click', () => closeSheet());
+  document.querySelectorAll('[data-close-sheet]').forEach((btn) => {
+    btn.addEventListener('click', () => closeSheet());
+  });
+
+  el.pinForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (photoBusy) { toast('사진을 준비하는 중이에요. 잠시만요.'); return; }
+    cb.onSubmitPin && cb.onSubmitPin(getFormValues());
+  });
+
+  document.querySelectorAll('[data-category]').forEach((btn) => {
+    btn.addEventListener('click', () => setFormCategory(btn.dataset.category));
+  });
+
+  el.formDelete.addEventListener('click', () => cb.onDeletePin && cb.onDeletePin());
+  el.detailDelete.addEventListener('click', () => cb.onDeletePin && cb.onDeletePin());
+  el.detailEdit.addEventListener('click', () => cb.onEditPin && cb.onEditPin());
+  el.detailVisit.addEventListener('click', () => cb.onMarkVisited && cb.onMarkVisited());
+  el.detailRoute.addEventListener('click', () => cb.onRoute && cb.onRoute());
+  el.detailCourse.addEventListener('click', () => cb.onAddToCourse && cb.onAddToCourse());
+  el.detailCard.addEventListener('click', () => cb.onMakeCard && cb.onMakeCard());
+  el.detailFav.addEventListener('click', () => cb.onToggleFavorite && cb.onToggleFavorite());
+
+  document.querySelectorAll('[data-close-courses]').forEach((n) => {
+    n.addEventListener('click', () => closeCourses());
+  });
+  el.btnCourseNew.addEventListener('click', () => cb.onCourseNew && cb.onCourseNew());
+
+  el.courseBarClose.addEventListener('click', () => cb.onCourseBarClose && cb.onCourseBarClose());
+  el.courseBarEdit.addEventListener('click', () => cb.onCourseEdit && cb.onCourseEdit());
+  el.courseBarDone.addEventListener('click', () => cb.onCourseDone && cb.onCourseDone());
+  initCourseBarScroll();
+  el.courseViewBtns.forEach((btn) => {
+    btn.addEventListener('click', () => setCourseView(btn.dataset.courseView));
+  });
+  applyCourseView();
+
+  el.coursePickNew.addEventListener('click', () => finishCoursePick('new'));
+  el.coursePickCancel.addEventListener('click', () => finishCoursePick(null));
+  el.coursePick.addEventListener('click', (e) => { if (e.target === el.coursePick) finishCoursePick(null); });
+
+  initCourseEditor();
+
+  el.toastAction.addEventListener('click', () => {
+    const fn = toastActionFn;
+    hideToast();
+    if (fn) fn();
+  });
+
+  el.dateToday.addEventListener('click', () => { el.pinDate.value = todayValue(); });
+  el.dateClear.addEventListener('click', () => { el.pinDate.value = ''; });
+
+  buildTagPicker();
+  buildFeaturePicker();
+
+  el.photoAdd.addEventListener('click', () => el.photoInput.click());
+  el.photoInput.addEventListener('change', () => {
+
+    const files = Array.from(el.photoInput.files || []);
+
+    el.photoInput.value = '';
+
+    if (files.length) pickPhotos(files);
+  });
+
+  el.galleryPrev.addEventListener('click', () => stepGallery(-1));
+  el.galleryNext.addEventListener('click', () => stepGallery(1));
+
+  el.detailPhotos.addEventListener('scroll', updateGalleryNav, { passive: true });
+
+  window.addEventListener('resize', updateGalleryNav);
+
+  el.commentForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = el.commentInput.value.trim();
+    if (!text) return;
+    el.commentInput.value = '';
+    cb.onAddComment && cb.onAddComment(text);
+  });
+
+  el.pickerCancel.addEventListener('click', () => cb.onPickerCancel && cb.onPickerCancel());
+  el.pickerConfirm.addEventListener('click', () => cb.onPickerConfirm && cb.onPickerConfirm());
+
+  document.querySelectorAll('[data-close-timeline]').forEach((n) => {
+    n.addEventListener('click', () => closeTimeline());
+  });
+  $('#btn-export').addEventListener('click', () => cb.onExport && cb.onExport());
+  el.timelineSearch.addEventListener('input', () => {
+    timelineQuery = el.timelineSearch.value.trim().toLowerCase();
+    el.timelineSearchClear.hidden = el.timelineSearch.value.length === 0;
+    renderTimeline(timelinePins);
+  });
+  el.timelineSearch.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.stopPropagation(); clearTimelineSearch(); }
+  });
+  el.timelineSearchClear.addEventListener('click', () => {
+    clearTimelineSearch();
+    el.timelineSearch.focus();
+  });
+
+  el.timelineSort.addEventListener('change', () => {
+    timelineSort = el.timelineSort.value;
+    renderTimeline(timelinePins);
+  });
+
+  document.querySelectorAll('[data-close-feed]').forEach((n) => {
+    n.addEventListener('click', () => closeFeed());
+  });
+  el.feedSearch.addEventListener('input', () => {
+    feedQuery = el.feedSearch.value.trim().toLowerCase();
+    el.feedSearchClear.hidden = el.feedSearch.value.length === 0;
+    if (!feedLoading) renderFeed();
+  });
+  el.feedSearch.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.stopPropagation(); clearFeedSearch(); }
+  });
+  el.feedSearchClear.addEventListener('click', () => {
+    clearFeedSearch();
+    el.feedSearch.focus();
+  });
+
+  el.feedSort.addEventListener('change', () => {
+    feedSort = el.feedSort.value;
+    if (!feedLoading) renderFeed();
+  });
+
+  el.lightboxClose.addEventListener('click', () => closeLightbox());
+  el.lightboxPrev.addEventListener('click', () => stepLightbox(-1));
+  el.lightboxNext.addEventListener('click', () => stepLightbox(1));
+  el.lightbox.addEventListener('click', (e) => {
+    if (e.target === el.lightbox) closeLightbox();
+  });
+
+  el.storyClose.addEventListener('click', () => closeStoryCard());
+  el.storyFormats.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-format]');
+    if (!btn || !story || story.format === btn.dataset.format) return;
+    story.format = btn.dataset.format;
+    story.filename = storyFilename(story.pin, story.format);
+    paintStoryFormats();
+    renderStory();
+  });
+  el.storyThemes.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-theme]');
+    if (!btn || !story || story.theme === btn.dataset.theme) return;
+    story.theme = btn.dataset.theme;
+    paintStoryThemes();
+    renderStory();
+  });
+  el.storyEditToggle.addEventListener('click', () => {
+    const open = el.storyEdit.hidden;
+    el.storyEdit.hidden = !open;
+    el.storyEditToggle.setAttribute('aria-expanded', String(open));
+  });
+  for (const [input, key] of [[el.storyName, 'name'], [el.storyAddress, 'address'], [el.storyMemo, 'memo']]) {
+    input.addEventListener('input', () => {
+      if (!story) return;
+      story[key] = input.value;
+      renderStorySoon();
+    });
+  }
+  el.storyMemoFill.addEventListener('click', () => {
+    if (!story) return;
+    el.storyMemo.value = story.memo = story.pin.memo || '';
+    renderStory();
+  });
+  bindStoryCropGestures();
+  el.storyCopyright.addEventListener('change', () => {
+    if (!story) return;
+    story.copyright = el.storyCopyright.checked;
+    renderStory();
+  });
+  el.storyHashForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    addStoryHashtags(el.storyHashInput.value);
+  });
+  el.storySave.addEventListener('click', () => {
+    if (!story) return;
+    if (!story.blob) { toast('카드를 그리는 중이에요. 잠시만요.'); return; }
+    cb.onSaveStoryCard && cb.onSaveStoryCard(story.blob, story.filename);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!el.story.hidden) {
+      if (e.key === 'Escape') closeStoryCard();
+      return;
+    }
+
+    if (!el.lightbox.hidden) {
+      if (e.key === 'Escape')     { closeLightbox(); return; }
+      if (e.key === 'ArrowLeft')  { stepLightbox(-1); return; }
+      if (e.key === 'ArrowRight') { stepLightbox(1);  return; }
+      return;
+    }
+
+    // 코스를 보는 동안 ← → 로 이전 · 다음 장소를 짚는다.
+    // 다른 창이 떠 있거나 글자를 입력하는 중에는 건드리지 않는다.
+    if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && canStepCourse(e)) {
+      e.preventDefault();
+      cb.onCourseStep && cb.onCourseStep(e.key === 'ArrowLeft' ? -1 : 1);
+      return;
+    }
+
+    if (e.key !== 'Escape') return;
+    if (!el.roadview.hidden) { closeRoadview(); return; }
+    if (!el.about.hidden)   { closeAbout(); return; }
+    if (!el.export.hidden)  { finishExport(null); return; }
+    if (!el.confirm.hidden) { el.confirmCancel.click(); return; }
+    if (coursePickResolve)  { finishCoursePick(null); return; }
+    if (sheetMode)          { closeSheet(); return; }
+    if (feedOpen)           { closeFeed(); return; }
+    if (timelineOpen)       { closeTimeline(); return; }
+    if (coursesOpen)        { closeCourses(); return; }
+    // 짚은 장소가 있으면 먼저 그것만 풀고, 한 번 더 누르면 코스 보기를 닫는다.
+    if (courseBarOpen && courseFocusId) { cb.onCourseFocusClear && cb.onCourseFocusClear(); return; }
+    if (courseBarOpen)      { cb.onCourseBarClose && cb.onCourseBarClose(); return; }
+    if (!el.picker.hidden)  cb.onPickerCancel && cb.onPickerCancel();
+  });
+}
+
+function canStepCourse(e) {
+  if (!courseBarOpen || e.altKey || e.ctrlKey || e.metaKey) return false;
+
+  const t = e.target;
+  if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return false;
+
+  return !sheetMode && !coursesOpen && !timelineOpen && !feedOpen && !coursePickResolve
+      && el.confirm.hidden && el.about.hidden && el.export.hidden && el.roadview.hidden;
+}
+
+// 사진까지 / 목록만 / 취소 세 가지로 답한다.
+// confirmDialog 는 예·아니오뿐이라 '취소'를 표현할 수 없어서 따로 둔다.
+export function exportDialog() {
+  return new Promise((resolve) => {
+    if (exportResolve) finishExport(null);
+
+    exportResolve = resolve;
+    el.export.hidden = false;
+    requestAnimationFrame(() => el.export.classList.add('is-on'));
+  });
+}
+
+// result 가 null 이면 아무것도 내보내지 않는다.
+function finishExport(result) {
+  if (!exportResolve) return;
+
+  const resolve = exportResolve;
+  exportResolve = null;
+
+  el.export.classList.remove('is-on');
+  setTimeout(() => {
+    if (!el.export.classList.contains('is-on')) el.export.hidden = true;
+  }, 280);
+
+  resolve(result);
+}
+
+// 만난 날을 1일로 센다.
+const MET_ON = [2026, 7, 27];   // 월은 0부터 — 2026.08.27
+
+// 시분초가 섞인 값을 그냥 나누면 오후에 하루 모자라게 나온다.
+// 양쪽 다 로컬 자정으로 내려서 뺀다.
+function daysTogether() {
+  const [y, m, d] = MET_ON;
+  const start = new Date(y, m, d);
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  return Math.floor((today - start) / 86400000) + 1;
+}
+
+function openAbout() {
+  // 앱을 켜둔 채 자정을 넘길 수 있어서 열 때마다 다시 센다.
+  el.aboutDays.textContent = daysTogether();
+
+  // 항상 접힌 상태로 열리게 한다.
+  el.aboutNotice.open = false;
+  el.aboutFont.open = false;
+
+  el.about.hidden = false;
+  requestAnimationFrame(() => el.about.classList.add('is-on'));
+}
+
+function closeAbout(immediate = false) {
+  if (el.about.hidden) return;
+  el.about.classList.remove('is-on');
+
+  if (immediate) { el.about.hidden = true; return; }
+
+  // 닫는 중에 다시 열리면 그대로 둔다.
+  setTimeout(() => {
+    if (!el.about.classList.contains('is-on')) el.about.hidden = true;
+  }, 280);
+}
+
+export function setMyId(id) {
+
+  myId = normalizeId(id);
+  paintMePill();
+}
+
+/* 배경 영상.
+   <source> 가 없으면(아직 파일을 안 넣었으면) 아무것도 하지 않고
+   CSS 폴백 그라디언트를 그대로 둔다. */
+let loginVideoOn = false;
+
+function initLoginBg() {
+  const video = el.loginVideo;
+  if (!video || !video.querySelector('source')) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = navigator.connection && navigator.connection.saveData;
+  if (reduceMotion || saveData) return;
+
+  video.addEventListener('playing', () => {
+    el.loginBg.classList.add('is-video-ready');
+  }, { once: true });
+
+  loginVideoOn = true;
+  video.preload = 'auto';
+  video.load();
+  playLoginVideo();
+
+  // 숨겨진 탭에서 열렸거나 iOS 저전력 모드면 자동재생이 미뤄진다.
+  // 화면이 다시 보일 때 한 번 더 시도한다. 끝내 막혀도 폴백 그라디언트가 남는다.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    if (!el.screenLogin.classList.contains('is-active')) return;
+    if (video.paused) playLoginVideo();
+  });
+}
+
+function playLoginVideo() {
+  if (!loginVideoOn) return;
+  // 자동재생이 막혀도(iOS 저전력 모드 등) 폴백 그라디언트가 남아 깨지지 않는다.
+  el.loginVideo.play().catch(() => {});
+}
+
+function pauseLoginVideo() {
+  if (!loginVideoOn) return;
+  el.loginVideo.pause();
+}
+
+// 상단바가 실제로 끝나는 지점을 CSS 변수로 내보낸다.
+// 폭이 좁아 검색줄이 접히거나, 필터 칩이 늘고 줄거나, 화면을 돌리면 달라진다.
+// '현재 위치를 찾는 중' 알림이 그 아래에 놓이도록 실측값을 넘긴다.
+//
+// 높이가 아니라 '바닥 좌표'를 재는 이유: .filter-row 는 가로 스크롤 여백을
+// 위해 margin 이 -5px/-7px 라 부모 높이 밖으로 삐져나온다. 상단바 높이만
+// 재면 그 7px 을 놓쳐 알림이 칩에 걸친다.
+function syncTopBarMetrics() {
+  const bar = el.topBar;
+  if (!bar) return;
+
+  let bottom = bar.getBoundingClientRect().bottom;
+  if (el.filterRow) bottom = Math.max(bottom, el.filterRow.getBoundingClientRect().bottom);
+  if (bottom > 0) {
+    document.documentElement.style.setProperty('--top-bar-bottom', Math.round(bottom) + 'px');
+  }
+}
+
+function watchTopBarMetrics() {
+  const bar = el.topBar;
+  if (!bar) return;
+
+  syncTopBarMetrics();
+
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(syncTopBarMetrics);
+    ro.observe(bar);
+    if (el.filterRow) ro.observe(el.filterRow);   // 칩이 늘고 주는 것도 잡아야 한다
+  }
+  window.addEventListener('resize', syncTopBarMetrics);
+  window.addEventListener('orientationchange', () => setTimeout(syncTopBarMetrics, 250));
+}
+
+function initCardTilt() {
+  const card = el.loginCard;
+  const sheen = card.querySelector('.login-card__sheen');
+  if (!window.matchMedia('(hover: hover)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const stage = card.parentElement;
+
+  stage.addEventListener('pointermove', (e) => {
+    const r = stage.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `rotateY(${px * 9}deg) rotateX(${-py * 9}deg) translateZ(0)`;
+    if (sheen) sheen.style.transform = `translateX(${px * 60}%)`;
+  });
+
+  stage.addEventListener('pointerleave', () => {
+    card.style.transform = '';
+    if (sheen) sheen.style.transform = 'translateX(-40%)';
+  });
+}
+
+export function showScreen(name) {
+  const next = name === 'map' ? el.screenMap : el.screenLogin;
+  const prev = name === 'map' ? el.screenLogin : el.screenMap;
+
+  prev.classList.remove('is-active');
+  next.classList.add('is-active');
+
+  // 로그인 화면은 배경이 어둡다. 모바일 브라우저 상단 색도 같이 맞춘다.
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeMeta) themeMeta.content = name === 'map' ? '#F1F6FB' : '#061E33';
+
+  if (name === 'map') pauseLoginVideo();
+  else playLoginVideo();
+
+  if (name === 'login') {
+
+    closeSheet(true);
+    closePicker();
+    closeTimeline(true);
+    closeCourses(true);
+    hideCourseBar();
+    finishCoursePick(null);
+    closeLightbox();
+    closeAbout(true);
+    finishExport(null);
+    clearSearch();
+    setLocating(false);
+    hideHint();
+  }
+}
+
+export function hideBoot() {
+  el.boot.classList.add('is-off');
+  setTimeout(() => { el.boot.hidden = true; }, 450);
+}
+
+export function setLoginError(msg) {
+  if (!msg) { el.loginError.hidden = true; el.loginError.textContent = ''; return; }
+  el.loginError.textContent = msg;
+  el.loginError.hidden = false;
+}
+
+export function setLoginLoading(on) {
+  el.loginSubmit.disabled = on;
+  el.loginSubmit.classList.toggle('is-loading', on);
+  el.loginSubmit.querySelector('.spinner').hidden = !on;
+}
+
+export function resetLoginForm() {
+  el.loginPassword.value = '';
+  setLoginError('');
+  setLoginLoading(false);
+}
+
+export function prefillLogin(id) {
+  const saved = String(id || '');
+
+  el.loginId.value = saved;
+  el.saveId.checked = !!saved;
+
+  if (saved && window.matchMedia('(hover: hover)').matches) {
+    setTimeout(() => el.loginPassword.focus(), 60);
+  }
+}
+
+export function setCounts(visited, wish, fav = 0, features = {}) {
+  featureCounts = { ...features };
+
+  filterRows.forEach((row) => {
+    row.counts.visited.textContent = visited;
+    row.counts.wish.textContent = wish;
+    row.counts.fav.textContent = fav;
+    FEATURES.forEach((f) => { row.counts[f.id].textContent = featureCounts[f.id] || 0; });
+  });
+
+  // 조건 칩은 개수가 0 이면 숨기므로, 개수가 바뀔 때마다 다시 칠한다.
+  paintFilters();
+}
+
+const CATEGORY_CHIPS = [
+  { key: 'visited', label: '가본 곳', mod: 'chip--visited' },
+  { key: 'wish',    label: '가볼 곳', mod: 'chip--wish' }
+];
+
+const RESET_ICON =
+  '<svg viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]" aria-hidden="true">' +
+    '<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+    '<path d="M19.5 3.5v4h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+  '</svg>';
+
+// 필터 줄 한 벌을 만들어 root 에 채운다.
+// 칩을 누르면 filters 만 고치고 칠하기는 paintFilters 가 전담한다.
+// 그래야 지도와 모아보기가 어긋날 수 없다.
+function buildFilterRow(root) {
+  const row = { root, reset: null, counts: {}, userDiv: null, tagDiv: null, tagMore: null };
+
+  row.reset = h('button', 'chip chip--reset');
+  row.reset.type = 'button';
+  row.reset.disabled = true;
+  row.reset.innerHTML = RESET_ICON;
+  row.reset.append(document.createTextNode('필터 초기화'));
+  row.reset.addEventListener('click', resetFilters);
+  root.appendChild(row.reset);
+
+  CATEGORY_CHIPS.forEach(({ key, label, mod }) => {
+    const chip = h('button', `chip ${mod}`);
+    chip.type = 'button';
+    chip.dataset.filter = key;
+
+    const count = h('span', 'chip__count', '0');
+    chip.append(h('span', 'chip__dot'), document.createTextNode(label), count);
+    row.counts[key] = count;
+
+    chip.addEventListener('click', () => {
+      filters[key] = !filters[key];
+      paintFilters();
+      cb.onFilterChange && cb.onFilterChange(filters);
+    });
+
+    root.appendChild(chip);
+  });
+
+  // 즐겨찾기 칩 — 카테고리 칩과 달리 켜야 거른다. is-on 칠하기는 data-filter 로 같이 된다.
+  const favChip = h('button', 'chip chip--fav');
+  favChip.type = 'button';
+  favChip.dataset.filter = 'fav';
+  const favCount = h('span', 'chip__count', '0');
+  favChip.append(h('span', 'chip__star', '★'), document.createTextNode('즐겨찾기'), favCount);
+  row.counts.fav = favCount;
+  favChip.addEventListener('click', () => {
+    filters.fav = !filters.fav;
+    paintFilters();
+    cb.onFilterChange && cb.onFilterChange(filters);
+  });
+  root.appendChild(favChip);
+
+  // 조건 칩 — 즐겨찾기처럼 켜야 거른다. 달린 핀이 하나도 없으면 paintFilters 가 숨긴다.
+  FEATURES.forEach((f) => {
+    const chip = h('button', 'chip chip--feature');
+    chip.type = 'button';
+    chip.dataset.featureFilter = f.id;
+    const count = h('span', 'chip__count', '0');
+    chip.append(h('span', 'chip__emoji', f.emoji), document.createTextNode(f.label), count);
+    row.counts[f.id] = count;
+
+    chip.addEventListener('click', () => {
+      const on = filters.features.includes(f.id);
+      filters.features = on
+        ? filters.features.filter((x) => x !== f.id)
+        : filters.features.concat(f.id);
+      paintFilters();
+      cb.onFilterChange && cb.onFilterChange(filters);
+    });
+
+    root.appendChild(chip);
+  });
+
+  // 사람 칩은 이 구분선과 다음 구분선 사이에 들어간다.
+  row.userDiv = divider();
+  row.userDiv.classList.add('is-folded');
+  root.appendChild(row.userDiv);
+
+  row.tagDiv = divider();
+  root.appendChild(row.tagDiv);
+
+  TAGS.forEach((tag) => {
+    const chip = h('button', 'chip chip--tag');
+    chip.type = 'button';
+    chip.dataset.tagFilter = tag.id;
+    chip.append(h('span', 'chip__emoji', tag.emoji), document.createTextNode(tag.label));
+
+    chip.addEventListener('click', () => {
+      const on = filters.tags.includes(tag.id);
+      filters.tags = on
+        ? filters.tags.filter((t) => t !== tag.id)
+        : filters.tags.concat(tag.id);
+      paintFilters();
+      cb.onFilterChange && cb.onFilterChange(filters);
+    });
+
+    root.appendChild(chip);
+  });
+
+  row.tagMore = h('button', 'chip chip--more');
+  row.tagMore.type = 'button';
+  row.tagMore.addEventListener('click', () => {
+    tagFilterOpen = !tagFilterOpen;
+    paintFilters();
+  });
+  root.appendChild(row.tagMore);
+
+  filterRows.push(row);
+  return row;
+}
+
+function divider() {
+  const d = h('span', 'filter-div');
+  d.setAttribute('aria-hidden', 'true');
+  return d;
+}
+
+// 기본값에서 하나라도 벗어나 있으면 '필터 걸린 상태'로 본다.
+function isFiltered() {
+  return !filters.visited
+      || !filters.wish
+      || filters.fav
+      || filters.tags.length > 0
+      || filters.features.length > 0
+      || filters.users.length !== userIds.length;
+}
+
+// 모든 필터 줄을 현재 filters 대로 다시 칠한다.
+function paintFilters() {
+  const filtered = isFiltered();
+
+  filterRows.forEach((row) => {
+    row.root.querySelectorAll('[data-filter]').forEach((c) => {
+      c.classList.toggle('is-on', !!filters[c.dataset.filter]);
+    });
+
+    row.root.querySelectorAll('[data-user-filter]').forEach((c) => {
+      c.classList.toggle('is-on', filters.users.includes(c.dataset.userFilter));
+    });
+
+    // 달린 핀이 없으면 눌러봐야 지도가 비기만 하니 숨긴다.
+    // 켜 둔 채 0 개가 되면 끌 방법이 없어지므로, 켜져 있으면 남긴다.
+    row.root.querySelectorAll('[data-feature-filter]').forEach((c) => {
+      const id = c.dataset.featureFilter;
+      const on = filters.features.includes(id);
+      c.classList.toggle('is-on', on);
+      c.classList.toggle('is-folded', !on && !featureCounts[id]);
+    });
+
+    // 태그는 앞 몇 개만 두고 접는다. 켜져 있는 건 접힌 자리에서도 보여준다.
+    let hidden = 0;
+    [...row.root.querySelectorAll('[data-tag-filter]')].forEach((chip, i) => {
+      const on = filters.tags.includes(chip.dataset.tagFilter);
+      chip.classList.toggle('is-on', on);
+
+      const show = tagFilterOpen || i < TAG_FILTER_VISIBLE || on;
+      chip.classList.toggle('is-folded', !show);
+      if (!show) hidden++;
+    });
+
+    row.tagMore.classList.toggle('is-folded', !tagFilterOpen && hidden === 0);
+    row.tagMore.textContent = tagFilterOpen ? '접기' : `+${hidden}`;
+    row.tagMore.setAttribute('aria-expanded', String(tagFilterOpen));
+    row.tagMore.setAttribute('aria-label', tagFilterOpen ? '태그 접기' : '태그 더 보기');
+
+    // 자리는 항상 지키되, 걸린 필터가 없으면 누를 게 없으므로 비활성으로 둔다.
+    row.reset.disabled = !filtered;
+  });
+
+  syncTopBarMetrics();
+}
+
+function resetFilters() {
+  filters.visited = true;
+  filters.wish = true;
+  filters.fav = false;
+  filters.tags = [];
+  filters.features = [];
+  filters.users = userIds.slice();
+
+  paintFilters();
+  cb.onFilterChange && cb.onFilterChange(filters);
+}
+
+export function setUsers(ids) {
+  const next = Array.isArray(ids) ? ids : [];
+
+  paintMePill();
+
+  if (next.join(' ') === userIds.join(' ')) return;
+  userIds = next.slice();
+
+  filters.users = userIds.slice();
+
+  // 혼자 쓰는 동안에는 사람 칩을 띄우지 않는다.
+  const show = userIds.length >= 2;
+  const ordered = userIds.slice().sort((a, b) => (a === myId ? -1 : b === myId ? 1 : 0));
+
+  filterRows.forEach((row) => {
+    row.root.querySelectorAll('[data-user-filter]').forEach((n) => n.remove());
+    row.userDiv.classList.toggle('is-folded', !show);
+    if (!show) return;
+
+    const frag = document.createDocumentFragment();
+
+    ordered.forEach((id) => {
+      const color = userColor(id);
+      const chip = h('button', 'chip chip--user');
+      chip.type = 'button';
+      chip.dataset.userFilter = id;
+      chip.style.setProperty('--user-dot', color.dot);
+      chip.style.setProperty('--user-soft', color.soft);
+      chip.style.setProperty('--user-text', color.text);
+
+      chip.append(
+        h('span', 'chip__dot chip__dot--user'),
+        document.createTextNode(id === myId ? `${displayName(id)} (나)` : displayName(id))
+      );
+
+      chip.addEventListener('click', () => {
+        const on = filters.users.includes(id);
+        filters.users = on
+          ? filters.users.filter((u) => u !== id)
+          : filters.users.concat(id);
+        paintFilters();
+        cb.onFilterChange && cb.onFilterChange(filters);
+      });
+
+      frag.appendChild(chip);
+    });
+
+    row.root.insertBefore(frag, row.tagDiv);
+  });
+
+  paintFilters();
+}
+
+function paintMePill() {
+  if (!myId) { el.mePill.hidden = true; return; }
+
+  const color = userColor(myId);
+  el.mePill.hidden = false;
+  el.mePillName.textContent = displayName(myId);
+  el.mePillDot.style.background = color.dot;
+  el.mePill.style.setProperty('--user-soft', color.soft);
+  el.mePill.style.setProperty('--user-text', color.text);
+
+  el.mePill.title = `${displayName(myId)} 님으로 로그인했어요`;
+}
+
+export function resetTagFilter() {
+  filters.fav = false;
+  filters.tags = [];
+  filters.features = [];
+  filters.users = [];
+  featureCounts = {};
+  tagFilterOpen = false;
+  userIds = [];
+
+  filterRows.forEach((row) => {
+    row.root.querySelectorAll('[data-user-filter]').forEach((n) => n.remove());
+    row.userDiv.classList.add('is-folded');
+  });
+
+  paintFilters();
+}
+
+export function renderSearchResults(list) {
+  el.searchResults.innerHTML = '';
+
+  if (!list.length) {
+    el.searchEmpty.hidden = false;
+    el.searchCount.textContent = '검색 결과';
+  } else {
+    el.searchEmpty.hidden = true;
+    el.searchCount.textContent = `검색 결과 ${list.length}곳`;
+
+    const frag = document.createDocumentFragment();
+    list.forEach((place) => {
+      const li = document.createElement('li');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'result-item';
+
+      btn.innerHTML =
+        '<span class="result-item__ico">' +
+          '<svg viewBox="0 0 24 24" fill="none" class="w-[17px] h-[17px]">' +
+            '<path d="M12 21s7-5.686 7-11a7 7 0 1 0-14 0c0 5.314 7 11 7 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>' +
+            '<circle cx="12" cy="10" r="2.3" fill="currentColor"/>' +
+          '</svg>' +
+        '</span>' +
+        '<span class="min-w-0 flex-1">' +
+          '<span class="result-item__name block"></span>' +
+          '<span class="result-item__addr block"></span>' +
+          '<span class="result-item__cat"></span>' +
+          '<span class="result-item__dist"></span>' +
+        '</span>';
+
+      btn.querySelector('.result-item__name').textContent = place.name;
+      btn.querySelector('.result-item__addr').textContent = place.roadAddress || place.address || '';
+
+      const catEl = btn.querySelector('.result-item__cat');
+      if (place.category) catEl.textContent = place.category;
+      else catEl.remove();
+
+      const distEl = btn.querySelector('.result-item__dist');
+      if (Number.isFinite(place.distance)) distEl.textContent = fmtDistance(place.distance);
+      else distEl.remove();
+
+      btn.addEventListener('click', () => {
+        hideSearchPanel();
+        cb.onSelectPlace && cb.onSelectPlace(place);
+      });
+
+      li.appendChild(btn);
+      frag.appendChild(li);
+    });
+    el.searchResults.appendChild(frag);
+  }
+
+  el.searchPanel.hidden = false;
+}
+
+function fmtDistance(meters) {
+  if (meters < 1000) return `${Math.round(meters)}m`;
+
+  const km = meters / 1000;
+  return km < 100 ? `${km.toFixed(1)}km` : `${Math.round(km)}km`;
+}
+
+export function hideSearchPanel() {
+  el.searchPanel.hidden = true;
+}
+
+export function clearSearch() {
+  el.searchInput.value = '';
+  el.searchClear.hidden = true;
+  el.searchResults.innerHTML = '';
+  hideSearchPanel();
+}
+
+function openSheet(mode) {
+  sheetMode = mode;
+
+  el.panelForm.hidden   = mode !== 'form';
+  el.panelDetail.hidden = mode !== 'detail';
+  el.panelCourse.hidden = mode !== 'course';
+
+  el.backdrop.hidden = false;
+  el.sheet.hidden = false;
+
+  requestAnimationFrame(() => {
+    el.backdrop.classList.add('is-on');
+    el.sheet.classList.add('is-on');
+  });
+
+  hideHint();
+}
+
+export function closeSheet(immediate = false) {
+  if (!sheetMode) return;
+  sheetMode = null;
+
+  formSession++;
+  setPhotoBusy(false);
+
+  el.sheet.classList.remove('is-on');
+  el.backdrop.classList.remove('is-on');
+
+  const finish = () => {
+    el.sheet.hidden = true;
+    el.backdrop.hidden = true;
+    el.sheet.scrollTop = 0;
+  };
+  if (immediate) finish(); else setTimeout(finish, 420);
+
+  cb.onSheetClose && cb.onSheetClose();
+}
+
+export function isSheetOpen() { return sheetMode !== null; }
+
+export function openForm(opts) {
+  const isEdit = opts.mode === 'edit';
+
+  formSession++;
+
+  el.formTitle.textContent = isEdit ? '핀 수정하기' : '새로운 핀';
+  el.formSubmit.querySelector('.btn-label').textContent = isEdit ? '수정 완료' : '저장하기';
+  el.formDelete.hidden = !isEdit;
+
+  el.pinName.value = isEdit ? (opts.pin.name || '') : (opts.name || '');
+  el.pinMemo.value = isEdit ? (opts.pin.memo || '') : '';
+  el.pinDate.value = isEdit ? (opts.pin.visitedAt || '') : '';
+
+  setFormCategory(isEdit ? opts.pin.category : 'visited');
+  setFormTags(isEdit ? opts.pin.tags : []);
+  setFormFeatures(isEdit ? opts.pin.features : []);
+  setFormAddress(isEdit ? (opts.pin.address || '') : (opts.address || ''));
+
+  const photos = (isEdit && Array.isArray(opts.photos)) ? opts.photos : [];
+  formPhotos = photos.map((p) => ({
+    key: `s${p.id}`, id: p.id, dataUrl: p.dataUrl, w: p.w, h: p.h
+  }));
+  formOriginalIds = formPhotos.map((p) => p.id);
+  renderPhotoStrip();
+
+  setFormLoading(false);
+  openSheet('form');
+
+  if (!isEdit && !el.pinName.value && window.matchMedia('(hover: hover)').matches) {
+    setTimeout(() => el.pinName.focus(), 260);
+  }
+}
+
+export function setFormAddress(text) {
+  el.formAddress.textContent = text || '주소 정보 없음';
+}
+
+export function setFormCategory(category) {
+  formCategory = category === 'wish' ? 'wish' : 'visited';
+
+  document.querySelectorAll('[data-category]').forEach((btn) => {
+    const on = btn.dataset.category === formCategory;
+    btn.classList.toggle('is-on', on);
+    btn.setAttribute('aria-checked', String(on));
+  });
+
+  el.dateLabel.textContent = formCategory === 'wish' ? '가고 싶은 날' : '다녀온 날';
+}
+
+function buildTagPicker() {
+  const frag = document.createDocumentFragment();
+
+  TAGS.forEach((tag) => {
+    const btn = h('button', 'tag-opt');
+    btn.type = 'button';
+    btn.dataset.tagOpt = tag.id;
+    btn.setAttribute('aria-pressed', 'false');
+    btn.append(h('span', 'tag-opt__emoji', tag.emoji), document.createTextNode(tag.label));
+
+    btn.addEventListener('click', () => {
+      if (formTags.includes(tag.id)) {
+        setFormTags(formTags.filter((t) => t !== tag.id));
+      } else if (formTags.length >= MAX_TAGS) {
+        toast(`태그는 최대 ${MAX_TAGS}개까지 고를 수 있어요.`);
+      } else {
+        setFormTags(formTags.concat(tag.id));
+      }
+    });
+
+    frag.appendChild(btn);
+  });
+
+  el.tagPicker.appendChild(frag);
+}
+
+function setFormTags(list) {
+  formTags = normalizeTags(list);
+  el.tagPicker.querySelectorAll('[data-tag-opt]').forEach((btn) => {
+    const on = formTags.includes(btn.dataset.tagOpt);
+    btn.classList.toggle('is-on', on);
+    btn.setAttribute('aria-pressed', String(on));
+  });
+}
+
+// 조건은 태그와 모양만 같고 개수 제한이 없다.
+function buildFeaturePicker() {
+  const frag = document.createDocumentFragment();
+
+  FEATURES.forEach((f) => {
+    const btn = h('button', 'tag-opt');
+    btn.type = 'button';
+    btn.dataset.featureOpt = f.id;
+    btn.setAttribute('aria-pressed', 'false');
+    btn.append(h('span', 'tag-opt__emoji', f.emoji), document.createTextNode(f.label));
+
+    btn.addEventListener('click', () => {
+      setFormFeatures(formFeatures.includes(f.id)
+        ? formFeatures.filter((x) => x !== f.id)
+        : formFeatures.concat(f.id));
+    });
+
+    frag.appendChild(btn);
+  });
+
+  el.featurePicker.appendChild(frag);
+}
+
+function setFormFeatures(list) {
+  formFeatures = normalizeFeatures(list);
+  el.featurePicker.querySelectorAll('[data-feature-opt]').forEach((btn) => {
+    const on = formFeatures.includes(btn.dataset.featureOpt);
+    btn.classList.toggle('is-on', on);
+    btn.setAttribute('aria-pressed', String(on));
+  });
+}
+
+async function pickPhotos(fileList) {
+  const session = formSession;
+  const room = MAX_PHOTOS - formPhotos.length;
+
+  if (room <= 0) {
+    toast(`사진은 최대 ${MAX_PHOTOS}장까지 넣을 수 있어요.`);
+    return;
+  }
+
+  const picked = Array.from(fileList).slice(0, room);
+  if (fileList.length > room) {
+    toast(`${room}장만 추가했어요. (최대 ${MAX_PHOTOS}장)`, 2600);
+  }
+
+  setPhotoBusy(true);
+  for (const file of picked) {
+    try {
+      const out = await compressPhoto(file);
+      if (session !== formSession) return;
+      formPhotos.push({ key: `n${++photoKeySeq}`, id: null, ...out });
+      renderPhotoStrip();
+    } catch (err) {
+      if (session !== formSession) return;
+      toast(err.message || '사진을 넣지 못했어요.', 3000);
+    }
+  }
+  if (session === formSession) setPhotoBusy(false);
+}
+
+function setPhotoBusy(on) {
+  photoBusy = on;
+  el.photoAdd.classList.toggle('is-busy', on);
+  el.photoAdd.disabled = on;
+  el.formSubmit.disabled = on;
+}
+
+function renderPhotoStrip() {
+
+  el.photoStrip.querySelectorAll('.photo-thumb').forEach((n) => n.remove());
+
+  const frag = document.createDocumentFragment();
+  formPhotos.forEach((p) => {
+    const wrap = h('div', 'photo-thumb');
+
+    const img = document.createElement('img');
+    img.src = p.dataUrl;
+    img.alt = '';
+    img.loading = 'lazy';
+    wrap.appendChild(img);
+
+    const del = h('button', 'photo-thumb__del');
+    del.type = 'button';
+    del.setAttribute('aria-label', '사진 빼기');
+    del.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" class="w-[12px] h-[12px]">' +
+        '<path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>' +
+      '</svg>';
+    del.addEventListener('click', () => {
+      formPhotos = formPhotos.filter((x) => x.key !== p.key);
+      renderPhotoStrip();
+    });
+    wrap.appendChild(del);
+
+    frag.appendChild(wrap);
+  });
+
+  el.photoStrip.insertBefore(frag, el.photoAdd);
+  el.photoCountLbl.textContent = `${formPhotos.length}/${MAX_PHOTOS}`;
+  el.photoAdd.hidden = formPhotos.length >= MAX_PHOTOS;
+}
+
+export function getFormPhotos() { return formPhotos.slice(); }
+export function getFormOriginalPhotoIds() { return formOriginalIds.slice(); }
+
+export function getFormValues() {
+  return {
+    name: el.pinName.value.trim(),
+    memo: el.pinMemo.value.trim(),
+    category: formCategory,
+    tags: formTags.slice(),
+    features: formFeatures.slice(),
+    visitedAt: el.pinDate.value || ''
+  };
+}
+
+export function setFormLoading(on) {
+  el.formSubmit.disabled = on || photoBusy;
+  el.formSubmit.classList.toggle('is-loading', on);
+  el.formSubmit.querySelector('.spinner').hidden = !on;
+  el.formDelete.disabled = on;
+}
+
+// '[양식] 식당1' 의 [양식] 같은 대괄호 머리말을 뗀 이름. 네이버 검색 · 스토리 카드가 같이 쓴다.
+function cleanPlaceName(name) {
+  return String(name || '').replace(/\[[^\]]*\]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+// 핀 이름을 네이버에 넘기되 대괄호 머리말은 뗀다. 떼고 나서 비면 주소로 찾는다.
+function searchUrl(pin) {
+  const name = cleanPlaceName(pin.name);
+  const query = name || pin.address || '';
+  return 'https://search.naver.com/search.naver?query=' + encodeURIComponent(query);
+}
+
+export function openDetail(pin) {
+  const isWish = pin.category === 'wish';
+
+  el.detailBadge.textContent = isWish ? '가볼 곳' : '가본 곳';
+  el.detailBadge.className = 'badge ' + (isWish ? 'badge--wish' : 'badge--visited');
+
+  paintDetailFavorite(pin);
+
+  el.detailName.textContent = pin.name;
+  el.detailAddress.textContent = pin.address || '주소 정보 없음';
+  el.detailAddrCopy.hidden = !pin.address;   // 복사할 주소가 없으면 버튼도 감춘다
+
+  el.detailSearch.href = searchUrl(pin);
+
+  el.detailVisit.hidden = !isWish;
+
+  if (pin.visitedAt) {
+    const d = parseDateValue(pin.visitedAt);
+    el.detailWhenText.textContent =
+      (isWish ? '가고 싶은 날 · ' : '다녀온 날 · ') + (d ? fmtFullDate(d) : pin.visitedAt);
+    el.detailWhen.hidden = false;
+  } else {
+    el.detailWhen.hidden = true;
+  }
+
+  renderTagRow(el.detailTags, pin.tags);
+  renderFeatureRow(el.detailFeatures, pin.features);
+
+  if (pin.memo) {
+    el.detailMemoWrap.hidden = false;
+    renderMemo(pin.memo);
+  } else {
+    el.detailMemoWrap.hidden = true;
+  }
+
+  resetCopyMarks();
+
+  renderMeta(pin);
+
+  openSheet('detail');
+}
+
+// 별 버튼은 '내' 별, 옆 배지는 상대 별까지 합쳐서 보여준다.
+function paintDetailFavorite(pin) {
+  const favs = pin.favoritedBy || [];
+  const mine = favs.includes(myId);
+  const others = favs.filter((id) => id !== myId);
+
+  el.detailFav.classList.toggle('is-on', mine);
+  el.detailFav.setAttribute('aria-pressed', String(mine));
+  el.detailFav.setAttribute('aria-label', mine ? '즐겨찾기에서 빼기' : '즐겨찾기에 넣기');
+
+  const note = el.detailFavNote;
+  note.classList.toggle('is-both', mine && others.length > 0);
+  if (mine && others.length) {
+    note.textContent = '♥ 둘 다 좋아하는 곳';
+  } else if (others.length) {
+    note.textContent = `★ ${displayName(others[0])} 님이 좋아해요`;
+  } else if (mine) {
+    note.textContent = '★ 내 즐겨찾기';
+  }
+  note.hidden = favs.length === 0;
+}
+
+// http(s):// 로 시작하거나 www. 로 시작하는 주소만 링크로 만든다.
+// 다른 스킴(javascript: 같은)은 아예 걸리지 않는다.
+const MEMO_URL = /(https?:\/\/[^\s<>()[\]{}"']+|www\.[^\s<>()[\]{}"']+)/gi;
+
+function renderMemo(text) {
+  const node = el.detailMemo;
+  node.textContent = '';
+
+  const src = String(text || '');
+  let last = 0;
+  let m;
+
+  MEMO_URL.lastIndex = 0;
+
+  while ((m = MEMO_URL.exec(src)) !== null) {
+    let raw = m[0];
+
+    // '...했어요(https://a.com).' 처럼 뒤에 붙은 문장부호는 링크에서 뺀다.
+    const tail = raw.match(/[.,!?;:)\]}]+$/);
+    if (tail) raw = raw.slice(0, -tail[0].length);
+
+    if (!raw) { MEMO_URL.lastIndex = m.index + m[0].length; continue; }
+
+    if (m.index > last) node.appendChild(document.createTextNode(src.slice(last, m.index)));
+
+    const a = document.createElement('a');
+    a.className = 'memo-link';
+    a.href = /^www\./i.test(raw) ? `https://${raw}` : raw;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = raw;
+    node.appendChild(a);
+
+    last = m.index + raw.length;
+    MEMO_URL.lastIndex = last;
+  }
+
+  if (last < src.length) node.appendChild(document.createTextNode(src.slice(last)));
+}
+
+// 상세를 다시 열 때 체크 표시를 되돌리기 위한 목록.
+const copyResets = [];
+
+// read() 가 돌려준 글자를 클립보드에 넣고, 잠깐 체크 표시로 바꾼다.
+// 메모의 경우 링크 글자가 원래 주소 그대로라 이어 붙이면 저장된 값과 같다.
+function bindCopy(btn, read, message) {
+  const icon = btn.querySelector('[data-copy-icon]');
+  const done = btn.querySelector('[data-copy-done]');
+  let timer = null;
+
+  const mark = (on) => {
+    btn.classList.toggle('is-done', on);
+    icon.hidden = on;
+    done.hidden = !on;
+  };
+
+  btn.addEventListener('click', async () => {
+    const text = String(read() || '').trim();
+    if (!text) return;
+
+    if (!(await writeClipboard(text))) {
+      toast('복사하지 못했어요. 길게 눌러 직접 복사해주세요.');
+      return;
+    }
+
+    toast(message);
+    mark(true);
+
+    clearTimeout(timer);
+    timer = setTimeout(() => mark(false), 1600);
+  });
+
+  copyResets.push(() => { clearTimeout(timer); mark(false); });
+}
+
+function resetCopyMarks() {
+  copyResets.forEach((fn) => fn());
+}
+
+async function writeClipboard(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch (_) {  }
+
+  // https 가 아닌 곳에서는 클립보드 API 를 못 쓰니 예전 방식으로 대신한다.
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:-1000px;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok;
+  } catch (_) {
+    return false;
+  }
+}
+
+function renderTagRow(container, tags) {
+  container.innerHTML = '';
+  const list = normalizeTags(tags);
+
+  if (!list.length) { container.hidden = true; return; }
+
+  list.forEach((id) => {
+    const t = tagById(id);
+    if (!t) return;
+    const pill = h('span', 'tag-pill');
+    pill.append(h('span', 'tag-pill__emoji', t.emoji), document.createTextNode(t.label));
+    container.appendChild(pill);
+  });
+  container.hidden = false;
+}
+
+function renderFeatureRow(container, features) {
+  container.innerHTML = '';
+  const list = normalizeFeatures(features);
+
+  if (!list.length) { container.hidden = true; return; }
+
+  list.forEach((id) => {
+    const f = featureById(id);
+    if (!f) return;
+    const pill = h('span', 'tag-pill tag-pill--feature');
+    pill.append(h('span', 'tag-pill__emoji', f.emoji), document.createTextNode(f.label));
+    container.appendChild(pill);
+  });
+  container.hidden = false;
+}
+
+function renderMeta(pin) {
+  el.detailMeta.innerHTML = '';
+
+  if (pin.createdBy) {
+    const dot = h('span', 'meta-dot');
+    dot.style.background = userColor(pin.createdBy).dot;
+    el.detailMeta.append(dot, h('span', 'meta-by', `${displayName(pin.createdBy)} 님이 추가`));
+  }
+
+  const edited = pin.updatedAt && pin.createdAt && pin.updatedAt - pin.createdAt > 1000;
+  const when = pin.updatedAt || pin.createdAt;
+
+  if (when) {
+    if (pin.createdBy) el.detailMeta.appendChild(h('span', 'meta-sep', '·'));
+    el.detailMeta.appendChild(h('span', null, fmtStamp(when) + (edited ? ' 수정됨' : '')));
+  }
+}
+
+export function setDetailPhotos(photos) {
+  const list = Array.isArray(photos) ? photos : [];
+  el.detailPhotos.innerHTML = '';
+
+  if (!list.length) { el.detailGallery.hidden = true; updateGalleryNav(); return; }
+
+  const frag = document.createDocumentFragment();
+  list.forEach((p, i) => {
+    const btn = h('button', 'gallery__item');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', `사진 ${i + 1} 크게 보기`);
+
+    const img = document.createElement('img');
+    img.src = p.dataUrl;
+    img.alt = '';
+    img.loading = 'lazy';
+    btn.appendChild(img);
+
+    btn.addEventListener('click', () => openLightbox(list, i));
+    frag.appendChild(btn);
+  });
+
+  el.detailPhotos.appendChild(frag);
+  el.detailGallery.hidden = false;
+  el.detailPhotos.scrollLeft = 0;
+  updateGalleryNav();
+}
+
+function updateGalleryNav() {
+  const box = el.detailPhotos;
+  const overflow = box.scrollWidth - box.clientWidth;
+
+  const canScroll = overflow > 2;
+  const atStart = box.scrollLeft <= 2;
+  const atEnd = box.scrollLeft >= overflow - 2;
+
+  el.galleryPrev.hidden = !canScroll || atStart;
+  el.galleryNext.hidden = !canScroll || atEnd;
+}
+
+function stepGallery(dir) {
+  el.detailPhotos.scrollBy({
+    left: dir * el.detailPhotos.clientWidth * 0.85,
+    behavior: 'smooth'
+  });
+}
+
+export function setDetailComments(comments) {
+  const list = Array.isArray(comments) ? comments : [];
+
+  el.commentCount.textContent = list.length;
+  el.commentEmpty.hidden = list.length > 0;
+  el.commentList.innerHTML = '';
+
+  const frag = document.createDocumentFragment();
+  list.forEach((c) => {
+    const mine = !!myId && normalizeId(c.by) === myId;
+
+    const li = h('li', 'comment' + (mine ? ' is-mine' : ''));
+    const bubble = h('div', 'comment__bubble');
+
+    const head = h('div', 'comment__head');
+
+    const by = h('span', 'comment__by', mine ? '나' : (displayName(c.by) || '상대방'));
+    if (c.by) by.style.color = userColor(c.by).text;
+    head.appendChild(by);
+
+    const time = h('span', 'comment__time', relTime(c.createdAt));
+    time.title = fmtStamp(c.createdAt);
+    head.appendChild(time);
+
+    if (mine) {
+      const del = h('button', 'comment__del', '삭제');
+      del.type = 'button';
+      del.addEventListener('click', () => cb.onDeleteComment && cb.onDeleteComment(c.id, c.text));
+      head.appendChild(del);
+    }
+
+    bubble.appendChild(head);
+    bubble.appendChild(h('p', 'comment__text', c.text));
+    li.appendChild(bubble);
+    frag.appendChild(li);
+  });
+
+  el.commentList.appendChild(frag);
+}
+
+export function clearDetailExtras() {
+  el.detailPhotos.innerHTML = '';
+  el.detailGallery.hidden = true;
+  el.galleryPrev.hidden = true;
+  el.galleryNext.hidden = true;
+  el.commentList.innerHTML = '';
+  el.commentEmpty.hidden = false;
+  el.commentCount.textContent = '0';
+  el.commentInput.value = '';
+}
+
+export function openLightbox(photos, index) {
+  lightboxPhotos = photos.slice();
+  lightboxIndex = Math.max(0, Math.min(index, lightboxPhotos.length - 1));
+
+  el.lightbox.hidden = false;
+  requestAnimationFrame(() => el.lightbox.classList.add('is-on'));
+  paintLightbox();
+}
+
+function paintLightbox() {
+  const p = lightboxPhotos[lightboxIndex];
+  if (!p) { closeLightbox(); return; }
+
+  el.lightboxImg.src = p.dataUrl;
+  el.lightboxCount.textContent = `${lightboxIndex + 1} / ${lightboxPhotos.length}`;
+
+  const many = lightboxPhotos.length > 1;
+  el.lightboxPrev.hidden = !many;
+  el.lightboxNext.hidden = !many;
+}
+
+function stepLightbox(delta) {
+  if (!lightboxPhotos.length) return;
+  lightboxIndex = (lightboxIndex + delta + lightboxPhotos.length) % lightboxPhotos.length;
+  paintLightbox();
+}
+
+export function closeLightbox() {
+  if (el.lightbox.hidden) return;
+
+  el.lightbox.classList.remove('is-on');
+  setTimeout(() => {
+    el.lightbox.hidden = true;
+    el.lightboxImg.removeAttribute('src');
+    lightboxPhotos = [];
+  }, 240);
+}
+
+export function isLightboxOpen() { return !el.lightbox.hidden; }
+
+// ── 스토리 카드 ───────────────────────────────────────────
+export function openStoryCard(pin, photos) {
+  const list = Array.isArray(photos) ? photos : [];
+
+  // 이름 · 주소 · 메모 · 태그 · 해시태그는 이 창에서만 고친다. 핀에는 저장하지 않는다.
+  story = {
+    pin,
+    photos: list,
+    photoIndex: 0,
+    name: cleanPlaceName(pin.name) || pin.name,   // 대괄호뿐인 이름이면 그대로 둔다
+    address: pin.address || '',
+    memo: '',                                      // 메모는 기본으로 빼고, 필요하면 가져온다
+    tags: storyPinTags(pin),
+    hashtags: [],
+    theme: list.length ? 'photo' : 'charcoal',   // 고른 배경 · 비율은 기억하지 않는다
+    format: 'story',
+    copyright: true,   // 맨 아래 저작권 줄. 기본 켜짐, 기억하지 않는다
+    crops: {},         // 사진별 위치 · 배율 { [photoIndex]: { zoom, cx, cy } }. 창을 닫으면 사라진다
+    layout: null,      // 마지막으로 그린 카드의 사진 칸 위치 (drawStoryCard 가 돌려준 값)
+    blob: null,
+    filename: storyFilename(pin, 'story')
+  };
+
+  el.storyName.value = story.name;
+  el.storyAddress.value = story.address;
+  el.storyMemo.value = '';
+  el.storyMemoFill.hidden = !pin.memo;
+  el.storyHashInput.value = '';
+  el.storyCopyright.checked = true;
+  el.storyEdit.hidden = true;
+  el.storyEditToggle.setAttribute('aria-expanded', 'false');
+  renderStoryTokens();
+  renderStoryPhotos();
+  paintStoryFormats();
+  paintStoryThemes();
+  paintStoryCrop();
+
+  el.story.hidden = false;
+  requestAnimationFrame(() => el.story.classList.add('is-on'));
+  renderStory();
+}
+
+export function closeStoryCard() {
+  if (el.story.hidden) return;
+
+  storySeq++;
+  clearTimeout(storyRenderTimer);
+  story = null;
+  el.story.classList.remove('is-on');
+  setTimeout(() => {
+    if (story) return;   // 닫히는 사이 다시 열렸다
+    el.story.hidden = true;
+    el.storyPhotos.innerHTML = '';
+  }, 240);
+}
+
+export function isStoryCardOpen() { return !el.story.hidden; }
+
+function paintStoryFormats() {
+  el.storyFormats.querySelectorAll('[data-format]').forEach((btn) => {
+    btn.setAttribute('aria-pressed', String(btn.dataset.format === story.format));
+  });
+}
+
+// ── 사진 위치 조절 ────────────────────────────────────────
+// 미리보기 사진 칸을 한 손가락(마우스)으로 끌면 옮기고, 두 손가락 · 휠 · 슬라이더로 확대한다.
+// 위치는 사진마다 story.crops 에 { zoom, cx, cy } 로 둔다(storycard.js 의 clampCrop 참고).
+
+function currentCrop() {
+  return story.crops[story.photoIndex] || DEFAULT_CROP;
+}
+
+// 지금 사진 칸 크기에 맞춰 범위 안으로 되돌려 저장하고 슬라이더를 맞춘다.
+function setCrop(next) {
+  const L = story.layout;
+  const c = L && L.photoRect
+    ? clampCrop(next, L.photoRect.w, L.photoRect.h, L.imgW, L.imgH)
+    : { ...next, zoom: Math.min(CROP_ZOOM_MAX, Math.max(1, next.zoom)) };
+  story.crops[story.photoIndex] = c;
+  el.storyZoom.value = String(Math.round(c.zoom * 100));
+}
+
+function paintStoryCrop() {
+  el.storyCrop.hidden = !storyPhoto(story);
+  el.storyZoom.value = String(Math.round(currentCrop().zoom * 100));
+}
+
+// 손을 움직이는 동안은 화면에 한 번씩만 가볍게 그린다.
+let cropFrame = 0;
+let cropSettle = 0;
+function renderCropLive() {
+  if (!cropFrame) {
+    cropFrame = requestAnimationFrame(() => {
+      cropFrame = 0;
+      renderStory({ quick: true });
+    });
+  }
+}
+function renderCropDone() {
+  cancelAnimationFrame(cropFrame);
+  cropFrame = 0;
+  renderStory();
+}
+
+function bindStoryCropGestures() {
+  const cv = el.storyCanvas;
+  const pointers = new Map();
+  let gesture = null;
+
+  // 화면 좌표 → 캔버스 좌표(1080 폭 기준)
+  const toCanvas = (e) => {
+    const r = cv.getBoundingClientRect();
+    const k = cv.width / r.width;
+    return { x: (e.clientX - r.left) * k, y: (e.clientY - r.top) * k };
+  };
+  const photoRect = () => (story && storyPhoto(story) && story.layout && story.layout.photoRect) || null;
+  const inPhoto = (p) => {
+    const R = photoRect();
+    return !!R && p.x >= R.x && p.x <= R.x + R.w && p.y >= R.y && p.y <= R.y + R.h;
+  };
+  const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+
+  // 손가락 수가 바뀔 때마다 지금 상태를 출발점으로 다시 잡는다.
+  const restart = () => {
+    const pts = [...pointers.values()];
+    const crop0 = { ...currentCrop() };
+    if (pts.length === 1) gesture = { mode: 'pan', start: pts[0], crop0 };
+    else if (pts.length >= 2) gesture = { mode: 'pinch', d0: dist(pts[0], pts[1]) || 1, crop0 };
+    else gesture = null;
+  };
+
+  cv.addEventListener('pointerdown', (e) => {
+    if (!photoRect()) return;
+    const p = toCanvas(e);
+    if (!pointers.size && !inPhoto(p)) return;   // 첫 손가락은 사진 칸 안에서 시작해야 한다
+    e.preventDefault();
+    try { cv.setPointerCapture(e.pointerId); } catch { /* 캡처가 안 돼도 캔버스 안에서는 움직임을 받는다 */ }
+    pointers.set(e.pointerId, p);
+    cv.classList.add('is-grabbing');
+    restart();
+  });
+
+  cv.addEventListener('pointermove', (e) => {
+    if (!pointers.has(e.pointerId)) {
+      // 마우스를 올려두면 사진 칸 위에서만 손 모양 커서
+      if (e.pointerType === 'mouse') cv.classList.toggle('is-grab', inPhoto(toCanvas(e)));
+      return;
+    }
+    pointers.set(e.pointerId, toCanvas(e));
+    const L = story.layout;
+    if (!gesture || !L || !L.photoRect) return;
+    const { w, h } = L.photoRect;
+
+    if (gesture.mode === 'pan') {
+      const p = pointers.get(e.pointerId);
+      const s = cropScale(gesture.crop0.zoom, w, h, L.imgW, L.imgH);
+      setCrop({
+        zoom: gesture.crop0.zoom,
+        cx: gesture.crop0.cx - (p.x - gesture.start.x) / s / L.imgW,
+        cy: gesture.crop0.cy - (p.y - gesture.start.y) / s / L.imgH
+      });
+    } else {
+      const [a, b] = [...pointers.values()];
+      setCrop({ ...gesture.crop0, zoom: gesture.crop0.zoom * (dist(a, b) / gesture.d0) });
+    }
+    renderCropLive();
+  });
+
+  const end = (e) => {
+    if (!pointers.delete(e.pointerId)) return;
+    if (pointers.size) { restart(); return; }
+    gesture = null;
+    cv.classList.remove('is-grabbing');
+    if (story) renderCropDone();
+  };
+  cv.addEventListener('pointerup', end);
+  cv.addEventListener('pointercancel', end);
+
+  // PC: 사진 칸 위에서 휠로 확대 · 축소. 멈추면 저장용으로 한 번 더 그린다.
+  cv.addEventListener('wheel', (e) => {
+    if (!inPhoto(toCanvas(e))) return;
+    e.preventDefault();
+    const c = currentCrop();
+    setCrop({ ...c, zoom: c.zoom * Math.exp(-e.deltaY * 0.0015) });
+    renderCropLive();
+    clearTimeout(cropSettle);
+    cropSettle = setTimeout(() => story && renderCropDone(), 250);
+  }, { passive: false });
+
+  el.storyZoom.addEventListener('input', () => {
+    if (!story) return;
+    setCrop({ ...currentCrop(), zoom: Number(el.storyZoom.value) / 100 });
+    renderCropLive();
+  });
+  el.storyZoom.addEventListener('change', () => story && renderCropDone());
+
+  el.storyCropReset.addEventListener('click', () => {
+    if (!story) return;
+    delete story.crops[story.photoIndex];
+    el.storyZoom.value = '100';
+    renderStory();
+  });
+}
+
+// 지금 카드에 쓸 사진. '사진 없음'(-1)을 골랐으면 null.
+function storyPhoto(s) {
+  return s.photoIndex >= 0 ? s.photos[s.photoIndex] || null : null;
+}
+
+// '사진' 견본은 지금 고른 사진을 보여주고, 사진이 없으면(핀에 없거나 '사진 없음'을 골랐거나) 숨긴다.
+// 사진 배경을 쓰던 중에 사진이 빠지면 흐리게 깔 게 없어서 차콜로 바꾼다.
+function paintStoryThemes() {
+  const photo = storyPhoto(story);
+  if (!photo && story.theme === 'photo') story.theme = 'charcoal';
+  el.storyThemes.querySelectorAll('[data-theme]').forEach((btn) => {
+    if (btn.dataset.theme === 'photo') {
+      btn.hidden = !photo;
+      btn.style.backgroundImage = photo ? `url("${photo.dataUrl}")` : '';
+    }
+    btn.setAttribute('aria-pressed', String(btn.dataset.theme === story.theme));
+  });
+}
+
+// 글자를 칠 때마다 다시 그리면 휴대폰에서 버벅인다. 손을 멈추면 그린다.
+function renderStorySoon() {
+  // 기다리는 사이 저장을 누르면 고치기 전 카드가 나가지 않게 먼저 막아둔다.
+  story.blob = null;
+  el.storySave.classList.add('is-busy');
+  clearTimeout(storyRenderTimer);
+  storyRenderTimer = setTimeout(renderStory, 250);
+}
+
+// '#성수 데이트, #카페' 처럼 여러 개를 한 번에 넣어도 나눠 담는다.
+// 해시태그는 띄어쓰기가 없어야 해서 공백 · 쉼표 · # 을 경계로 본다.
+const STORY_HASHTAG_MAX = 10;
+
+function addStoryHashtags(raw) {
+  if (!story) return;
+  const words = String(raw).split(/[\s,#]+/).map((w) => w.trim()).filter(Boolean);
+  el.storyHashInput.value = '';
+  if (!words.length) return;
+
+  let full = false;
+  for (const w of words) {
+    if (story.hashtags.includes(w)) continue;
+    if (story.hashtags.length >= STORY_HASHTAG_MAX) { full = true; break; }
+    story.hashtags.push(w.slice(0, 20));
+  }
+  if (full) toast(`해시태그는 ${STORY_HASHTAG_MAX}개까지 넣을 수 있어요.`);
+  renderStoryTokens();
+  renderStory();
+}
+
+function storyPinTags(pin) {
+  return (pin.tags || []).map((id) => tagById(id)?.label).filter(Boolean);
+}
+
+function renderStoryTokens() {
+  const token = (label, onRemove) => {
+    const chip = h('span', 'story__token', label);
+    const x = h('button', 'story__token-x', '✕');
+    x.type = 'button';
+    x.setAttribute('aria-label', `${label} 빼기`);
+    x.addEventListener('click', onRemove);
+    chip.appendChild(x);
+    return chip;
+  };
+
+  // 핀에 태그가 있으면 다 빼도 칸은 남기고, 한 번에 되돌릴 수 있게 한다.
+  // 핀에 처음부터 태그가 없을 때만 칸을 숨긴다.
+  const pinTags = storyPinTags(story.pin);
+  el.storyTags.innerHTML = '';
+  el.storyTagsField.hidden = !pinTags.length;
+  if (pinTags.length && !story.tags.length) {
+    el.storyTags.appendChild(h('span', 'story__tokens-empty', '태그를 모두 뺐어요'));
+    const back = h('button', 'story__link', '다시 넣기');
+    back.type = 'button';
+    back.addEventListener('click', () => {
+      story.tags = storyPinTags(story.pin);
+      renderStoryTokens();
+      renderStory();
+    });
+    el.storyTags.appendChild(back);
+  }
+  story.tags.forEach((t, i) => {
+    el.storyTags.appendChild(token(t, () => {
+      story.tags.splice(i, 1);
+      renderStoryTokens();
+      renderStory();
+    }));
+  });
+
+  el.storyHashtags.innerHTML = '';
+  story.hashtags.forEach((t, i) => {
+    el.storyHashtags.appendChild(token('#' + t, () => {
+      story.hashtags.splice(i, 1);
+      renderStoryTokens();
+      renderStory();
+    }));
+  });
+}
+
+// 맨 앞 '사진 없음'(photoIndex -1)을 고르면 사진이 있는 핀도 사진 없는 카드로 만든다.
+// 사진이 한 장이어도 고를 게 생기므로 보여주고, 사진이 아예 없는 핀에서만 숨긴다.
+function renderStoryPhotos() {
+  el.storyPhotos.innerHTML = '';
+  el.storyPhotos.hidden = !story.photos.length;
+  if (el.storyPhotos.hidden) return;
+
+  const add = (i, label, fill) => {
+    const btn = h('button', 'story__thumb');
+    btn.type = 'button';
+    btn.dataset.index = String(i);
+    btn.setAttribute('aria-label', label);
+    btn.setAttribute('aria-pressed', String(i === story.photoIndex));
+    fill(btn);
+
+    btn.addEventListener('click', () => {
+      if (!story || story.photoIndex === i) return;
+      story.photoIndex = i;
+      el.storyPhotos.querySelectorAll('.story__thumb').forEach((b) => {
+        b.setAttribute('aria-pressed', String(Number(b.dataset.index) === i));
+      });
+      paintStoryThemes();
+      paintStoryCrop();
+      renderStory();
+    });
+    el.storyPhotos.appendChild(btn);
+  };
+
+  add(-1, '사진 없이 만들기', (btn) => {
+    btn.classList.add('story__thumb--none');
+    btn.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true">'
+      + '<rect x="13.3" y="17" width="5.4" height="13" rx="2.7" fill="rgba(255,255,255,.72)"/>'
+      + '<circle cx="16" cy="11" r="9" fill="#B8DEFF"/></svg>';
+  });
+
+  story.photos.forEach((p, i) => {
+    add(i, `사진 ${i + 1} 쓰기`, (btn) => {
+      const img = document.createElement('img');
+      img.src = p.dataUrl;
+      img.alt = '';
+      btn.appendChild(img);
+    });
+  });
+}
+
+// quick 은 사진을 끄는 중에 쓰는 가벼운 다시 그리기: 흐리게 하지 않고, 저장용 JPG 도 만들지 않는다.
+// 손을 떼면 quick 없이 한 번 더 불러 저장할 수 있게 만든다.
+async function renderStory({ quick = false } = {}) {
+  if (!story) return;
+  const seq = ++storySeq;
+  const s = story;
+
+  s.blob = null;
+  el.storySave.classList.add('is-busy');
+  if (!quick) el.story.classList.add('is-drawing');
+
+  // 옵션을 연달아 누르면 마지막 것만 남도록, 그리는 캔버스는 매번 새로 만든다.
+  const canvas = document.createElement('canvas');
+  try {
+    const info = await drawStoryCard(canvas, storyCardData(s));
+    if (seq !== storySeq) return;
+    s.layout = info;   // 사진 칸 위치 — 미리보기에서 끌어 옮길 때 쓴다
+
+    // 비율이 바뀌면 크기를 다시 맞춘다(크기를 넣으면 캔버스가 비워진다).
+    const view = el.storyCanvas;
+    if (view.width !== canvas.width || view.height !== canvas.height) {
+      view.width = canvas.width;
+      view.height = canvas.height;
+    }
+    const ctx = view.getContext('2d');
+    ctx.clearRect(0, 0, view.width, view.height);
+    ctx.drawImage(canvas, 0, 0);
+    el.story.classList.remove('is-drawing');
+    if (quick) return;
+
+    const blob = await storyCardBlob(canvas);
+    if (seq !== storySeq) return;
+    s.blob = blob;
+    el.storySave.classList.remove('is-busy');
+  } catch (err) {
+    if (seq !== storySeq) return;
+    console.error('[PinLog] 스토리 카드 그리기 실패:', err);
+    toast('카드를 만들지 못했어요.', 3000);
+  }
+}
+
+function storyCardData(s) {
+  const { pin } = s;
+  const d = parseDateValue(pin.visitedAt);
+  const p = (v) => String(v).padStart(2, '0');
+  const photo = storyPhoto(s);
+
+  return {
+    name: s.name.trim() || cleanPlaceName(pin.name) || pin.name,   // 이름을 다 지우면 원래 이름으로
+    dateText: d ? `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())}` : '',
+    address: s.address.trim(),
+    memo: s.memo.trim(),
+    tags: s.tags.slice(),
+    hashtags: s.hashtags.map((t) => '#' + t),
+    theme: s.theme,
+    format: s.format,
+    copyright: s.copyright,
+    crop: s.crops[s.photoIndex] || DEFAULT_CROP,
+    photo: photo ? photo.dataUrl : ''
+  };
+}
+
+// 같은 핀을 비율별로 저장해도 겹치지 않게 비율을 파일 이름 끝에 붙인다.
+const STORY_FILE_SUFFIX = { story: 'story', feed45: 'feed-4x5', square: 'feed-1x1' };
+
+function storyFilename(pin, format) {
+  const name = (cleanPlaceName(pin.name) || String(pin.name || 'pin')).replace(/[\\/:*?"<>|\s]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(pin.visitedAt || '') ? pin.visitedAt : todayValue();
+  return `pinlog-${name || 'pin'}-${date.replace(/-/g, '')}-${STORY_FILE_SUFFIX[format] || 'story'}.jpg`;
+}
+
+/* ── 댓글 모아보기 ─────────────────────────────────────────── */
+
+export function openFeed() {
+  feedOpen = true;
+  el.feed.hidden = false;
+  requestAnimationFrame(() => el.feed.classList.add('is-on'));
+
+  feedQuery = '';
+  el.feedSearch.value = '';
+  el.feedSearchClear.hidden = true;
+
+  feedLoading = true;
+  feedError = false;
+  feedItems = [];
+  el.feedSub.textContent = '불러오는 중…';
+  el.feedList.innerHTML = '';
+  el.feedList.hidden = true;
+  el.feedEmpty.hidden = true;
+
+  hideHint();
+}
+
+export function closeFeed(immediate = false) {
+  if (!feedOpen) return;
+  feedOpen = false;
+
+  el.feed.classList.remove('is-on');
+  const finish = () => {
+    el.feed.hidden = true;
+    el.feedList.scrollTop = 0;
+  };
+  if (immediate) finish(); else setTimeout(finish, 360);
+}
+
+export function isFeedOpen() { return feedOpen; }
+
+export function setFeedComments(items) {
+  if (!feedOpen) return;
+
+  feedLoading = false;
+  feedError = false;
+  feedItems = Array.isArray(items) ? items.slice() : [];
+
+  renderFeed();
+}
+
+export function setFeedError() {
+  if (!feedOpen) return;
+
+  feedLoading = false;
+  feedError = true;
+  feedItems = [];
+  renderFeed();
+}
+
+function renderFeed() {
+  // 날짜 머리글을 붙이려면 순서가 보장돼야 해서, 받은 순서에 기대지 않고 여기서 준다.
+  // filter 가 새 배열을 돌려주므로 그 자리에서 정렬해도 원본은 안 건드린다.
+  const list = feedItems
+    .filter(matchesFeedQuery)
+    .sort(feedSort === 'oldest'
+      ? (a, b) => a.createdAt - b.createdAt
+      : (a, b) => b.createdAt - a.createdAt);
+
+  if (feedError) {
+    el.feedSub.textContent = '불러오지 못했어요';
+  } else if (feedQuery) {
+    el.feedSub.textContent = `검색 결과 ${list.length}개`;
+  } else {
+    el.feedSub.textContent = feedItems.length
+      ? `댓글 ${feedItems.length}개`
+      : '아직 댓글이 없어요';
+  }
+
+  el.feedList.innerHTML = '';
+  el.feedList.hidden = !list.length;
+  el.feedEmpty.hidden = list.length > 0;
+  if (!list.length) { paintFeedEmpty(); return; }
+
+  const frag = document.createDocumentFragment();
+  let lastGroup = '';
+
+  list.forEach((c) => {
+    const key = dayKey(c.createdAt);
+    if (key !== lastGroup) {
+      lastGroup = key;
+      frag.appendChild(h('div', 'tl-group', dayLabel(c.createdAt)));
+    }
+    frag.appendChild(buildFeedItem(c));
+  });
+
+  el.feedList.appendChild(frag);
+}
+
+function buildFeedItem(c) {
+  const mine = !!myId && normalizeId(c.by) === myId;
+
+  const btn = h('button', 'fd-item');
+  btn.type = 'button';
+
+  const color = userColor(c.by);
+
+  const head = h('span', 'fd-item__head');
+
+  const dot = h('span', 'meta-dot');
+  dot.style.background = color.dot;
+  head.appendChild(dot);
+
+  const by = h('span', 'fd-item__by', mine ? '나' : (displayName(c.by) || '상대방'));
+  by.style.color = color.text;
+  head.appendChild(by);
+
+  const time = h('span', 'fd-item__time', relTime(c.createdAt));
+  time.title = fmtStamp(c.createdAt);
+  head.appendChild(time);
+
+  btn.appendChild(head);
+  btn.appendChild(h('span', 'fd-item__text', c.text));
+
+  const place = h('span', 'fd-item__place');
+  place.append(h('span', 'fd-item__pin', '📍'), document.createTextNode(c.pinName || '이름 없는 장소'));
+  btn.appendChild(place);
+
+  btn.addEventListener('click', () => {
+    closeFeed();
+    cb.onFeedSelect && cb.onFeedSelect(c.pinId);
+  });
+
+  return btn;
+}
+
+function matchesFeedQuery(c) {
+  if (!feedQuery) return true;
+  return `${c.text} ${c.pinName || ''} ${displayName(c.by)}`
+    .toLowerCase()
+    .includes(feedQuery);
+}
+
+function paintFeedEmpty() {
+  const title = el.feedEmpty.querySelector('[data-empty-title]');
+  const desc  = el.feedEmpty.querySelector('[data-empty-desc]');
+
+  if (feedError) {
+    title.textContent = '댓글을 불러오지 못했어요';
+    desc.textContent = '잠시 뒤에 다시 열어보세요';
+  } else if (feedQuery) {
+    title.textContent = '찾는 댓글이 없어요';
+    desc.textContent = '다른 말로 검색해 보세요';
+  } else {
+    title.textContent = '아직 댓글이 없어요';
+    desc.textContent = '핀을 열어 첫 댓글을 남겨보세요';
+  }
+}
+
+function clearFeedSearch() {
+  feedQuery = '';
+  el.feedSearch.value = '';
+  el.feedSearchClear.hidden = true;
+  if (!feedLoading) renderFeed();
+}
+
+function dayKey(d) {
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function dayLabel(d) {
+  const now = new Date();
+  const key = dayKey(d);
+
+  if (key === dayKey(now)) return '오늘';
+
+  const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  if (key === dayKey(yesterday)) return '어제';
+
+  return d.getFullYear() === now.getFullYear()
+    ? fmtShortDate(d)
+    : `${d.getFullYear()}년 ${fmtShortDate(d)}`;
+}
+
+export function openTimeline(pins, origin) {
+  timelineOpen = true;
+  el.timeline.hidden = false;
+  requestAnimationFrame(() => el.timeline.classList.add('is-on'));
+
+  timelineQuery = '';
+  el.timelineSearch.value = '';
+  el.timelineSearchClear.hidden = true;
+
+  renderTimeline(pins, origin);
+  hideHint();
+}
+
+export function closeTimeline(immediate = false) {
+  if (!timelineOpen) return;
+  timelineOpen = false;
+
+  el.timeline.classList.remove('is-on');
+  const finish = () => {
+    el.timeline.hidden = true;
+    el.timelineList.scrollTop = 0;
+  };
+  if (immediate) finish(); else setTimeout(finish, 360);
+}
+
+export function isTimelineOpen() { return timelineOpen; }
+
+export function renderTimeline(pins, origin) {
+  timelinePins = Array.isArray(pins) ? pins : [];
+  if (origin) timelineOrigin = origin;
+
+  const list = timelinePins
+    .filter((p) => matchesTimelineQuery(p))
+    .slice()
+    .sort(timelineSorter());
+
+  if (timelineQuery) {
+    el.timelineSub.textContent = `검색 결과 ${list.length}곳`;
+  } else {
+    const visited = timelinePins.filter((p) => p.category === 'visited').length;
+    el.timelineSub.textContent = `가본 곳 ${visited}곳 · 가볼 곳 ${timelinePins.length - visited}곳`;
+  }
+
+  el.timelineList.innerHTML = '';
+
+  el.timelineList.hidden = !list.length;
+  el.timelineEmpty.hidden = list.length > 0;
+  if (!list.length) { paintTimelineEmpty(); return; }
+
+  const byMonth  = timelineSort === 'recent' || timelineSort === 'oldest';
+  const byRegion = timelineSort === 'region';
+  const byFav    = timelineSort === 'fav';
+
+  // 지역 헤더에 개수를 같이 보여주려면 미리 세어둔다.
+  const regionCount = new Map();
+  if (byRegion) {
+    list.forEach((p) => {
+      const r = regionOf(p);
+      regionCount.set(r, (regionCount.get(r) || 0) + 1);
+    });
+  }
+  const favTotal = byFav ? list.filter((p) => favScore(p) > 0).length : 0;
+
+  const frag = document.createDocumentFragment();
+  let lastGroup = '';
+
+  list.forEach((pin) => {
+    const d = effectiveDate(pin);
+
+    if (byMonth) {
+      const key = `${d.getFullYear()}-${d.getMonth()}`;
+      if (key !== lastGroup) {
+        lastGroup = key;
+        frag.appendChild(h('div', 'tl-group', `${d.getFullYear()}년 ${d.getMonth() + 1}월`));
+      }
+    } else if (byRegion) {
+      const key = regionOf(pin);
+      if (key !== lastGroup) {
+        lastGroup = key;
+        frag.appendChild(h('div', 'tl-group', `${key} · ${regionCount.get(key)}곳`));
+      }
+    } else if (byFav) {
+      const key = favScore(pin) > 0 ? 'fav' : 'rest';
+      if (key !== lastGroup) {
+        lastGroup = key;
+        frag.appendChild(h('div', 'tl-group', key === 'fav'
+          ? `즐겨찾기 · ${favTotal}곳`
+          : `나머지 · ${list.length - favTotal}곳`));
+      }
+    }
+
+    frag.appendChild(buildTimelineItem(pin, d));
+  });
+
+  el.timelineList.appendChild(frag);
+}
+
+function matchesTimelineQuery(pin) {
+  if (!timelineQuery) return true;
+
+  const tagLabels = pin.tags
+    .map((id) => { const t = tagById(id); return t ? t.label : ''; })
+    .join(' ');
+
+  return `${pin.name} ${pin.memo} ${pin.address} ${tagLabels}`
+    .toLowerCase()
+    .includes(timelineQuery);
+}
+
+function timelineSorter() {
+  switch (timelineSort) {
+    case 'oldest':
+      return (a, b) => effectiveDate(a) - effectiveDate(b);
+
+    // 둘 다 좋아한 곳 → 한 명만 좋아한 곳(내 별 먼저) → 나머지, 같은 칸 안에서는 최신순
+    case 'fav':
+      return (a, b) => (favScore(b) - favScore(a)) || (effectiveDate(b) - effectiveDate(a));
+
+    case 'name':
+      return (a, b) => a.name.localeCompare(b.name, 'ko');
+
+    case 'near':
+
+      if (!timelineOrigin) return (a, b) => effectiveDate(b) - effectiveDate(a);
+      return (a, b) => distanceOf(a) - distanceOf(b);
+
+    case 'region':
+      return (a, b) => {
+        const ra = regionOf(a);
+        const rb = regionOf(b);
+
+        if (ra !== rb) {
+          // 주소를 못 받은 핀은 항상 맨 뒤로 모은다.
+          if (ra === REGION_UNKNOWN) return 1;
+          if (rb === REGION_UNKNOWN) return -1;
+          return ra.localeCompare(rb, 'ko');
+        }
+
+        return effectiveDate(b) - effectiveDate(a);
+      };
+
+    default:
+      return (a, b) => effectiveDate(b) - effectiveDate(a);
+  }
+}
+
+function favScore(pin) {
+  const favs = pin.favoritedBy || [];
+  if (!favs.length) return 0;
+  if (favs.length >= 2) return 3;
+  return favs.includes(myId) ? 2 : 1;
+}
+
+function distanceOf(pin) {
+  if (!timelineOrigin) return Infinity;
+  return distanceMeters(timelineOrigin.lat, timelineOrigin.lng, pin.lat, pin.lng);
+}
+
+const REGION_UNKNOWN = '지역 미확인';
+
+// 카카오는 같은 시/도를 '서울' 로 줄여 주기도 하고 '서울특별시' 로 다 쓰기도 한다.
+// 둘이 다른 그룹으로 갈리지 않도록 짧은 쪽으로 맞춘다.
+const REGION_ALIAS = {
+  '서울특별시': '서울',   '부산광역시': '부산',   '대구광역시': '대구',
+  '인천광역시': '인천',   '광주광역시': '광주',   '대전광역시': '대전',
+  '울산광역시': '울산',   '세종특별자치시': '세종',
+  '경기도': '경기',
+  '강원도': '강원',       '강원특별자치도': '강원',
+  '충청북도': '충북',     '충청남도': '충남',
+  '전라북도': '전북',     '전북특별자치도': '전북',
+  '전라남도': '전남',
+  '경상북도': '경북',     '경상남도': '경남',
+  '제주도': '제주',       '제주특별자치도': '제주'
+};
+
+// 주소의 첫 토큰이 시/도다. ('서울 성동구 연무장길 5' → '서울')
+function regionOf(pin) {
+  const first = String(pin.address || '').trim().split(/\s+/)[0];
+  if (!first) return REGION_UNKNOWN;
+  return REGION_ALIAS[first] || first;
+}
+
+function paintTimelineEmpty() {
+  const hasAny = timelinePins.length > 0;
+  const title = el.timelineEmpty.querySelector('[data-empty-title]');
+  const desc = el.timelineEmpty.querySelector('[data-empty-desc]');
+
+  if (hasAny) {
+    title.textContent = '찾는 핀이 없어요';
+    desc.textContent = timelineQuery ? '다른 말로 검색해 보세요' : '다른 조건으로 골라보세요';
+  } else if (isFiltered()) {
+    title.textContent = '조건에 맞는 핀이 없어요';
+    desc.textContent = '필터를 초기화해 보세요';
+  } else {
+    title.textContent = '아직 기록이 없어요';
+    desc.textContent = '지도에서 핀을 추가하면 여기에 쌓여요';
+  }
+}
+
+function clearTimelineSearch() {
+  timelineQuery = '';
+  el.timelineSearch.value = '';
+  el.timelineSearchClear.hidden = true;
+  renderTimeline(timelinePins);
+}
+
+function buildTimelineItem(pin, date) {
+  const isWish = pin.category === 'wish';
+
+  const btn = h('button', 'tl-item');
+  btn.type = 'button';
+
+  const thumb = h('span', 'tl-item__thumb' + (isWish ? ' is-wish' : ''));
+  if (pin.cover) {
+    const img = document.createElement('img');
+    img.src = pin.cover;
+    img.alt = '';
+    img.loading = 'lazy';
+    thumb.appendChild(img);
+  } else {
+    const first = pin.tags.length ? tagById(pin.tags[0]) : null;
+    thumb.appendChild(h('span', 'tl-item__glyph', first ? first.emoji : '📍'));
+  }
+  btn.appendChild(thumb);
+
+  const body = h('span', 'tl-item__body');
+
+  const top = h('span', 'tl-item__top');
+  top.appendChild(h('span', 'badge ' + (isWish ? 'badge--wish' : 'badge--visited'),
+    isWish ? '가볼 곳' : '가본 곳'));
+
+  const favs = pin.favoritedBy || [];
+  if (favs.length) {
+    const star = h('span', 'tl-item__fav' + (favs.length >= 2 ? ' is-both' : ''), favs.length >= 2 ? '♥' : '★');
+    star.setAttribute('aria-label', favs.length >= 2 ? '둘 다 즐겨찾기' : '즐겨찾기');
+    top.appendChild(star);
+  }
+
+  top.appendChild(h('span', 'tl-item__date', pin.visitedAt
+    ? fmtShortDate(date)
+    : `기록 ${fmtShortDate(date)} ${fmtTime(date)}`));
+
+  if (timelineSort === 'near' && timelineOrigin) {
+    top.appendChild(h('span', 'tl-item__dist', formatDistance(distanceOf(pin))));
+  }
+
+  body.appendChild(top);
+
+  body.appendChild(h('span', 'tl-item__name', pin.name));
+
+  if (pin.memo) body.appendChild(h('span', 'tl-item__memo', pin.memo));
+
+  if (pin.tags.length) {
+    const tagLine = h('span', 'tl-item__tags');
+    pin.tags.forEach((id) => {
+      const t = tagById(id);
+      if (t) tagLine.appendChild(h('span', 'tl-tag', `${t.emoji} ${t.label}`));
+    });
+    body.appendChild(tagLine);
+  }
+
+  if (pin.createdBy || pin.photoCount || pin.commentCount) {
+    const meta = h('span', 'tl-item__meta');
+
+    if (pin.createdBy) {
+      const who = h('span', 'tl-item__by');
+      const dot = h('span', 'meta-dot');
+      dot.style.background = userColor(pin.createdBy).dot;
+      who.append(dot, document.createTextNode(displayName(pin.createdBy)));
+      meta.appendChild(who);
+    }
+
+    if (pin.photoCount) meta.appendChild(h('span', null, `사진 ${pin.photoCount}`));
+
+    if (pin.commentCount) {
+      meta.appendChild(h('span', null, `댓글 ${pin.commentCount}`));
+    }
+
+    body.appendChild(meta);
+  }
+
+  btn.appendChild(body);
+
+  btn.addEventListener('click', () => {
+    closeTimeline();
+    cb.onTimelineSelect && cb.onTimelineSelect(pin.id);
+  });
+
+  return btn;
+}
+
+function effectiveDate(pin) {
+  const d = parseDateValue(pin.visitedAt);
+  return d || pin.createdAt || new Date();
+}
+
+export function todayValue() {
+  const n = new Date();
+  const p = (v) => String(v).padStart(2, '0');
+  return `${n.getFullYear()}-${p(n.getMonth() + 1)}-${p(n.getDate())}`;
+}
+
+function parseDateValue(value) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ''));
+  if (!m) return null;
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+}
+
+const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토'];
+
+function fmtFullDate(d) {
+  return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 (${WEEKDAY[d.getDay()]})`;
+}
+
+function fmtShortDate(d) {
+  return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+}
+
+function fmtTime(d) {
+  const p = (v) => String(v).padStart(2, '0');
+  return `${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+function fmtStamp(d) {
+  return `${d.getFullYear()}. ${d.getMonth() + 1}. ${d.getDate()}. ${fmtTime(d)}`;
+}
+
+function relTime(d) {
+  if (!(d instanceof Date) || Number.isNaN(d.getTime())) return '';
+
+  const diff = Date.now() - d.getTime();
+  const min = Math.floor(diff / 60000);
+
+  if (min < 1)  return '방금';
+  if (min < 60) return `${min}분 전`;
+
+  const hour = Math.floor(min / 60);
+  if (hour < 24) return `${hour}시간 전`;
+
+  const day = Math.floor(hour / 24);
+  if (day === 1) return `어제 ${fmtTime(d)}`;
+  if (day < 7)   return `${day}일 전`;
+
+  return `${fmtShortDate(d)} ${fmtTime(d)}`;
+}
+
+export function openPicker() {
+  el.picker.hidden = false;
+  el.pickerAddress.textContent = '위치를 찾는 중…';
+  hideHint();
+}
+
+export function closePicker() {
+  el.picker.hidden = true;
+}
+
+export function isPickerOpen() { return !el.picker.hidden; }
+
+export function setPickerAddress(text) {
+  el.pickerAddress.textContent = text || '주소 정보 없음';
+}
+
+export function setLocating(on) {
+  clearTimeout(locatingTimer);
+  el.btnLocate.classList.toggle('is-busy', on);
+
+  if (on) {
+    locatingTimer = setTimeout(() => { el.locatingPill.hidden = false; }, 400);
+  } else {
+    el.locatingPill.hidden = true;
+  }
+}
+
+// 로드뷰 뷰어는 화면에 먼저 나와야 카카오가 크기를 제대로 잰다.
+// 그래서 여는 것과 그리는 것을 나눠 두고, app 쪽에서 이 순서로 부른다.
+export function openRoadview() {
+  el.roadviewAddr.textContent = '';
+  el.roadview.hidden = false;
+  requestAnimationFrame(() => el.roadview.classList.add('is-on'));
+}
+
+export function closeRoadview() {
+  if (el.roadview.hidden) return;
+
+  el.roadview.classList.remove('is-on');
+  setTimeout(() => {
+    if (!el.roadview.classList.contains('is-on')) el.roadview.hidden = true;
+  }, 240);
+}
+
+export function isRoadviewOpen() { return !el.roadview.hidden; }
+
+export function setRoadviewAddress(text) {
+  el.roadviewAddr.textContent = text || '';
+}
+
+export function setRoadviewState(on) {
+  el.btnRoadview.classList.toggle('is-on', on);
+  el.btnRoadview.setAttribute('aria-pressed', on ? 'true' : 'false');
+
+  const label = on ? '로드뷰 끄기' : '로드뷰';
+  el.btnRoadview.setAttribute('aria-label', label);
+  el.btnRoadview.title = label;
+}
+
+export function setMapTypeState(sky) {
+  el.btnMapType.classList.toggle('is-on', sky);
+  el.btnMapType.setAttribute('aria-pressed', sky ? 'true' : 'false');
+
+  const label = sky ? '일반 지도' : '위성 지도';
+  el.btnMapType.setAttribute('aria-label', label);
+  el.btnMapType.title = label;
+}
+
+export function setZoomState(state) {
+  el.btnZoomIn.disabled  = !state.canZoomIn;
+  el.btnZoomOut.disabled = !state.canZoomOut;
+}
+
+export function showHint(ms = 4200) {
+  clearTimeout(hintTimer);
+  el.hintPill.classList.add('is-on');
+  hintTimer = setTimeout(() => el.hintPill.classList.remove('is-on'), ms);
+}
+
+export function hideHint() {
+  clearTimeout(hintTimer);
+  el.hintPill.classList.remove('is-on');
+}
+
+export function toast(message, ms = 2200, action = null) {
+  clearTimeout(toastTimer);
+  el.toastText.textContent = message;
+
+  toastActionFn = action ? action.onClick : null;
+  el.toastAction.hidden = !action;
+  if (action) el.toastAction.textContent = action.label;
+
+  el.toast.hidden = false;
+  requestAnimationFrame(() => el.toast.classList.add('is-on'));
+
+  toastTimer = setTimeout(hideToast, ms);
+}
+
+function hideToast() {
+  clearTimeout(toastTimer);
+  toastActionFn = null;
+  el.toast.classList.remove('is-on');
+  setTimeout(() => { el.toast.hidden = true; }, 320);
+}
+
+// tone 은 확인 버튼의 색이다. 지우거나 잃는 일은 'danger',
+// 다녀왔어요처럼 무언가를 남기는 일은 'primary' 를 쓴다.
+// cancelText 를 null 로 주면 취소 버튼 없이 확인만 있는 안내 팝업이 된다.
+export function confirmDialog({ title, desc, okText = '삭제', cancelText = '취소', tone = 'danger' }) {
+  return new Promise((resolve) => {
+    el.confirmTitle.textContent = title;
+    el.confirmDesc.textContent = desc;
+    el.confirmOk.textContent = okText;
+    el.confirmCancel.hidden = cancelText == null;
+    el.confirmCancel.textContent = cancelText ?? '취소';
+
+    // 아래에서 복제하므로 클래스는 그 전에 바꿔둔다.
+    el.confirmOk.className = (tone === 'primary' ? 'btn-primary' : 'btn-danger') + ' flex-1 h-12';
+
+    el.confirm.hidden = false;
+    requestAnimationFrame(() => el.confirm.classList.add('is-on'));
+
+    const ok = el.confirmOk.cloneNode(true);
+    const cancel = el.confirmCancel.cloneNode(true);
+    el.confirmOk.replaceWith(ok);
+    el.confirmCancel.replaceWith(cancel);
+    el.confirmOk = ok;
+    el.confirmCancel = cancel;
+
+    const close = (result) => {
+      el.confirm.classList.remove('is-on');
+      setTimeout(() => { el.confirm.hidden = true; }, 280);
+      resolve(result);
+    };
+
+    ok.addEventListener('click', () => close(true));
+    cancel.addEventListener('click', () => close(false));
+  });
+}
+
+/* ── 데이트 코스 ───────────────────────────────────────────── */
+
+const ICON_ARROW =
+  '<svg viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]" aria-hidden="true">' +
+    '<path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+  '</svg>';
+
+const ICON_UP =
+  '<svg viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]">' +
+    '<path d="m6 15 6-6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+  '</svg>';
+
+const ICON_DOWN =
+  '<svg viewBox="0 0 24 24" fill="none" class="w-[14px] h-[14px]">' +
+    '<path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+  '</svg>';
+
+const ICON_X =
+  '<svg viewBox="0 0 24 24" fill="none" class="w-[12px] h-[12px]">' +
+    '<path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>' +
+  '</svg>';
+
+const ICON_PIN =
+  '<svg viewBox="0 0 24 24" fill="none" class="w-[17px] h-[17px]">' +
+    '<path d="M12 21s7-5.686 7-11a7 7 0 1 0-14 0c0 5.314 7 11 7 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>' +
+    '<circle cx="12" cy="10" r="2.3" fill="currentColor"/>' +
+  '</svg>';
+
+// '9월 28일 (일)' — 코스 날짜는 목록 · 카드 · 고르기 창이 모두 같은 모양으로 쓴다.
+function fmtCourseDate(value) {
+  const d = parseDateValue(value);
+  return d ? `${fmtShortDate(d)} (${WEEKDAY[d.getDay()]})` : '';
+}
+
+// 예정 코스에만 붙인다. 지난 날짜면 빈 문자열.
+function ddayLabel(value) {
+  const d = parseDateValue(value);
+  if (!d) return '';
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diff = Math.round((d - today) / 86400000);
+
+  if (diff === 0) return 'D-DAY';
+  return diff > 0 ? `D-${diff}` : '';
+}
+
+function stopNames(course, pinsById) {
+  return course.stops
+    .map((s) => pinsById.get(s.pinId))
+    .filter(Boolean)
+    .map((p) => p.name);
+}
+
+// 예정은 가까운 날짜부터(날짜 없는 건 뒤로), 다녀온 코스는 최근 것부터.
+function sortCourses(list) {
+  const byCreated = (a, b) => (b.createdAt || 0) - (a.createdAt || 0);
+
+  const planned = list.filter((c) => c.status !== 'done').sort((a, b) => {
+    if (a.date && b.date) return a.date < b.date ? -1 : a.date > b.date ? 1 : byCreated(a, b);
+    if (a.date) return -1;
+    if (b.date) return 1;
+    return byCreated(a, b);
+  });
+
+  const done = list.filter((c) => c.status === 'done').sort((a, b) => {
+    if (a.date !== b.date) return (b.date || '') < (a.date || '') ? -1 : 1;
+    return byCreated(a, b);
+  });
+
+  return { planned, done };
+}
+
+/* 코스 목록 패널 */
+
+let coursesOpen = false;
+
+export function openCourses(courses, pins) {
+  coursesOpen = true;
+  el.courses.hidden = false;
+  requestAnimationFrame(() => el.courses.classList.add('is-on'));
+
+  renderCourses(courses, pins);
+  hideHint();
+}
+
+export function closeCourses(immediate = false) {
+  if (!coursesOpen) return;
+  coursesOpen = false;
+
+  el.courses.classList.remove('is-on');
+  const finish = () => {
+    el.courses.hidden = true;
+    el.coursesList.scrollTop = 0;
+  };
+  if (immediate) finish(); else setTimeout(finish, 360);
+}
+
+export function isCoursesOpen() { return coursesOpen; }
+
+export function renderCourses(courses, pins) {
+  const list = Array.isArray(courses) ? courses : [];
+  const pinsById = new Map((pins || []).map((p) => [p.id, p]));
+  const { planned, done } = sortCourses(list);
+
+  el.coursesSub.textContent = list.length
+    ? `예정 ${planned.length}개 · 다녀옴 ${done.length}개`
+    : '다음 데이트를 계획해보세요';
+
+  el.coursesList.innerHTML = '';
+  el.coursesList.hidden = !list.length;
+  el.coursesEmpty.hidden = list.length > 0;
+  if (!list.length) return;
+
+  const frag = document.createDocumentFragment();
+
+  if (planned.length) {
+    frag.appendChild(h('div', 'tl-group', `예정 · ${planned.length}`));
+    planned.forEach((c) => frag.appendChild(buildCourseItem(c, pinsById)));
+  }
+  if (done.length) {
+    frag.appendChild(h('div', 'tl-group', `다녀옴 · ${done.length}`));
+    done.forEach((c) => frag.appendChild(buildCourseItem(c, pinsById)));
+  }
+
+  el.coursesList.appendChild(frag);
+}
+
+function buildCourseItem(course, pinsById) {
+  const isDone = course.status === 'done';
+
+  const btn = h('button', 'cs-item');
+  btn.type = 'button';
+
+  const top = h('span', 'cs-item__top');
+  top.appendChild(h('span', 'badge ' + (isDone ? 'badge--visited' : 'badge--wish'), isDone ? '다녀옴' : '예정'));
+  top.appendChild(h('span', 'cs-item__date', fmtCourseDate(course.date) || '날짜 미정'));
+
+  const dday = isDone ? '' : ddayLabel(course.date);
+  if (dday) top.appendChild(h('span', 'cs-item__dday', dday));
+  btn.appendChild(top);
+
+  btn.appendChild(h('span', 'cs-item__name', course.name));
+
+  const names = stopNames(course, pinsById);
+  btn.appendChild(h('span', 'cs-item__route', names.length ? names.join(' → ') : '담긴 장소가 없어요'));
+
+  const meta = h('span', 'cs-item__meta');
+  meta.appendChild(h('span', null, `${names.length}곳`));
+  if (course.createdBy) {
+    const who = h('span', 'tl-item__by');
+    const dot = h('span', 'meta-dot');
+    dot.style.background = userColor(course.createdBy).dot;
+    who.append(dot, document.createTextNode(displayName(course.createdBy)));
+    meta.appendChild(who);
+  }
+  btn.appendChild(meta);
+
+  btn.addEventListener('click', () => {
+    closeCourses();
+    cb.onCourseSelect && cb.onCourseSelect(course.id);
+  });
+
+  return btn;
+}
+
+/* 코스 편집 시트 */
+
+// 담은 장소 하나. 이미 있는 핀이면 pinId, 검색으로 고른 새 장소면 place 를 든다.
+// 새 장소는 저장을 누를 때 '가볼 곳' 핀으로 만든다. 고르자마자 만들면
+// 편집을 취소했을 때 쓰지도 않을 핀이 지도에 남기 때문이다.
+let courseStops = [];
+let courseKeySeq = 0;
+let coursePinList = [];
+let coursePlaces = null;        // 카카오 검색 결과. null 이면 아직 없음(또는 검색 중)
+let coursePlacesFor = '';       // 위 결과가 어떤 검색어의 것인지
+let courseSearchTimer = null;
+let courseMax = 30;
+
+export function openCourseEditor({ course = null, pins = [], prefill = [], maxStops = 30 } = {}) {
+  const isEdit = !!course;
+  courseMax = maxStops;
+  coursePinList = Array.isArray(pins) ? pins : [];
+
+  const byId = new Map(coursePinList.map((p) => [p.id, p]));
+
+  el.courseFormTitle.textContent = isEdit ? '코스 수정하기' : '새 코스';
+  el.courseSubmit.querySelector('.btn-label').textContent = isEdit ? '수정 완료' : '저장하기';
+  el.courseDelete.hidden = !isEdit;
+
+  el.courseName.value = isEdit ? course.name : '';
+  el.courseDate.value = isEdit ? course.date : '';
+
+  const source = isEdit
+    ? course.stops.map((s) => ({ pin: byId.get(s.pinId), time: s.time, memo: s.memo }))
+    : prefill.map((pin) => ({ pin, time: '', memo: '' }));
+
+  courseStops = source
+    .filter((s) => s.pin)
+    .map((s) => ({
+      key: ++courseKeySeq,
+      pinId: s.pin.id,
+      place: null,
+      name: s.pin.name,
+      category: s.pin.category,
+      time: s.time || '',
+      memo: s.memo || ''
+    }));
+
+  clearCourseSearch();
+  renderCourseStops();
+  setCourseLoading(false);
+
+  openSheet('course');
+
+  if (!isEdit && !prefill.length && window.matchMedia('(hover: hover)').matches) {
+    setTimeout(() => el.courseName.focus(), 260);
+  }
+}
+
+export function isCourseEditorOpen() { return sheetMode === 'course'; }
+
+// 편집 중에 핀 목록이 바뀌면(상대가 핀을 지우거나 이름을 고치면) 검색 후보만 새로 받는다.
+// 이미 담은 장소는 저장할 때 app 쪽에서 다시 확인한다.
+export function setCoursePins(pins) {
+  if (sheetMode !== 'course') return;
+  coursePinList = Array.isArray(pins) ? pins : [];
+  renderCourseResults();
+}
+
+export function setCoursePlaces(list, keyword) {
+  if (sheetMode !== 'course') return;
+  if (keyword.trim() !== el.courseSearch.value.trim()) return;   // 늦게 온 옛 검색 결과
+
+  coursePlaces = Array.isArray(list) ? list : [];
+  coursePlacesFor = keyword.trim();
+  renderCourseResults();
+}
+
+export function getCourseValues() {
+  return {
+    name: el.courseName.value.trim(),
+    date: el.courseDate.value || '',
+    stops: courseStops.map((s) => ({
+      pinId: s.pinId,
+      place: s.place,
+      time: s.time,
+      memo: s.memo.trim()
+    }))
+  };
+}
+
+export function setCourseLoading(on) {
+  el.courseSubmit.disabled = on;
+  el.courseSubmit.classList.toggle('is-loading', on);
+  el.courseSubmit.querySelector('.spinner').hidden = !on;
+  el.courseDelete.disabled = on;
+}
+
+function initCourseEditor() {
+  el.courseForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    cb.onSubmitCourse && cb.onSubmitCourse(getCourseValues());
+  });
+
+  el.courseDelete.addEventListener('click', () => cb.onDeleteCourse && cb.onDeleteCourse());
+
+  el.courseDateToday.addEventListener('click', () => { el.courseDate.value = todayValue(); });
+  el.courseDateClear.addEventListener('click', () => { el.courseDate.value = ''; });
+
+  el.courseSearch.addEventListener('input', () => {
+    const kw = el.courseSearch.value;
+    el.courseSearchClear.hidden = kw.length === 0;
+
+    // 내 핀은 바로 거르고, 카카오 검색은 타자가 멈춘 뒤에 한 번만 보낸다.
+    coursePlaces = null;
+    coursePlacesFor = '';
+    renderCourseResults();
+
+    clearTimeout(courseSearchTimer);
+    if (!kw.trim()) return;
+    courseSearchTimer = setTimeout(() => cb.onCourseSearch && cb.onCourseSearch(kw), 350);
+  });
+
+  // 폼 안의 검색칸이라 Enter 가 그대로 가면 코스가 저장돼 버린다.
+  el.courseSearch.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      clearTimeout(courseSearchTimer);
+      const kw = el.courseSearch.value;
+      if (kw.trim()) cb.onCourseSearch && cb.onCourseSearch(kw);
+    }
+    if (e.key === 'Escape' && el.courseSearch.value) {
+      e.stopPropagation();
+      clearCourseSearch();
+    }
+  });
+
+  el.courseSearchClear.addEventListener('click', () => {
+    clearCourseSearch();
+    el.courseSearch.focus();
+  });
+}
+
+function clearCourseSearch() {
+  clearTimeout(courseSearchTimer);
+  el.courseSearch.value = '';
+  el.courseSearchClear.hidden = true;
+  coursePlaces = null;
+  coursePlacesFor = '';
+  renderCourseResults();
+}
+
+function renderCourseStops() {
+  el.courseStops.innerHTML = '';
+  el.courseStopCount.textContent = `${courseStops.length}/${courseMax}`;
+  el.courseStopsEmpty.hidden = courseStops.length > 0;
+
+  const frag = document.createDocumentFragment();
+
+  courseStops.forEach((stop, i) => {
+    const li = h('li', 'cs-stop');
+
+    li.appendChild(h('span', 'cs-stop__no', String(i + 1)));
+
+    const body = h('div', 'cs-stop__body');
+
+    const top = h('div', 'cs-stop__top');
+    top.appendChild(h('span', 'cs-stop__name', stop.name));
+    if (!stop.pinId) top.appendChild(h('span', 'cs-stop__new', '가볼 곳에 추가돼요'));
+    body.appendChild(top);
+
+    const fields = h('div', 'cs-stop__fields');
+
+    const time = document.createElement('input');
+    time.type = 'time';
+    time.className = 'cs-stop__time';
+    time.value = stop.time;
+    time.setAttribute('aria-label', `${i + 1}번 장소 시간`);
+    time.addEventListener('input', () => { stop.time = time.value; });
+    fields.appendChild(time);
+
+    const memo = document.createElement('input');
+    memo.type = 'text';
+    memo.className = 'cs-stop__memo';
+    memo.maxLength = 60;
+    memo.placeholder = '메모';
+    memo.value = stop.memo;
+    memo.setAttribute('aria-label', `${i + 1}번 장소 메모`);
+    memo.addEventListener('input', () => { stop.memo = memo.value; });
+    // 메모 칸에서 Enter 를 눌러도 저장되지 않게 한다.
+    memo.addEventListener('keydown', (e) => { if (e.key === 'Enter') e.preventDefault(); });
+    fields.appendChild(memo);
+
+    body.appendChild(fields);
+    li.appendChild(body);
+
+    const ctl = h('div', 'cs-stop__ctl');
+    ctl.appendChild(stopButton(ICON_UP, '위로', i === 0, () => moveCourseStop(i, -1)));
+    ctl.appendChild(stopButton(ICON_DOWN, '아래로', i === courseStops.length - 1, () => moveCourseStop(i, 1)));
+
+    const del = stopButton(ICON_X, '빼기', false, () => {
+      courseStops = courseStops.filter((s) => s.key !== stop.key);
+      renderCourseStops();
+      renderCourseResults();
+    });
+    del.classList.add('cs-stop__btn--del');
+    ctl.appendChild(del);
+
+    li.appendChild(ctl);
+    frag.appendChild(li);
+  });
+
+  el.courseStops.appendChild(frag);
+}
+
+function stopButton(icon, label, disabled, onClick) {
+  const btn = h('button', 'cs-stop__btn');
+  btn.type = 'button';
+  btn.disabled = disabled;
+  btn.innerHTML = icon;
+  btn.setAttribute('aria-label', label);
+  btn.addEventListener('click', onClick);
+  return btn;
+}
+
+function moveCourseStop(index, dir) {
+  const next = index + dir;
+  if (next < 0 || next >= courseStops.length) return;
+
+  const list = courseStops.slice();
+  [list[index], list[next]] = [list[next], list[index]];
+  courseStops = list;
+  renderCourseStops();
+}
+
+function addCourseStop(item) {
+  if (courseStops.length >= courseMax) {
+    toast(`코스에는 최대 ${courseMax}곳까지 담을 수 있어요.`);
+    return;
+  }
+
+  courseStops.push({ key: ++courseKeySeq, time: '', memo: '', ...item });
+  renderCourseStops();
+  clearCourseSearch();
+
+  if (window.matchMedia('(hover: hover)').matches) el.courseSearch.focus();
+}
+
+// 카카오 검색 결과가 이미 핀으로 있는 곳인지 본다.
+// 같은 이름이 가까이 있거나, 이름이 달라도 거의 같은 자리면 같은 곳으로 친다.
+function pinForPlace(place) {
+  return coursePinList.find((p) => {
+    const d = distanceMeters(p.lat, p.lng, place.lat, place.lng);
+    return d < 15 || (d < 200 && p.name.trim() === place.name.trim());
+  }) || null;
+}
+
+function renderCourseResults() {
+  const box = el.courseResults;
+  box.innerHTML = '';
+
+  const kw = el.courseSearch.value.trim().toLowerCase();
+  const inCourse = new Set(courseStops.map((s) => s.pinId).filter(Boolean));
+  const placeKeys = new Set(courseStops.filter((s) => s.place).map((s) => s.place.key));
+
+  const frag = document.createDocumentFragment();
+
+  // 검색어가 없으면 아직 안 가본 '가볼 곳'을 먼저 권한다.
+  if (!kw) {
+    const wish = coursePinList
+      .filter((p) => p.category === 'wish' && !inCourse.has(p.id))
+      .slice(0, 6);
+
+    if (wish.length) {
+      frag.appendChild(resultsHead('가볼 곳에서 고르기'));
+      wish.forEach((p) => frag.appendChild(pinResult(p)));
+    }
+    box.appendChild(frag);
+    return;
+  }
+
+  const mine = coursePinList
+    .filter((p) => !inCourse.has(p.id))
+    .filter((p) => `${p.name} ${p.address} ${p.memo}`.toLowerCase().includes(kw))
+    .slice(0, 6);
+
+  if (mine.length) {
+    frag.appendChild(resultsHead('내 핀'));
+    mine.forEach((p) => frag.appendChild(pinResult(p)));
+  }
+
+  frag.appendChild(resultsHead('새 장소', '저장하면 가볼 곳 핀이 함께 생겨요'));
+
+  if (coursePlaces === null || coursePlacesFor.toLowerCase() !== kw) {
+    frag.appendChild(h('p', 'cs-results__note', '찾는 중…'));
+  } else {
+    const shownPins = new Set(mine.map((p) => p.id));
+    let count = 0;
+
+    coursePlaces.forEach((place) => {
+      const key = `${place.id || ''}|${place.lat},${place.lng}`;
+      if (placeKeys.has(key)) return;
+
+      // 이미 핀으로 있는 곳이면 새로 만들지 않고 그 핀을 담는다.
+      const pin = pinForPlace(place);
+      if (pin) {
+        if (inCourse.has(pin.id) || shownPins.has(pin.id)) return;
+        shownPins.add(pin.id);
+        frag.appendChild(pinResult(pin));
+      } else {
+        frag.appendChild(placeResult(place, key));
+      }
+      count++;
+    });
+
+    if (!count) frag.appendChild(h('p', 'cs-results__note', '검색 결과가 없어요'));
+  }
+
+  box.appendChild(frag);
+}
+
+function resultsHead(title, note) {
+  const head = h('div', 'cs-results__head', title);
+  if (note) head.appendChild(h('small', null, note));
+  return head;
+}
+
+function resultButton({ icoClass, name, sub, onClick }) {
+  const btn = h('button', 'result-item');
+  btn.type = 'button';
+  btn.innerHTML =
+    `<span class="result-item__ico ${icoClass}">${ICON_PIN}</span>` +
+    '<span class="min-w-0 flex-1">' +
+      '<span class="result-item__name block"></span>' +
+      '<span class="result-item__addr block"></span>' +
+    '</span>';
+  btn.querySelector('.result-item__name').textContent = name;
+  btn.querySelector('.result-item__addr').textContent = sub;
+  btn.addEventListener('click', onClick);
+  return btn;
+}
+
+function pinResult(pin) {
+  const isWish = pin.category === 'wish';
+  return resultButton({
+    icoClass: isWish ? 'is-wish' : 'is-visited',
+    name: pin.name,
+    sub: `${isWish ? '가볼 곳' : '가본 곳'}${pin.address ? ' · ' + pin.address : ''}`,
+    onClick: () => addCourseStop({ pinId: pin.id, place: null, name: pin.name, category: pin.category })
+  });
+}
+
+function placeResult(place, key) {
+  const addr = place.roadAddress || place.address || '';
+  return resultButton({
+    icoClass: '',
+    name: place.name,
+    sub: [place.category, addr].filter(Boolean).join(' · '),
+    onClick: () => addCourseStop({
+      pinId: null,
+      place: { key, name: place.name.slice(0, 40), lat: place.lat, lng: place.lng, address: addr },
+      name: place.name,
+      category: 'wish'
+    })
+  });
+}
+
+/* 코스 고르기 — 상세 시트의 '코스에 담기' */
+
+let coursePickResolve = null;
+
+// 고른 코스 id, 'new'(새 코스), 또는 null(취소)로 답한다.
+export function pickCourse({ pin, courses, maxStops = 30 }) {
+  return new Promise((resolve) => {
+    if (coursePickResolve) finishCoursePick(null);
+    coursePickResolve = resolve;
+
+    const planned = sortCourses(courses || []).planned;
+
+    el.coursePickDesc.textContent = planned.length
+      ? `'${pin.name}' 을 담을 코스를 골라주세요.`
+      : `아직 예정된 코스가 없어요. '${pin.name}' 으로 새 코스를 시작할까요?`;
+
+    el.coursePickList.innerHTML = '';
+    planned.forEach((c) => {
+      const has = c.stops.some((s) => s.pinId === pin.id);
+      const full = c.stops.length >= maxStops;
+
+      const btn = h('button', 'cp-item');
+      btn.type = 'button';
+      btn.disabled = has || full;
+
+      const body = h('span', 'cp-item__body');
+      body.appendChild(h('span', 'cp-item__name', c.name));
+      body.appendChild(h('span', 'cp-item__sub',
+        `${fmtCourseDate(c.date) || '날짜 미정'} · ${c.stops.length}곳`));
+      btn.appendChild(body);
+
+      if (has)       btn.appendChild(h('span', 'cp-item__tag', '담겨 있음'));
+      else if (full) btn.appendChild(h('span', 'cp-item__tag', '가득 찼어요'));
+
+      btn.addEventListener('click', () => finishCoursePick(c.id));
+
+      const li = document.createElement('li');
+      li.appendChild(btn);
+      el.coursePickList.appendChild(li);
+    });
+
+    el.coursePick.hidden = false;
+    requestAnimationFrame(() => el.coursePick.classList.add('is-on'));
+  });
+}
+
+function finishCoursePick(result) {
+  if (!coursePickResolve) return;
+
+  const resolve = coursePickResolve;
+  coursePickResolve = null;
+
+  el.coursePick.classList.remove('is-on');
+  setTimeout(() => {
+    if (!el.coursePick.classList.contains('is-on')) el.coursePick.hidden = true;
+  }, 280);
+
+  resolve(result);
+}
+
+/* 코스 보기 카드 */
+
+let courseBarOpen = false;
+
+// stops: [{ pin, time, memo }] — 지도에 그린 순서 그대로
+export function showCourseBar(course, stops) {
+  const isDone = course.status === 'done';
+
+  el.courseBarBadge.textContent = isDone ? '다녀옴' : '예정';
+  el.courseBarBadge.className = 'badge ' + (isDone ? 'badge--visited' : 'badge--wish');
+
+  const date = fmtCourseDate(course.date);
+  const dday = isDone ? '' : ddayLabel(course.date);
+  el.courseBarDate.textContent = date ? (dday ? `${date} · ${dday}` : date) : '날짜 미정';
+
+  el.courseBarName.textContent = course.name;
+  el.courseBarDone.hidden = isDone;
+
+  el.courseBarStops.innerHTML = '';
+  if (!stops.length) {
+    el.courseBarStops.appendChild(h('p', 'course-bar__empty', '담긴 장소가 없어요. 수정에서 장소를 추가해보세요.'));
+  }
+
+  stops.forEach((s, i) => {
+    if (i > 0) {
+      const arrow = h('span', 'cb-arrow');
+      arrow.innerHTML = ICON_ARROW;
+      el.courseBarStops.appendChild(arrow);
+    }
+
+    const btn = h('button', 'cb-stop');
+    btn.type = 'button';
+
+    const top = h('span', 'cb-stop__top');
+    top.appendChild(h('span', 'cb-stop__no', String(i + 1)));
+    if (s.time) top.appendChild(h('span', 'cb-stop__time', s.time));
+    btn.appendChild(top);
+
+    btn.appendChild(h('span', 'cb-stop__name', s.pin.name));
+    if (s.memo) {
+      const memo = h('span', 'cb-stop__memo', s.memo);
+      memo.title = s.memo;
+      btn.appendChild(memo);
+    }
+
+    btn.appendChild(stopDetailChip());
+    btn.dataset.pinId = s.pin.id;
+    btn.addEventListener('click', (e) => onStopPress(s.pin.id, e));
+    el.courseBarStops.appendChild(btn);
+  });
+
+  if (!courseBarOpen) {
+    el.courseBarStops.scrollLeft = 0;
+    el.courseBarTable.scrollTop = 0;
+  }
+
+  renderCourseTable(stops);
+
+  courseBarOpen = true;
+  el.courseBar.hidden = false;
+  el.screenMap.classList.add('is-course');
+  hideHint();
+
+  applyCourseView();
+
+  // 다시 그려도 짚어둔 장소는 그대로 표시한다. (그사이 빠졌으면 app 이 풀어준다)
+  paintCourseFocus(false);
+}
+
+/* 코스에서 한 곳 짚기
+   처음 누르면 지도에서 그 핀만 강조하고, 짚은 곳을 한 번 더 누르거나
+   '상세 ›' 를 누르면 상세 시트를 연다. 카드와 표가 같은 규칙을 쓴다. */
+
+let courseFocusId = null;
+
+// 카드 · 행 자체가 누르는 자리라 그 안에 버튼을 또 넣을 수는 없어서 span 으로 둔다.
+// 클릭은 카드 · 행이 받아 누른 자리가 이 칩인지로 가른다.
+function stopDetailChip() {
+  const chip = h('span', 'stop-detail', '상세');
+  chip.dataset.stopDetail = '';
+  chip.insertAdjacentHTML('beforeend', ICON_ARROW.replace('w-[14px] h-[14px]', 'w-[12px] h-[12px]'));
+  return chip;
+}
+
+function onStopPress(pinId, e) {
+  const wantsDetail = pinId === courseFocusId || !!e.target.closest('[data-stop-detail]');
+
+  if (wantsDetail) cb.onCourseStopDetail && cb.onCourseStopDetail(pinId);
+  else             cb.onCourseStopSelect && cb.onCourseStopSelect(pinId);
+}
+
+// app 이 짚은 장소를 정해주면 카드 · 행을 칠하고, 필요하면 보이는 곳까지 굴린다.
+export function setCourseFocus(pinId, opts = {}) {
+  courseFocusId = pinId || null;
+  paintCourseFocus(!!opts.reveal);
+}
+
+function paintCourseFocus(reveal) {
+  let card = null;
+  let row = null;
+
+  el.courseBarStops.querySelectorAll('.cb-stop').forEach((n) => {
+    const on = n.dataset.pinId === courseFocusId;
+    n.classList.toggle('is-selected', on);
+    n.setAttribute('aria-pressed', String(on));
+    if (on) card = n;
+  });
+
+  el.courseBarTable.querySelectorAll('tbody tr').forEach((n) => {
+    const on = n.dataset.pinId === courseFocusId;
+    n.classList.toggle('is-selected', on);
+    if (on) row = n;
+  });
+
+  if (!reveal) return;
+
+  // scrollIntoView 는 바깥 컨테이너까지 굴려버릴 수 있어서 직접 계산한다.
+  if (card && !el.courseBarStops.hidden) {
+    const box = el.courseBarStops;
+    const left = card.offsetLeft - (box.clientWidth - card.offsetWidth) / 2;
+    box.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+  }
+
+  if (row && !el.courseBarTable.hidden) {
+    const box = el.courseBarTable;
+    const headH = (box.querySelector('thead') || { offsetHeight: 0 }).offsetHeight;
+    const top = row.offsetTop - headH;
+    const bottom = row.offsetTop + row.offsetHeight;
+
+    if (top < box.scrollTop) {
+      box.scrollTo({ top, behavior: 'smooth' });
+    } else if (bottom > box.scrollTop + box.clientHeight) {
+      box.scrollTo({ top: bottom - box.clientHeight, behavior: 'smooth' });
+    }
+  }
+}
+
+export function getCourseFocus() { return courseFocusId; }
+
+// 짚은 핀을 놓을 화면 y — 상단바 아래부터 하단 카드 위까지, 보이는 영역의 한가운데
+export function courseFocusY(topInset) {
+  const barTop = courseBarOpen ? el.courseBar.getBoundingClientRect().top : window.innerHeight;
+  return Math.round((topInset + barTop) / 2);
+}
+
+/* 카드 ↔ 표 전환 */
+
+const COURSE_VIEW_KEY = 'pinlog:courseView';
+let courseView = readCourseView();
+
+function readCourseView() {
+  try {
+    return localStorage.getItem(COURSE_VIEW_KEY) === 'table' ? 'table' : 'cards';
+  } catch (_) {
+    return 'cards';
+  }
+}
+
+function setCourseView(view) {
+  courseView = view === 'table' ? 'table' : 'cards';
+  try { localStorage.setItem(COURSE_VIEW_KEY, courseView); } catch (_) {  }
+  applyCourseView();
+}
+
+function applyCourseView() {
+  const table = courseView === 'table';
+
+  el.courseBarTrack.hidden = table;
+  el.courseBarTable.hidden = !table;
+  el.screenMap.classList.toggle('is-course-table', courseBarOpen && table);
+
+  el.courseViewBtns.forEach((btn) => {
+    const on = btn.dataset.courseView === courseView;
+    btn.classList.toggle('is-on', on);
+    btn.setAttribute('aria-checked', String(on));
+  });
+
+  if (!courseBarOpen) return;
+
+  // 표로 바꾸면 카드 높이가 달라지니 오른쪽 버튼 자리도 다시 맞춘다.
+  // 방금 보이게 했으니 offsetHeight 가 레이아웃을 바로 계산해 준다.
+  el.screenMap.style.setProperty('--course-bar-h', el.courseBar.offsetHeight + 'px');
+  updateCourseNav();
+}
+
+// 순서는 코스 순서 그대로 — 정렬하지 않는다.
+// '다음까지'는 다음 장소까지의 직선 거리라 마지막 줄은 비어 있다.
+function renderCourseTable(stops) {
+  const box = el.courseBarTable;
+  box.innerHTML = '';
+
+  if (!stops.length) {
+    box.appendChild(h('p', 'course-bar__empty', '담긴 장소가 없어요. 수정에서 장소를 추가해보세요.'));
+    return;
+  }
+
+  const table = h('table', 'ct');
+
+  const head = document.createElement('thead');
+  const hr = document.createElement('tr');
+  [
+    ['ct__no', '#'],
+    ['ct__time', '시간'],
+    ['ct__name', '장소'],
+    ['ct__memo ct__col-memo', '메모'],
+    ['ct__state ct__col-state', '상태'],
+    ['ct__dist', '다음까지']
+  ].forEach(([cls, label]) => {
+    const th = h('th', cls, label);
+    th.scope = 'col';
+    hr.appendChild(th);
+  });
+  head.appendChild(hr);
+  table.appendChild(head);
+
+  const body = document.createElement('tbody');
+  let total = 0;
+
+  stops.forEach((s, i) => {
+    const isWish = s.pin.category === 'wish';
+    const next = stops[i + 1];
+    const meters = next ? distanceMeters(s.pin.lat, s.pin.lng, next.pin.lat, next.pin.lng) : NaN;
+    if (Number.isFinite(meters)) total += meters;
+
+    const tr = document.createElement('tr');
+    tr.tabIndex = 0;
+    tr.setAttribute('role', 'button');
+    tr.setAttribute('aria-label', `${i + 1}번 ${s.pin.name}`);
+
+    const no = h('td', 'ct__no');
+    no.appendChild(h('span', null, String(i + 1)));
+    tr.appendChild(no);
+
+    tr.appendChild(s.time ? h('td', 'ct__time', s.time) : emptyCell('ct__time'));
+
+    // 폰에서는 메모 · 상태 열을 접고, 이름 칸 안에 점과 메모를 대신 보여준다.
+    const name = h('td', 'ct__name');
+    const row = h('span', 'ct__name-row');
+    row.appendChild(h('span', 'ct__dot' + (isWish ? ' is-wish' : '')));
+    const text = h('span', 'ct__name-text', s.pin.name);
+    text.title = s.pin.name;
+    row.appendChild(text);
+    row.appendChild(stopDetailChip());
+    name.appendChild(row);
+    name.appendChild(h('span', 'ct__sub', s.memo || ''));
+    tr.appendChild(name);
+
+    if (s.memo) {
+      const memo = h('td', 'ct__memo ct__col-memo');
+      const mt = h('span', 'ct__memo-text', s.memo);
+      mt.title = s.memo;
+      memo.appendChild(mt);
+      tr.appendChild(memo);
+    } else {
+      tr.appendChild(emptyCell('ct__memo ct__col-memo'));
+    }
+
+    const state = h('td', 'ct__state ct__col-state');
+    state.appendChild(h('span', 'badge ' + (isWish ? 'badge--wish' : 'badge--visited'), isWish ? '가볼 곳' : '가본 곳'));
+    tr.appendChild(state);
+
+    tr.appendChild(Number.isFinite(meters) ? h('td', 'ct__dist', formatDistance(meters)) : emptyCell('ct__dist'));
+
+    tr.dataset.pinId = s.pin.id;
+    tr.addEventListener('click', (e) => onStopPress(s.pin.id, e));
+    tr.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onStopPress(s.pin.id, e); }
+    });
+
+    body.appendChild(tr);
+  });
+  table.appendChild(body);
+
+  if (stops.length >= 2) {
+    const foot = document.createElement('tfoot');
+    const fr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = 6;
+    td.append('총 이동 ', h('b', null, formatDistance(total)), ' · 직선 거리 기준');
+    fr.appendChild(td);
+    foot.appendChild(fr);
+    table.appendChild(foot);
+  }
+
+  box.appendChild(table);
+}
+
+function emptyCell(cls) {
+  return h('td', cls + ' ct__empty', '–');
+}
+
+// 카드 줄은 가로 스크롤이라 휴대폰은 밀면 되지만, PC 마우스 휠은 세로로만 움직인다.
+// 스크롤바도 숨겨두었으니 마우스가 있는 기기에서는 휠을 가로로 돌려주고 좌우 버튼을 띄운다.
+const CAN_HOVER = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+function initCourseBarScroll() {
+  const row = el.courseBarStops;
+
+  row.addEventListener('scroll', updateCourseNav, { passive: true });
+  window.addEventListener('resize', updateCourseNav);
+
+  el.courseBarPrev.addEventListener('click', () => stepCourseBar(-1));
+  el.courseBarNext.addEventListener('click', () => stepCourseBar(1));
+
+  row.addEventListener('wheel', (e) => {
+    // 트랙패드 좌우 밀기나 Shift+휠은 브라우저가 알아서 가로로 넘긴다.
+    if (Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;
+
+    const overflow = row.scrollWidth - row.clientWidth;
+    if (overflow <= 2) return;
+
+    // deltaMode 1 은 줄 단위라 픽셀로 바꿔준다.
+    const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+
+    // 끝에 닿았으면 가로챌 이유가 없다.
+    if (dy < 0 && row.scrollLeft <= 0) return;
+    if (dy > 0 && row.scrollLeft >= overflow - 1) return;
+
+    e.preventDefault();
+    row.scrollLeft += dy;
+    updateCourseNav();
+  }, { passive: false });
+}
+
+function updateCourseNav() {
+  const row = el.courseBarStops;
+  const overflow = row.scrollWidth - row.clientWidth;
+
+  const show = courseBarOpen && CAN_HOVER.matches && overflow > 2;
+  el.courseBarPrev.hidden = !show || row.scrollLeft <= 2;
+  el.courseBarNext.hidden = !show || row.scrollLeft >= overflow - 2;
+}
+
+function stepCourseBar(dir) {
+  el.courseBarStops.scrollBy({
+    left: dir * el.courseBarStops.clientWidth * 0.85,
+    behavior: 'smooth'
+  });
+}
+
+export function hideCourseBar() {
+  courseBarOpen = false;
+  el.courseBar.hidden = true;
+  el.screenMap.classList.remove('is-course', 'is-course-table');
+  courseFocusId = null;
+}
+
+export function isCourseBarOpen() { return courseBarOpen; }
+
+// 지도를 코스에 맞출 때 카드가 가리는 아래쪽 여백
+export function courseBarInset() {
+  return courseBarOpen ? el.courseBar.offsetHeight + 40 : 60;
+}
